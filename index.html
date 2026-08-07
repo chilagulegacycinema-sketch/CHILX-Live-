@@ -14,70 +14,69 @@
     * { box-sizing: border-box; margin: 0; padding: 0; }
     body { background: var(--bg); color: var(--text); font-family: 'Orbitron', sans-serif; height: 100vh; display: flex; justify-content: center; overflow: hidden; }
 
-   .app-container { width: 100%; max-width: 500px; background: #000; border-left: 1px solid var(--border); border-right: 1px solid var(--border); display: flex; flex-direction: column; height: 100vh; }
+.app-container { width: 100%; max-width: 500px; background: #000; border-left: 1px solid var(--border); border-right: 1px solid var(--border); display: flex; flex-direction: column; height: 100vh; }
 
-   .header { background: #05050A; padding: 12px 16px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; }
-   .logo { display: flex; align-items: center; gap: 10px; }
-   .logo img { width: 38px; height: 38px; border-radius: 50%; object-fit: cover; border: 2px solid var(--blue-neon); }
-   .logo h1 { font-size: 18px; font-weight: 900; color: var(--blue-neon); }
-   .logo h1 span { color: var(--pink-neon); }
+.header { background: #05050A; padding: 12px 16px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; }
+.logo { display: flex; align-items: center; gap: 10px; }
+.logo img { width: 38px; height: 38px; border-radius: 50%; object-fit: cover; border: 2px solid var(--blue-neon); box-shadow: 0 0 10px var(--blue-neon); }
+.logo h1 { font-size: 18px; font-weight: 900; color: var(--blue-neon); text-shadow: 0 0 8px var(--blue-neon); }
+.logo h1 span { color: var(--pink-neon); text-shadow: 0 0 8px var(--pink-neon); }
 
-   .live-status { display: flex; align-items: center; gap: 6px; font-size: 10px; color: var(--error); font-weight: 900; cursor: pointer; padding: 4px 8px; border-radius: 12px; background: rgba(255,0,64,0.1); }
-   .live-dot { width: 8px; height: 8px; background: var(--error); border-radius: 50%; animation: blink 1s infinite; }
+.live-status { display: flex; align-items: center; gap: 6px; font-size: 10px; color: var(--error); font-weight: 900; cursor: pointer; padding: 4px 8px; border-radius: 12px; background: rgba(255,0,64,0.1); }
+.live-dot { width: 8px; height: 8px; background: var(--error); border-radius: 50%; animation: blink 1s infinite; }
     @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0} }
 
-   .user-profile { display: flex; align-items: center; gap: 8px; cursor: pointer; }
-   .user-profile img { width: 32px; height: 32px; border-radius: 50%; object-fit: cover; border: 2px solid var(--blue-neon); }
-   .user-name { font-size: 12px; font-weight: 700; color: var(--blue-neon); display: flex; align-items: center; gap: 4px; }
+.user-profile { display: flex; align-items: center; gap: 8px; cursor: pointer; }
+.user-profile img { width: 32px; height: 32px; border-radius: 50%; object-fit: cover; border: 2px solid var(--blue-neon); }
+.user-name { font-size: 12px; font-weight: 700; color: var(--blue-neon); display: flex; align-items: center; gap: 4px; }
 
-   .login-screen { text-align: center; padding: 40px 20px; display: flex; flex-direction: column; justify-content: center; align-items: center; width: 100%; height: 100vh; background: var(--bg); position: absolute; top: 0; left: 0; z-index: 1000; }
-   .login-screen img { width: 120px; height: 120px; border-radius: 25px; margin-bottom: 20px; border: 3px solid var(--pink-neon); }
-   .login-screen h2 { color: var(--blue-neon); }
-   .login-screen input { width: 90%; background: var(--card); border: 1px solid var(--blue-neon); color: #fff; padding: 14px; margin: 15px 0; border-radius: 8px; font-size: 16px; font-family: 'Orbitron'; text-align: center; }
-   .login-screen button { background: linear-gradient(90deg, var(--blue-neon), var(--pink-neon)); color: #000; border: none; padding: 14px; width: 90%; border-radius: 8px; font-weight: 900; cursor: pointer; font-size: 16px; font-family: 'Orbitron'; margin-bottom: 10px; }
+.login-screen { text-align: center; padding: 40px 20px; display: flex; flex-direction: column; justify-content: center; align-items: center; width: 100%; height: 100vh; background: var(--bg); position: absolute; top: 0; left: 0; z-index: 1000; }
+.login-screen img { width: 120px; height: 120px; border-radius: 25px; margin-bottom: 20px; border: 3px solid var(--pink-neon); object-fit: cover; }
+.login-screen h2 { color: var(--blue-neon); }
+.login-screen input { width: 90%; background: var(--card); border: 1px solid var(--blue-neon); color: #fff; padding: 14px; margin: 15px 0; border-radius: 8px; font-size: 16px; font-family: 'Orbitron'; text-align: center; }
+.login-screen button { background: linear-gradient(90deg, var(--blue-neon), var(--pink-neon)); color: #000; border: none; padding: 14px; width: 90%; border-radius: 8px; font-weight: 900; cursor: pointer; font-size: 16px; font-family: 'Orbitron'; margin-bottom: 10px; }
 
-   .chat-area { flex: 1; overflow-y: auto; padding: 15px; display: flex; flex-direction: column; gap: 15px; background: rgba(10,10,18,0.4); }
+.chat-area { flex: 1; overflow-y: auto; padding: 15px; display: flex; flex-direction: column; gap: 15px; background: rgba(10,10,18,0.4); }
 
-   .post { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 12px; position: relative; }
-   .post-header { display: flex; gap: 10px; align-items: center; margin-bottom: 8px; }
-   .post-pfp { width: 35px; height: 35px; border-radius: 50%; object-fit: cover; border: 2px solid var(--pink-neon); }
-   .post-name { font-size: 12px; font-weight: 700; color: var(--blue-neon); display: flex; align-items: center; gap: 4px; }
-   .post-time { font-size: 9px; color: #888; }
-   .post-content { font-size: 14px; line-height: 1.4; }
-   .post-content img { max-width: 100%; border-radius: 8px; margin-top: 8px; border: 1px solid var(--border); }
-   .post-content iframe { width: 100%; aspect-ratio: 16/9; border-radius: 8px; margin-top: 8px; border: 1px solid var(--border); }
+.post { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 0; overflow: hidden; }
+.post-header { display: flex; gap: 10px; align-items: center; padding: 10px 12px; }
+.post-pfp { width: 32px; height: 32px; border-radius: 50%; object-fit: cover; border: 2px solid var(--pink-neon); }
+.post-name { font-size: 12px; font-weight: 700; color: var(--blue-neon); display: flex; align-items: center; gap: 4px; }
+.post-time { font-size: 9px; color: #888; }
+.post-caption { font-size: 13px; line-height: 1.4; padding: 0 12px 8px 12px; }
+.post-media img { width: 100%; display: block; border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
+.post-media iframe { width: 100%; aspect-ratio: 1/1; display: block; border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
 
-   .v-badge { width: 14px; height: 14px; background: #0095F6; border-radius: 50%; display: inline-flex; justify-content: center; align-items: center; }
-   .v-badge svg { width: 9px; height: 9px; fill: #fff; }
-   .post-settings { position: absolute; top: 10px; right: 10px; font-size: 18px; color: #888; cursor: pointer; }
+.v-badge { width: 14px; height: 14px; background: #0095F6; border-radius: 50%; display: inline-flex; justify-content: center; align-items: center; }
+.v-badge svg { width: 9px; height: 9px; fill: #fff; }
+.post-settings { margin-left: auto; font-size: 18px; color: #888; cursor: pointer; }
 
-   .love-btn { position: fixed; bottom: 80px; right: 20px; width: 50px; height: 50px; background: linear-gradient(135deg, var(--blue-neon), var(--pink-neon)); border-radius: 50%; display: flex; justify-content: center; align-items: center; cursor: pointer; z-index: 999; }
-   .love-btn svg { width: 28px; height: 28px; fill: #000; }
-   .love-animation { position: absolute; animation: fly 1.5s forwards; }
-   .love-animation svg { width: 25px; height: 25px; fill: var(--pink-neon); }
+.live-love-btn { position: absolute; bottom: 120px; right: 20px; width: 50px; height: 50px; background: linear-gradient(135deg, var(--blue-neon), var(--pink-neon)); border-radius: 50%; display: none; justify-content: center; align-items: center; cursor: pointer; z-index: 2001; box-shadow: 0 0 20px var(--pink-neon); }
+.live-love-btn svg { width: 28px; height: 28px; fill: #000; }
+.love-animation { position: absolute; animation: fly 1.5s forwards; z-index: 2002; }
+.love-animation svg { width: 25px; height: 25px; fill: var(--pink-neon); }
     @keyframes fly { 0%{opacity:1; transform:translateY(0) scale(1)} 100%{opacity:0; transform:translateY(-120px) scale(1.5)} }
 
-   .input-area { padding: 15px; background: #05050A; border-top: 1px solid var(--border); display: flex; gap: 10px; align-items: center; }
-   .chat-input { flex: 1; background: #000; border: 1px solid var(--border); color: #fff; padding: 12px 18px; border-radius: 25px; font-family: 'Orbitron'; font-size: 14px; }
-   .send-btn { background: linear-gradient(135deg, var(--blue-neon), var(--pink-neon)); color: #000; border: none; border-radius: 50%; width: 45px; height: 45px; cursor: pointer; font-weight: 900; font-size: 18px; }
+.artist-post-area { padding: 15px; background: #05050A; border-top: 1px solid var(--border); display: flex; flex-direction: column; gap: 10px; }
+.artist-input { width: 100%; background: #000; border: 1px solid var(--border); color: #fff; padding: 12px 18px; border-radius: 12px; font-family: 'Orbitron'; font-size: 14px; }
+.post-btn { background: linear-gradient(135deg, var(--blue-neon), var(--pink-neon)); color: #000; border: none; border-radius: 12px; padding: 12px; cursor: pointer; font-weight: 900; font-size: 16px; font-family: 'Orbitron'; }
 
     #cameraModal { display: none; position: fixed; top:0; left:0; width:100%; height:100%; background: #000; z-index: 2000; }
     #cameraVideo { width: 100%; height: 100%; object-fit: cover; }
-   .live-overlay { position: absolute; top: 20px; left: 20px; background: var(--error); padding: 6px 14px; border-radius: 6px; display: flex; align-items: center; gap: 8px; font-size: 14px; font-weight: 900; }
+.live-overlay { position: absolute; top: 20px; left: 20px; background: var(--error); padding: 6px 14px; border-radius: 6px; display: flex; align-items: center; gap: 8px; font-size: 14px; font-weight: 900; }
 
     #danmakuContainer { position: absolute; top: 80px; left: 0; width: 100%; height: calc(100% - 160px); pointer-events: none; overflow: hidden; }
-   .danmaku { position: absolute; white-space: nowrap; font-size: 13px; font-weight: 700; color: #fff; text-shadow: 0 0 5px #000; animation: danmakuMove 7s linear; display: flex; align-items: center; gap: 6px; background: rgba(0,240,255,0.1); padding: 4px 10px; border-radius: 15px; border: 1px solid var(--blue-neon); }
-   .danmaku img { width: 22px; height: 22px; border-radius: 50%; border: 1px solid var(--pink-neon); }
+.danmaku { position: absolute; white-space: nowrap; font-size: 13px; font-weight: 700; color: #fff; text-shadow: 0 0 5px #000; animation: danmakuMove 7s linear; display: flex; align-items: center; gap: 6px; background: rgba(0,240,255,0.1); padding: 4px 10px; border-radius: 15px; border: 1px solid var(--blue-neon); }
+.danmaku img { width: 22px; height: 22px; border-radius: 50%; border: 1px solid var(--pink-neon); }
     @keyframes danmakuMove { from { transform: translateX(100%); } to { transform: translateX(-100%); } }
-    .live-chat-input { position:absolute; bottom:20px; left:10px; right:10px; display:none; gap:10px; }
+ .live-chat-input { position:absolute; bottom:20px; left:10px; right:10px; display:none; gap:10px; }
 
-    /* UKURASA WA PROFILE YA MSANII */
-   .profile-page { display: none; flex-direction: column; height: 100%; }
-   .profile-header { padding: 20px; text-align: center; border-bottom: 1px solid var(--border); }
-   .profile-header img { width: 80px; height: 80px; border-radius: 50%; border: 3px solid var(--blue-neon); margin-bottom: 10px; cursor: pointer; }
-   .back-btn { background: none; border: 1px solid var(--blue-neon); color: var(--blue-neon); padding: 5px 12px; border-radius: 15px; font-size: 10px; cursor: pointer; margin-bottom: 10px; }
-   .edit-pfp-btn { font-size: 10px; color: var(--pink-neon); cursor: pointer; }
-   .logout-btn { background: var(--error); color: #fff; border: none; padding: 10px 20px; border-radius: 8px; font-weight: 900; cursor: pointer; margin-top: 15px; font-family: 'Orbitron'; }
+ .profile-page { display: none; flex-direction: column; height: 100%; }
+.profile-header { padding: 20px; text-align: center; border-bottom: 1px solid var(--border); }
+.profile-header img { width: 80px; height: 80px; border-radius: 50%; border: 3px solid var(--blue-neon); margin-bottom: 10px; cursor: pointer; object-fit: cover; }
+.back-btn { background: none; border: 1px solid var(--blue-neon); color: var(--blue-neon); padding: 5px 12px; border-radius: 15px; font-size: 10px; cursor: pointer; margin-bottom: 10px; }
+.edit-pfp-btn { font-size: 10px; color: var(--pink-neon); cursor: pointer; }
+.logout-btn { background: var(--error); color: #fff; border: none; padding: 10px 20px; border-radius: 8px; font-weight: 900; cursor: pointer; margin-top: 15px; font-family: 'Orbitron'; }
 </style>
 
 <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
@@ -111,12 +110,11 @@
 
     <div id="channelView">
         <div class="chat-area" id="chatBox"></div>
-        <div class="input-area" id="artistInput">
-            <input type="text" id="msgInput" class="chat-input" placeholder="Andika post au bandika link ya picha/video...">
-            <button class="send-btn" onclick="sendPost()">></button>
-        </div>
-        <div class="love-btn" id="loveBtn" onclick="sendLove()">
-            <svg viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
+        <!-- HII ITAFICHWA KWA MTAZAMAJI -->
+        <div class="artist-post-area" id="artistInput">
+            <input type="text" id="postCaption" class="artist-input" placeholder="Andika maelezo ya post yako...">
+            <input type="text" id="postLink" class="artist-input" placeholder="Bandika link ya Picha/Video: postimg.cc au youtube">
+            <button class="post-btn" onclick="sendPost()">POST</button>
         </div>
     </div>
 
@@ -126,7 +124,7 @@
             <img id="profilePagePfp" src="" onclick="changeProfilePic()">
             <div class="edit-pfp-btn" onclick="changeProfilePic()">Badili Picha</div>
             <h2 id="profilePageName"></h2>
-            <button class="logout-btn" onclick="logout()">TOKA ACCOUNT</button> <!-- HAPA NDIO SIGN OUT -->
+            <button class="logout-btn" onclick="logout()">TOKA ACCOUNT</button>
             <p style="color:#888;font-size:11px; margin-top:15px;">Post zako</p>
         </div>
         <div class="chat-area" id="profilePosts"></div>
@@ -141,6 +139,9 @@
         <span>LIVE • <span id="liveViewers">1</span> WAKITAZAMA</span>
     </div>
     <div id="danmakuContainer"></div>
+    <div class="live-love-btn" id="liveLoveBtn" onclick="sendLove()">
+        <svg viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
+    </div>
     <div class="live-chat-input" id="liveChatInput">
         <input type="text" id="liveComment" placeholder="Tuma ujumbe..." style="flex:1; background:rgba(0,0,0,0.6); border:1px solid var(--blue-neon); color:#fff; padding:10px; border-radius:20px; font-family:Orbitron;">
         <button onclick="sendDanmaku()" style="background:var(--pink-neon); border:none; padding:10px 15px; border-radius:20px; color:#000; font-weight:900;">TUMA</button>
@@ -163,6 +164,7 @@
         let name = document.getElementById('loginName').value.trim();
         let pfp = document.getElementById('loginPfp').value.trim();
         if(!name ||!pfp) { alert("Jaza majina yote"); return; }
+        if(!artistsList.includes(name.toUpperCase())) { alert("Jina hili halipo kwenye orodha ya wasanii 7"); return; } // LOCK KWA WASANII 7 TU
         setupUser(name, pfp, "artist");
     }
     function loginAsViewer() {
@@ -186,28 +188,28 @@
         document.getElementById('mainApp').style.display = 'flex';
         let badge = isArtist? '<span class="v-badge"><svg viewBox="0 0 24 24"><path d="M12 2L3 5l9 19 9-19-9-3z"/></svg></span>' : '';
         document.getElementById('userProfile').innerHTML = `<img src="${currentPfp}"><div class="user-name">${currentUser}${badge}</div>`;
+
+        // HAPA NDIO TUMEFUNGA KABISA KWA MTAZAMAJI
         if(userRole === "viewer") {
-            document.getElementById('artistInput').style.display = 'none';
-            document.getElementById('loveBtn').style.display = 'flex';
-            document.getElementById('userProfile').onclick = null;
+            document.getElementById('artistInput').style.display = 'none'; // FICHA SEHEMU YA KUPOST
+            document.getElementById('userProfile').onclick = null; // FICHA PROFILE
         }
+
         listenToOnlineCount();
         listenToChannel();
         listenToDanmaku();
     }
 
-    // SIGN OUT FUNCTION
     function logout() {
         if(confirm("Una uhakika unataka kutoka?")) {
-            db.ref("online/" + currentUser).remove(); // Mtoe kwenye online
-            localStorage.removeItem('chilxUser');
-            localStorage.removeItem('chilxPfp');
-            location.reload(); // Rudisha kwenye login
+            db.ref("online/" + currentUser).remove();
+            localStorage.clear();
+            location.reload();
         }
     }
 
     function openProfile() {
-        if(userRole!== "artist") return;
+        if(!isArtist) return;
         document.getElementById('channelView').style.display = 'none';
         document.getElementById('profilePage').style.display = 'flex';
         document.getElementById('profilePagePfp').src = currentPfp;
@@ -235,26 +237,40 @@
         });
     }
     function renderMyPost(key, data) {
-        let content = getMediaContent(data.text);
+        let media = getMediaHTML(data.link);
         document.getElementById('profilePosts').innerHTML += `
             <div class="post" id="my-post-${key}">
-                <div class="post-settings" onclick="postOptions('${key}')">⋮</div>
-                <div class="post-header"><img class="post-pfp" src="${data.pfp}"><div class="post-name">${data.sender}</div></div>
-                <div class="post-content">${content}</div>
+                <div class="post-header">
+                    <img class="post-pfp" src="${data.pfp}">
+                    <div><div class="post-name">${data.sender}</div></div>
+                    <div class="post-settings" onclick="postOptions('${key}')">⋮</div>
+                </div>
+                <div class="post-caption" id="caption-${key}">${data.caption}</div>
+                <div class="post-media" id="media-${key}">${media}</div>
             </div>
         `;
     }
     function postOptions(key) {
-        let action = prompt("1. Futa Post\n2. Hariri Post");
+        let action = prompt("Chagua: \n1. Futa Post \n2. Hariri Maelezo \n3. Hariri Link");
         if(action == "1") {
-            if(confirm("Una uhakika?")) {
+            if(confirm("Una uhakika unataka kufuta post hii?")) {
                 db.ref("channel_posts/" + key).remove();
                 document.getElementById("my-post-" + key).remove();
             }
         }
         if(action == "2") {
-            let newText = prompt("Andika maandishi mapya:");
-            if(newText) { db.ref("channel_posts/" + key + "/text").set(newText); location.reload(); }
+            let newCap = prompt("Andika maelezo mapya:");
+            if(newCap) {
+                db.ref("channel_posts/" + key + "/caption").set(newCap);
+                document.getElementById("caption-" + key).innerText = newCap;
+            }
+        }
+        if(action == "3") {
+            let newLink = prompt("Bandika link mpya:");
+            if(newLink) {
+                db.ref("channel_posts/" + key + "/link").set(newLink);
+                document.getElementById("media-" + key).innerHTML = getMediaHTML(newLink);
+            }
         }
     }
 
@@ -270,14 +286,14 @@
     function sendLove() {
         let love = document.createElement('div');
         love.className = 'love-animation';
-        love.style.left = Math.random() * 300 + 50 + 'px';
-        love.style.bottom = '80px';
+        love.style.right = '30px';
+        love.style.bottom = '180px';
         love.innerHTML = `<svg viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>`;
-        document.body.appendChild(love);
+        document.getElementById('cameraModal').appendChild(love);
         setTimeout(() => love.remove(), 1500);
     }
     function sendDanmaku() {
-        if(!isArtist) return;
+        if(!isArtist) return; // MTAZAMAJI HAWEZI KUTUMA KOPAKOPA
         let text = document.getElementById('liveComment').value.trim();
         if(!text) return;
         db.ref("live_comments").push({sender: currentUser, pfp: currentPfp, text: text});
@@ -294,14 +310,15 @@
             setTimeout(() => dan.remove(), 7000);
         });
     }
-    function getMediaContent(text) {
-        if(text.match(/\.(jpeg|jpg|gif|png)$/) || text.includes("postimg.cc")) {
-            return `<img src="${text}">`;
-        } else if(text.includes("youtube.com") || text.includes("youtu.be")) {
-            let videoId = text.split('v=')[1] || text.split('youtu.be/')[1];
+    function getMediaHTML(link) {
+        if(!link) return "";
+        if(link.match(/\.(jpeg|jpg|gif|png)$/) || link.includes("postimg.cc")) {
+            return `<img src="${link}">`;
+        } else if(link.includes("youtube.com") || link.includes("youtu.be")) {
+            let videoId = link.split('v=')[1] || link.split('youtu.be/')[1];
             return `<iframe src="https://www.youtube.com/embed/${videoId}" allowfullscreen></iframe>`;
         } else {
-            return `<div>${text}</div>`;
+            return "";
         }
     }
     function renderPost(key, data) {
@@ -313,7 +330,8 @@
                     <img class="post-pfp" src="${data.pfp}">
                     <div><div class="post-name">${data.sender}${badge}</div><div class="post-time">${time}</div></div>
                 </div>
-                <div class="post-content">${getMediaContent(data.text)}</div>
+                <div class="post-caption">${data.caption}</div>
+                <div class="post-media">${getMediaHTML(data.link)}</div>
             </div>
         `;
     }
@@ -323,24 +341,37 @@
         });
     }
     function sendPost() {
-        if(!isArtist) return;
-        let text = document.getElementById('msgInput').value.trim();
-        if (!text) return;
-        db.ref("channel_posts").push().set({sender: currentUser, pfp: currentPfp, text: text, timestamp: Date.now()});
-        document.getElementById('msgInput').value = "";
+        if(!isArtist) return; // DOUBLE LOCK: MTAZAMAJI HAWEZI KUTUMA POST
+        let caption = document.getElementById('postCaption').value.trim();
+        let link = document.getElementById('postLink').value.trim();
+        if (!caption &&!link) return;
+        db.ref("channel_posts").push().set({
+            sender: currentUser,
+            pfp: currentPfp,
+            caption: caption,
+            link: link,
+            timestamp: Date.now()
+        });
+        document.getElementById('postCaption').value = "";
+        document.getElementById('postLink').value = "";
     }
     async function openCamera() {
         document.getElementById('cameraModal').style.display = 'block';
-        if(isArtist) document.getElementById('liveChatInput').style.display = 'flex';
+        document.getElementById('liveLoveBtn').style.display = 'flex';
+        if(isArtist) document.getElementById('liveChatInput').style.display = 'flex'; // KOPAKOPA KWA MSANII TU
         cameraStream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
         document.getElementById('cameraVideo').srcObject = cameraStream;
     }
     function closeCamera() {
         document.getElementById('cameraModal').style.display = 'none';
+        document.getElementById('liveLoveBtn').style.display = 'none';
         document.getElementById('liveChatInput').style.display = 'none';
         if(cameraStream) cameraStream.getTracks().forEach(track => track.stop());
     }
     document.getElementById('liveComment').addEventListener("keypress", e => { if (e.key === "Enter") sendDanmaku(); });
+    document.getElementById('cameraModal').addEventListener('click', function(e){
+        if(e.target.id === 'cameraModal') closeCamera();
+    });
 </script>
 </body>
 </html>
