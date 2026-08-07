@@ -16,23 +16,35 @@
 
     .app-container { width: 100%; max-width: 500px; background: #000; border-left: 1px solid var(--border); border-right: 1px solid var(--border); display: flex; flex-direction: column; height: 100vh; position: relative; }
    
-    .header { background: #05050A; padding: 12px 16px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; box-shadow: 0 0 15px rgba(0,240,255,0.1); }
+    .header { background: #05050A; padding: 12px 16px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; box-shadow: 0 0 15px rgba(0,240,255,0.1); position: relative; }
     .logo { display: flex; align-items: center; gap: 10px; cursor: pointer; user-select: none; }
     .logo img { width: 38px; height: 38px; border-radius: 50%; object-fit: cover; border: 2px solid var(--blue-neon); box-shadow: 0 0 10px var(--blue-neon); }
     .logo h1 { font-size: 20px; font-weight: 900; color: var(--blue-neon); text-shadow: 0 0 8px var(--blue-neon); }
     .logo h1 span { color: var(--pink-neon); text-shadow: 0 0 8px var(--pink-neon); }
     
-    .header-right { display: flex; align-items: center; gap: 10px; }
-    .user-profile { display: flex; align-items: center; gap: 8px; }
+    /* LIVE INDICATOR */
+    .live-status { display: flex; align-items: center; gap: 6px; font-size: 10px; color: var(--error); font-weight: 900; }
+    .live-dot { width: 8px; height: 8px; background: var(--error); border-radius: 50%; animation: blink 1s infinite; }
+    @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0} }
+
+    .user-profile { display: flex; align-items: center; gap: 8px; cursor: pointer; position: relative; }
     .user-profile img { width: 32px; height: 32px; border-radius: 50%; object-fit: cover; border: 2px solid var(--blue-neon); }
     .user-name { font-size: 12px; font-weight: 700; color: var(--blue-neon); display: flex; align-items: center; gap: 4px; }
-    .signout-btn { background: var(--error); color: #fff; border: none; padding: 5px 10px; border-radius: 5px; font-size: 10px; font-family: 'Orbitron'; cursor: pointer; }
+    .profile-menu { display: none; position: absolute; top: 45px; right: 0; background: var(--card); border: 1px solid var(--border); border-radius: 8px; padding: 10px; width: 180px; z-index: 100; box-shadow: 0 0 15px rgba(0,240,255,0.2); }
+    .profile-menu.active { display: block; }
+    .profile-menu-item { padding: 10px; color: var(--text); font-size: 12px; cursor: pointer; border-radius: 5px; display: flex; align-items: center; gap: 8px; }
+    .profile-menu-item:hover { background: #111424; }
+    .profile-menu-item.signout { color: var(--error); }
 
     .login-screen { text-align: center; padding: 40px 20px; display: flex; flex-direction: column; justify-content: center; align-items: center; width: 100%; height: 100vh; background: var(--bg); position: absolute; top: 0; left: 0; z-index: 1000; }
     .login-screen img { width: 120px; height: 120px; border-radius: 25px; margin-bottom: 20px; border: 3px solid var(--pink-neon); object-fit: cover; box-shadow: 0 0 20px var(--pink-neon); }
     .login-screen h2 { color: var(--blue-neon); text-shadow: 0 0 10px var(--blue-neon); margin-bottom: 5px; }
     .login-screen select, .login-screen input { width: 90%; background: var(--card); border: 1px solid var(--blue-neon); color: #fff; padding: 14px; margin-bottom: 15px; border-radius: 8px; font-size: 16px; box-shadow: 0 0 5px var(--blue-neon); font-family: 'Orbitron'; text-align: center; text-align-last: center; outline: none; }
     .login-screen button { background: linear-gradient(90deg, var(--blue-neon), var(--pink-neon)); color: #000; border: none; padding: 14px; width: 90%; border-radius: 8px; font-weight: 900; cursor: pointer; font-size: 16px; font-family: 'Orbitron'; }
+
+    .tabs { display: flex; background: #050510; border-bottom: 1px solid var(--border); }
+    .tab { flex: 1; padding: 10px; text-align: center; font-size: 12px; cursor: pointer; color: #888; }
+    .tab.active { color: var(--blue-neon); border-bottom: 2px solid var(--blue-neon); }
 
     .media-indicators { background: #050510; border-bottom: 1px solid var(--border); padding: 8px 15px; display: flex; justify-content: space-around; font-size: 11px; }
     .indicator-btn { background: none; border: 1px dashed var(--pink-neon); padding: 4px 10px; border-radius: 4px; color: var(--pink-neon); font-family: 'Orbitron'; cursor: pointer; }
@@ -43,11 +55,12 @@
     .msg-wrapper { display: flex; gap: 10px; max-width: 85%; }
     .msg-wrapper.outgoing { align-self: flex-end; flex-direction: row-reverse; }
     .msg-wrapper.incoming { align-self: flex-start; }
-    .msg-pfp { width: 35px; height: 35px; border-radius: 50%; object-fit: cover; border: 2px solid var(--pink-neon); flex-shrink: 0; }
+    .msg-pfp { width: 35px; height: 35px; border-radius: 50%; object-fit: cover; border: 2px solid var(--pink-neon); flex-shrink: 0; cursor: pointer; }
     .msg { font-size: 14px; padding: 10px 14px; border-radius: 12px; line-height: 1.4; border: 1px solid var(--border); box-shadow: 0 0 8px rgba(0,0,0,0.3); cursor: pointer; }
     .msg.incoming { background: var(--card); border-left: 3px solid var(--pink-neon); }
     .msg.outgoing { background: #111424; border-right: 3px solid var(--blue-neon); color: #fff; }
     .msg-header { color: var(--blue-neon); display: flex; align-items: center; gap: 4px; font-size: 11px; margin-bottom: 4px; letter-spacing: 1px; font-weight: 700; }
+    .msg-caption { font-size: 13px; margin-bottom: 5px; }
     
     .v-badge { width: 14px; height: 14px; background: #0095F6; border-radius: 50%; display: inline-flex; justify-content: center; align-items: center; }
     .v-badge svg { width: 9px; height: 9px; fill: #fff; }
@@ -66,9 +79,10 @@
     @keyframes pulse { 0%{transform:scale(1)} 50%{transform:scale(1.2)} 100%{transform:scale(1)} }
     .send-btn { background: linear-gradient(135deg, var(--blue-neon), var(--pink-neon)); color: #000; border: none; border-radius: 50%; width: 45px; height: 45px; cursor: pointer; font-weight: 900; font-size: 18px; display: flex; justify-content: center; align-items: center; box-shadow: 0 0 10px var(--pink-neon); }
 
-    #cameraModal { display: none; position: fixed; top:0; left:0; width:100%; height:100%; background: #000; z-index: 2000; flex-direction: column; justify-content: center; align-items: center; }
+    #cameraModal, #mediaModal { display: none; position: fixed; top:0; left:0; width:100%; height:100%; background: rgba(0,0,0,0.9); z-index: 2000; justify-content: center; align-items: center; flex-direction: column; }
     #cameraVideo { width: 100%; height: 80%; object-fit: cover; }
-    #closeCamera { position: absolute; top: 20px; right: 20px; background: var(--pink-neon); color: #000; border: none; padding: 10px 15px; border-radius: 50%; font-weight: 900; cursor: pointer; }
+    #closeCamera, #closeMedia { position: absolute; top: 20px; right: 20px; background: var(--pink-neon); color: #000; border: none; padding: 10px 15px; border-radius: 50%; font-weight: 900; cursor: pointer; }
+    #mediaCaption { width: 90%; background: #000; border: 1px solid var(--blue-neon); color: #fff; padding: 12px; border-radius: 8px; margin-top: 15px; font-family: 'Orbitron'; }
 </style>
 
 <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
@@ -103,10 +117,16 @@
             <img src="https://i.postimg.cc/vBJj3bNH/chilx-live.jpg" alt="Logo">
             <h1>CHILX <span>LIVE</span></h1>
         </div>
-        <div class="header-right">
-            <div class="user-profile" id="userProfile"></div>
-            <button class="signout-btn" onclick="signOut()">EXIT</button>
+        <div style="display:flex;align-items:center;gap:10px;">
+            <div class="live-status"><div class="live-dot"></div><span id="liveCount">0 LIVE</span></div>
+            <div class="user-profile" id="userProfile" onclick="toggleProfileMenu()"></div>
         </div>
+        <div class="profile-menu" id="profileMenu"></div>
+    </div>
+
+    <div class="tabs">
+        <div class="tab active" onclick="switchTab('group')">GROUP CHAT</div>
+        <div class="tab" onclick="switchTab('dm')">INBOX</div>
     </div>
 
     <div class="media-indicators">
@@ -117,10 +137,10 @@
     <div class="chat-area" id="chatBox"></div>
 
     <div class="input-area">
-        <button class="media-btn" onclick="sendMedia()">📎</button>
+        <button class="media-btn" onclick="openMediaModal()">📎</button>
         <button class="media-btn" id="voiceBtn">🎙️</button>
        
-        <input type="text" id="msgInput" class="chat-input" placeholder="Andika SMC au bandika link ya media...">
+        <input type="text" id="msgInput" class="chat-input" placeholder="Andika ujumbe...">
         <button class="send-btn" onclick="sendMessage()">></button>
     </div>
 </div>
@@ -130,6 +150,13 @@
     <button id="closeCamera" onclick="closeCamera()">X</button>
 </div>
 
+<div id="mediaModal">
+    <input type="text" id="mediaLink" placeholder="Bandika link ya picha/video: postimg.cc au youtube">
+    <input type="text" id="mediaCaption" placeholder="Andika maelezo ya picha/video...">
+    <button class="send-btn" onclick="sendMediaWithCaption()">TUMA</button>
+    <button id="closeMedia" onclick="closeMediaModal()">X</button>
+</div>
+
 <script>
     const firebaseConfig = { databaseURL: "https://chilx-live-4432d-default-rtdb.firebaseio.com/" };
     firebase.initializeApp(firebaseConfig);
@@ -137,6 +164,8 @@
 
     let currentUser = "";
     let currentPfp = "";
+    let currentTab = "group";
+    let dmTarget = "";
     const verifiedArtists = ["ZORAVALY", "PAUL", "WILLIAMS", "MASON", "SHANIYA", "IRENE", "ZAISAN"];
     let cameraStream = null;
     let mediaRecorder, audioChunks = [];
@@ -149,6 +178,11 @@
             currentPfp = savedPfp;
             enterApp();
         }
+        document.addEventListener('click', function(e) {
+            if(!e.target.closest('.user-profile') && !e.target.closest('.profile-menu')) {
+                document.getElementById('profileMenu').classList.remove('active');
+            }
+        });
     }
 
     function login() {
@@ -162,7 +196,9 @@
         
         localStorage.setItem('chilxUser', currentUser);
         localStorage.setItem('chilxPfp', currentPfp);
-        db.ref("users/" + currentUser).set({pfp: currentPfp, name: currentUser});
+        // WEKA MTU KWENYE ONLINE
+        db.ref("online/" + currentUser).set({pfp: currentPfp, lastSeen: Date.now()});
+        db.ref("online/" + currentUser).onDisconnect().remove();
 
         enterApp();
     }
@@ -173,59 +209,117 @@
         
         let badge = verifiedArtists.includes(currentUser) ? '<span class="v-badge"><svg viewBox="0 0 24 24"><path d="M12 2L3 5l9 19 9-19-9-3z"/></svg></span>' : '';
         document.getElementById('userProfile').innerHTML = `<img src="${currentPfp}"><div class="user-name">${currentUser}${badge}</div>`;
+        document.getElementById('profileMenu').innerHTML = `
+            <div class="profile-menu-item">
+                <img src="${currentPfp}" style="width:25px;height:25px;border-radius:50%">
+                <span>${currentUser}${badge}</span>
+            </div>
+            <div class="profile-menu-item signout" onclick="signOut()">🚪 Sign Out</div>
+        `;
 
+        listenToOnlineCount();
         listenToGroupChat();
         setupVoiceRecorder();
     }
 
-    // SIGN OUT FUNCTION MPYA
+    // LIVE COUNT
+    function listenToOnlineCount() {
+        db.ref("online").on("value", snap => {
+            let count = snap.numChildren();
+            document.getElementById('liveCount').innerText = count + " LIVE";
+        });
+    }
+
+    function toggleProfileMenu() {
+        document.getElementById('profileMenu').classList.toggle('active');
+    }
+
     function signOut() {
-        if(confirm("Una uhakika unataka kutoka? Kumbukumbu za majaribio zitafutwa")) {
+        if(confirm("Una uhakika unataka kutoka?")) {
+            db.ref("online/" + currentUser).remove();
             localStorage.removeItem('chilxUser');
             localStorage.removeItem('chilxPfp');
             location.reload();
         }
     }
 
+    function switchTab(tab) {
+        currentTab = tab;
+        document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+        event.target.classList.add('active');
+        document.getElementById('chatBox').innerHTML = "";
+        if(tab === 'group') listenToGroupChat();
+        else listenToDMList();
+    }
+
     function listenToGroupChat() {
-        db.ref("group_messages").limitToLast(40).on("child_added", function(snapshot) {
-            let data = snapshot.val();
-            let key = snapshot.key;
+        db.ref("group_messages").limitToLast(40).on("child_added", renderMessage);
+    }
+
+    function listenToDMList() {
+        // Rahisi: onyesha orodha ya watu online ubonyeze uchat nae
+        db.ref("online").once("value", snap => {
             let chatBox = document.getElementById('chatBox');
-
-            let wrapper = document.createElement('div');
-            wrapper.id = "msg-" + key;
-            wrapper.className = (data.sender === currentUser) ? "msg-wrapper outgoing" : "msg-wrapper incoming";
-           
-            let badge = verifiedArtists.includes(data.sender) ? '<span class="v-badge"><svg viewBox="0 0 24 24"><path d="M12 2L3 5l9 19 9-19-9-3z"/></svg></span>' : '';
-            let content = data.text;
-
-            if(data.type === 'voice') {
-                content = `<div class="voice-player"><audio controls src="${data.text}"></audio></div>`;
-            } else if(content.match(/\.(jpeg|jpg|gif|png)$/) || content.includes("postimg.cc")) {
-                content = `<img src="${content}">`;
-            } else if(content.includes("youtube.com") || content.includes("streamable.com") || content.includes("vimeo")) {
-                content = `<iframe src="${content}" allowfullscreen></iframe>`;
-            }
-
-            wrapper.innerHTML = `
-                <img class="msg-pfp" src="${data.pfp || 'https://i.postimg.cc/vBJj3bNH/chilx-live.jpg'}">
-                <div class="msg ${data.sender === currentUser ? 'outgoing' : 'incoming'}" ondblclick="deleteMessage('${key}', '${data.sender}')">
-                    <div class="msg-header">${data.sender}${badge}</div>
-                    ${content}
-                </div>
-            `;
-           
-            chatBox.appendChild(wrapper);
-            chatBox.scrollTop = chatBox.scrollHeight;
+            chatBox.innerHTML = "<p style='text-align:center;color:#888'>Chagua msanii wa kuanza DM</p>";
+            snap.forEach(child => {
+                if(child.key !== currentUser) {
+                    let div = document.createElement('div');
+                    div.innerHTML = `<div style="display:flex;gap:10px;padding:10px;cursor:pointer" onclick="openDM('${child.key}')"><img src="${child.val().pfp}" style="width:40px;height:40px;border-radius:50%"><span>${child.key}</span></div>`;
+                    chatBox.appendChild(div);
+                }
+            });
         });
     }
 
-    // DELETE FUNCTION MPYA
-    function deleteMessage(key, sender) {
+    function openDM(target) {
+        dmTarget = target;
+        document.getElementById('chatBox').innerHTML = "";
+        db.ref("dms/" + getDMid(currentUser, target)).limitToLast(40).on("child_added", renderMessage);
+    }
+
+    function getDMid(u1, u2) {
+        return [u1,u2].sort().join("_");
+    }
+
+    function renderMessage(snapshot) {
+        let data = snapshot.val();
+        let key = snapshot.key;
+        let chatBox = document.getElementById('chatBox');
+
+        let wrapper = document.createElement('div');
+        wrapper.id = "msg-" + key;
+        wrapper.className = (data.sender === currentUser) ? "msg-wrapper outgoing" : "msg-wrapper incoming";
+       
+        let badge = verifiedArtists.includes(data.sender) ? '<span class="v-badge"><svg viewBox="0 0 24 24"><path d="M12 2L3 5l9 19 9-19-9-3z"/></svg></span>' : '';
+        let content = `<div class="msg-caption">${data.caption || ''}</div>`;
+
+        if(data.type === 'voice') {
+            content += `<div class="voice-player"><audio controls src="${data.text}"></audio></div>`;
+        } else if(data.text && (data.text.match(/\.(jpeg|jpg|gif|png)$/) || data.text.includes("postimg.cc"))) {
+            content += `<img src="${data.text}">`;
+        } else if(data.text && (data.text.includes("youtube.com") || data.text.includes("streamable.com"))) {
+            content += `<iframe src="${data.text}" allowfullscreen></iframe>`;
+        } else {
+            content += data.text;
+        }
+
+        wrapper.innerHTML = `
+            <img class="msg-pfp" src="${data.pfp}" onclick="openDM('${data.sender}')">
+            <div class="msg ${data.sender === currentUser ? 'outgoing' : 'incoming'}" ondblclick="deleteMessage('${key}', '${data.sender}', '${currentTab}')">
+                <div class="msg-header">${data.sender}${badge}</div>
+                ${content}
+            </div>
+        `;
+       
+        chatBox.appendChild(wrapper);
+        chatBox.scrollTop = chatBox.scrollHeight;
+    }
+
+    function deleteMessage(key, sender, tab) {
         if(sender === currentUser) {
             if(confirm("Futa ujumbe huu?")) {
-                db.ref("group_messages/" + key).remove();
+                let path = tab === 'group' ? "group_messages/" : "dms/" + getDMid(currentUser, dmTarget) + "/";
+                db.ref(path + key).remove();
                 document.getElementById("msg-" + key).remove();
             }
         }
@@ -236,18 +330,31 @@
         let text = input.value.trim();
         if (text === "") return;
        
-        db.ref("group_messages").push().set({
-            sender: currentUser, pfp: currentPfp, type: 'text', text: text, timestamp: Date.now()
+        let path = currentTab === 'group' ? "group_messages" : "dms/" + getDMid(currentUser, dmTarget);
+        db.ref(path).push().set({
+            sender: currentUser, pfp: currentPfp, type: 'text', text: text, caption: "", timestamp: Date.now()
         });
         input.value = "";
     }
 
-    function sendMedia() {
-        let link = prompt(`POSTI PICHA AU VIDEO:\n\n1. Picha: Weka link ya postimg.cc\n2. Video: Weka link ya youtube.com au streamable.com\nBandika link hapa:`);
+    // MEDIA NA CAPTION KAMA WHATSAPP
+    function openMediaModal() {
+        document.getElementById('mediaModal').style.display = 'flex';
+    }
+    function closeMediaModal() {
+        document.getElementById('mediaModal').style.display = 'none';
+    }
+    function sendMediaWithCaption() {
+        let link = document.getElementById('mediaLink').value.trim();
+        let caption = document.getElementById('mediaCaption').value.trim();
         if(!link) return;
-        db.ref("group_messages").push().set({
-            sender: currentUser, pfp: currentPfp, type: 'media', text: link, timestamp: Date.now()
+        let path = currentTab === 'group' ? "group_messages" : "dms/" + getDMid(currentUser, dmTarget);
+        db.ref(path).push().set({
+            sender: currentUser, pfp: currentPfp, type: 'media', text: link, caption: caption, timestamp: Date.now()
         });
+        closeMediaModal();
+        document.getElementById('mediaLink').value = "";
+        document.getElementById('mediaCaption').value = "";
     }
 
     function setupVoiceRecorder() {
@@ -275,8 +382,9 @@
             reader.readAsDataURL(audioBlob); 
             reader.onloadend = () => {
                 const base64Audio = reader.result;
-                db.ref("group_messages").push().set({
-                    sender: currentUser, pfp: currentPfp, type: 'voice', text: base64Audio, timestamp: Date.now()
+                let path = currentTab === 'group' ? "group_messages" : "dms/" + getDMid(currentUser, dmTarget);
+                db.ref(path).push().set({
+                    sender: currentUser, pfp: currentPfp, type: 'voice', text: base64Audio, caption: "", timestamp: Date.now()
                 });
             }
         };
