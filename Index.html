@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="sw">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CHILX LIVE</title>
+<style>
+    @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&display=swap');
+    body { background: #000; color: #e0e0e0; font-family: 'Orbitron', sans-serif; margin:0; }
+  .header { background: #100000; padding: 15px; border-bottom: 3px solid #ff0000; text-align: center; cursor: pointer; position: sticky; top:0; z-index: 100; }
+  .header h1 { font-size: 28px; font-weight: 900; margin: 0; text-shadow: 0 0 10px red; color:#ff0000; }
+  .container { max-width: 600px; margin: 0 auto; padding: 10px; }
+  .post-form { background: #150000; border: 2px solid #ff0000; padding: 15px; border-radius: 10px; margin-bottom: 25px; }
+  .post-form input,.post-form textarea { width: 96%; background: #000; border: 1px solid #333; color: #fff; padding: 10px; font-family: 'Orbitron'; margin-bottom: 10px; border-radius: 5px; }
+  .post-form button { background: #ff0000; color: #000; border: none; padding: 12px 25px; font-weight: 900; cursor: pointer; font-family: 'Orbitron'; }
+  .post { background: #111; border: 1px solid #222; border-radius: 10px; padding: 15px; margin-bottom: 20px; }
+  .post-user { font-weight: 900; color: #ff3333; font-size: 15px; }
+  .v-badge { color: #0095f6; margin-left: 4px; }
+  .post-title { font-size: 16px; margin: 8px 0; color:#fff; }
+  .post-link { color: #00ffcc; text-decoration: none; word-break: break-all; }
+  .post-desc { margin: 8px 0; font-size: 14px; }
+  .post-actions { display: flex; gap: 20px; margin-top: 10px; font-size: 14px; }
+  .post-actions span { cursor: pointer; }
+  .liked { color: #ff0000; }
+  .comments { margin-top: 10px; padding-top: 10px; border-top: 1px solid #222; }
+  .comment { font-size: 13px; margin: 5px 0; }
+  .comment strong { color: #00ffcc; }
+  .comment-input { display: flex; gap: 5px; margin-top: 5px; }
+  .comment-input input { flex:1; background:#000; border:1px solid #333; color:#fff; padding:5px; }
+
+  .admin-panel { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.98); z-index: 9999; padding: 20px; overflow-y: auto; }
+  .admin-active { display: block; }
+  .admin-header { color: #ff0000; font-size: 1.5rem; margin-bottom: 20px; }
+  .admin-btn { background: #222; color: #fff; border: 1px solid #444; padding: 8px; margin: 4px; cursor: pointer; border-radius: 4px; }
+  .admin-btn.danger { background: #ff0000; }
+  .admin-btn.verify { background: #0095f6; }
+  .user-row { display: flex; justify-content: space-between; background: #111; padding: 10px; margin-bottom: 8px; border-radius: 4px; }
+</style>
+</head>
+<body>
+
+<div class="header" onclick="handleLogoClick()">
+    <h1>CHILX LIVE</h1>
+</div>
+
+<div class="container" id="mainApp">
+
+    <div style="text-align: center; margin: 10px 0;">
+        <input type="text" id="myUsername" placeholder="Ingiza Jina Lako la Siri..."
+        style="background:#000; border:2px solid #ff0000; color:#fff; padding:10px; text-align:center; border-radius:5px; width: 90%; font-family: 'Orbitron';">
+    </div>
+
+    <div class="post-form">
+        <h3>POST LINK MPYA</h3>
+        <input id="postTitle" placeholder="Title ya Post">
+        <input id="postLink" placeholder="Weka Link hapa: https://">
+        <textarea id="postDesc" placeholder="Maelezo mafupi..."></textarea>
+        <button onclick="sendPost()">POST</button>
+    </div>
+    <div id="feed"><div style="text-align:center; color:#555;">Inapakia CHILX LIVE...</div></div>
+</div>
+
+<div class="admin-panel" id="adminPanel">
+    <div class="admin-header">DIRECTOR CONTROL CENTER</div>
+    <div style="background:#111; padding:12px; border-radius:4px; margin-bottom:20px;">
+        <p>Badilisha Password ya Siri:</p>
+        <input id="newPassInput" type="text" placeholder="Password Mpya...">
+        <button class="admin-btn" onclick="changeSecretPassword()">Hifadhi</button>
+    </div>
+    <h3>WACHEZAJI:</h3>
+    <div id="adminUserList"></div>
+    <button class="admin-btn danger" style="width:100%; margin-top:20px; padding:12px;" onclick="closeAdmin()">Funga</button>
+</div>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import { getDatabase, ref, push, onValue, get, update, remove, set } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyAGne9pWm-czJUJgtvsvNGnPXMpXi4vxDY",
+  authDomain: "chilx-live.firebaseapp.com",
+  databaseURL: "https://chilx-live-4432d-default-rtdb.firebaseio.com",
+  projectId: "chilx-live",
+  storageBucket: "chilx-live.firebasestorage.app",
+  messagingSenderId: "298470644583",
+  appId: "1:298470644583:web:bb7606e8e68518476bedc2"
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getDatabase(app);
+const postsRef = ref(db, "posts");
+const usersRef = ref(db, "users");
+const adminRef = ref(db, "admin");
+
+get(adminRef).then(snap => { if(!snap.exists()) set(adminRef, {password: "CHILX Live"}) });
+
+let logoClicks = 0;
+let currentUser = "";
+
+window.sendPost = function() {
+    currentUser = document.getElementById('myUsername').value || "Anonymous";
+    const title = document.getElementById('postTitle').value;
+    const link = document.getElementById('postLink').value;
+    const desc = document.getElementById('postDesc').value;
+    if(!title ||!link) return alert("Jaza Title na Link");
+    set(ref(db, 'users/' + currentUser), {verified: false});
+    push(postsRef, {user: currentUser, title: title, link: link, desc: desc, likes: 0, likedBy: {}, comments: {}, time: Date.now()});
+    document.getElementById('postTitle').value = ""; document.getElementById('postLink').value = ""; document.getElementById('postDesc').value = "";
+}
+
+onValue(postsRef, (snap) => {
+    const feed = document.getElementById('feed'); feed.innerHTML = ""; const posts = [];
+    snap.forEach(child => posts.push({id: child.key,...child.val()})); posts.sort((a,b) => b.time - a.time);
+    posts.forEach(post => {
+        get(ref(db, 'users/' + post.user)).then(uSnap => {
+            const verified = uSnap.exists() && uSnap.val().verified? '<span class="v-badge">☑</span>' : '';
+            const liked = post.likedBy && post.likedBy[currentUser]? 'liked' : '';
+            let commentsHTML = ""; if(post.comments) Object.values(post.comments).forEach(c => commentsHTML += `<div class="comment"><strong>${c.user}</strong>: ${c.text}</div>`);
+            feed.innerHTML += `<div class="post"><div class="post-user">${post.user}${verified}</div><div class="post-title">${post.title}</div><a href="${post.link}" target="_blank" class="post-link">${post.link}</a><div class="post-desc">${post.desc}</div><div class="post-actions"><span class="${liked}" onclick="likePost('${post.id}')">❤️ ${post.likes || 0}</span><span>💬 Comment</span></div><div class="comments">${commentsHTML}<div class="comment-input"><input id="comment-${post.id}" placeholder="Andika comment..."><button onclick="sendComment('${post.id}')">Tuma</button></div></div></div>`;
+        })
+    })
+});
+
+window.likePost = function(postId) {
+    currentUser = document.getElementById('myUsername').value || "Anonymous";
+    const postRef = ref(db, 'posts/' + postId);
+    get(postRef).then(snap => {const post = snap.val(); if(!post.likedBy) post.likedBy = {}; if(post.likedBy[currentUser]) {post.likes--; delete post.likedBy[currentUser];} else {post.likes = (post.likes || 0) + 1; post.likedBy[currentUser] = true;} update(postRef, {likes: post.likes, likedBy: post.likedBy});})
+}
+
+window.sendComment = function(postId) {
+    currentUser = document.getElementById('myUsername').value || "Anonymous";
+    const input = document.getElementById('comment-' + postId); const text = input.value.trim(); if(!text) return;
+    push(ref(db, 'posts/' + postId + '/comments'), {user: currentUser, text: text}); input.value = "";
+}
+
+window.handleLogoClick = function() {
+    logoClicks++; setTimeout(() => { logoClicks = 0; }, 3000);
+    if (logoClicks >= 5) {logoClicks = 0; let pass = prompt("INGIZA PASSWORD YA SIRI:");
+    get(adminRef).then(snap => {if (snap.val().password === pass) {document.getElementById('adminPanel').classList.add('admin-active'); loadUsers();} else alert("PASSWORD SIO SAHIHI!");})}
+}
+
+window.closeAdmin = function() { document.getElementById('adminPanel').classList.remove('admin-active'); }
+window.changeSecretPassword = function() {const newP = document.getElementById('newPassInput').value; if(newP.length < 4) return alert("Password iwe angalau herufi 4"); update(adminRef, {password: newP}); alert("Password imebadilika!");}
+function loadUsers() {get(usersRef).then(snap => {let html = ""; snap.forEach(child => {const username = child.key; const data = child.val(); let statusText = data.verified? "Verified ☑" : "Unverified"; html += `<div class="user-row"><div><strong>${username}</strong><br><span style="color:#666;">${statusText}</span></div><div><button class="admin-btn verify" onclick="verifyUser('${username}')">Verify</button><button class="admin-btn danger" onclick="deleteUser('${username}')">Futa</button></div></div>`;}) document.getElementById('adminUserList').innerHTML = html || "Hakuna watumiaji";})}
+window.verifyUser = function(username) { update(ref(db, 'users/' + username), {verified: true}); loadUsers(); }
+window.deleteUser = function(username) { if(confirm("Futa account?")) remove(ref(db, 'users/' + username)); loadUsers(); }
+</script>
+</body>
+</html>
