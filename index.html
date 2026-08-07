@@ -3,70 +3,78 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>CHILX Live</title>
+<title>CHILX LIVE</title>
 <link rel="icon" href="https://i.postimg.cc/vBJj3bNH/chilx-live.jpg">
 <style>
-    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap');
-    :root { --bg:#000; --card:#0a0a0a; --border:#1a1a1a; --red:#D90429; --gold:#FFD700; --text:#E0E0E0; }
+    @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&display=swap');
+    :root {
+        --bg:#010101; --card:#0A0A12; --border:#1E1E2E;
+        --blue-neon:#00F0FF; --pink-neon:#FF00F5; --text:#E0E0FF;
+    }
     * { box-sizing: border-box; }
-    body { background: var(--bg); color: var(--text); font-family: 'Poppins', sans-serif; margin:0; padding-bottom: 70px; }
+    body { background: var(--bg); color: var(--text); font-family: 'Orbitron', sans-serif; margin:0; padding-bottom: 70px; }
 
-   .header { background: #050505; padding: 12px 16px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; position: sticky; top:0; z-index: 100; }
-   .logo { display: flex; align-items: center; gap: 10px; cursor: pointer; }
-   .logo img { width: 35px; height: 35px; border-radius: 50%; border: 2px solid var(--red); }
-   .logo h1 { font-size: 20px; font-weight: 700; margin: 0; color: var(--gold); }
+ .header { background: #05050A; padding: 12px 16px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; position: sticky; top:0; z-index: 100; box-shadow: 0 0 15px rgba(0,240,255,0.1); }
+ .logo { display: flex; align-items: center; gap: 10px; cursor: pointer; }
+ .logo img { width: 38px; height: 38px; border-radius: 50%; object-fit: cover; border: 2px solid var(--blue-neon); box-shadow: 0 0 10px var(--blue-neon); }
+ .logo h1 { font-size: 22px; font-weight: 900; margin: 0; color: var(--blue-neon); text-shadow: 0 0 8px var(--blue-neon); }
+ .logo h1 span { color: var(--pink-neon); text-shadow: 0 0 8px var(--pink-neon); }
 
-   .container { max-width: 600px; margin: 0 auto; }
-   .login-screen { text-align: center; padding: 40px 20px; }
-   .login-screen img { width: 100px; height: 100px; border-radius: 20px; margin-bottom: 20px; }
-   .login-screen input { width: 90%; background: var(--card); border: 1px solid var(--border); color: #fff; padding: 12px; margin-bottom: 10px; border-radius: 8px; }
-   .login-screen button { background: var(--red); color: #fff; border: none; padding: 12px; width: 90%; border-radius: 8px; font-weight: 700; cursor: pointer; }
+ .container { max-width: 600px; margin: 0 auto; }
+ .login-screen { text-align: center; padding: 40px 20px; }
+ .login-screen img { width: 120px; height: 120px; border-radius: 25px; margin-bottom: 20px; border: 3px solid var(--pink-neon); object-fit: cover; box-shadow: 0 0 20px var(--pink-neon); }
+ .login-screen h2 { color: var(--blue-neon); text-shadow: 0 0 10px var(--blue-neon); }
+ .login-screen input { width: 90%; background: var(--card); border: 1px solid var(--blue-neon); color: #fff; padding: 14px; margin-bottom: 15px; border-radius: 8px; font-size: 16px; box-shadow: 0 0 5px var(--blue-neon); }
+ .login-screen button { background: linear-gradient(90deg, var(--blue-neon), var(--pink-neon)); color: #000; border: none; padding: 14px; width: 90%; border-radius: 8px; font-weight: 900; cursor: pointer; font-size: 16px; }
 
-   .post { background: var(--card); border: 1px solid var(--border); border-radius: 12px; margin: 15px 0; }
-   .post-header { display: flex; align-items: center; padding: 12px; gap: 10px; }
-   .post-header img { width: 32px; height: 32px; border-radius: 50%; background: #222; }
-   .post-user { font-weight: 600; font-size: 14px; }
-   .v-badge { color: #0095f6; }
-   .post-body img,.post-body iframe { width: 100%; border-radius: 0; }
-   .post-actions { padding: 10px 12px; display: flex; gap: 15px; font-size: 20px; }
-   .post-actions span { cursor: pointer; }
-   .liked { color: var(--red); }
-   .post-caption { padding: 0 12px 12px; font-size: 14px; }
-   .post-caption strong { color: var(--gold); }
+ .post { background: var(--card); border: 1px solid var(--border); border-radius: 12px; margin: 15px 0; box-shadow: 0 0 10px rgba(0,240,255,0.05); }
+ .post-header { display: flex; align-items: center; padding: 12px; gap: 10px; }
+ .post-header img { width: 35px; height: 35px; border-radius: 50%; object-fit: cover; border: 1px solid var(--pink-neon); }
+ .post-user { font-weight: 700; font-size: 14px; color: var(--blue-neon); display: flex; align-items: center; gap: 4px; }
+ .v-badge { width: 16px; height: 16px; background: var(--blue-neon); border-radius: 50%; display: inline-flex; justify-content: center; align-items: center; }
+ .v-badge svg { width: 10px; height: 10px; fill: #000; }
+ .post-body img,.post-body iframe { width: 100%; border-radius: 0; aspect-ratio: 16/9; border-top:1px solid var(--border); border-bottom:1px solid var(--border); }
+ .post-actions { padding: 10px 12px; display: flex; gap: 15px; font-size: 22px; }
+ .post-actions span { cursor: pointer; }
+ .liked { color: var(--pink-neon); text-shadow: 0 0 5px var(--pink-neon); }
+ .post-caption { padding: 0 12px 12px; font-size: 14px; }
+ .post-caption strong { color: var(--pink-neon); }
 
-   .bottom-nav { position: fixed; bottom: 0; left: 0; width: 100%; background: #050505; border-top: 1px solid var(--border); display: flex; justify-content: space-around; padding: 10px 0; z-index: 100; }
-   .bottom-nav button { background: none; border: none; color: var(--text); font-size: 24px; cursor: pointer; }
-   .post-btn { background: var(--red)!important; color: #000!important; width: 45px; height: 45px; border-radius: 12px; font-size: 28px!important; margin-top: -5px; }
+ .bottom-nav { position: fixed; bottom: 0; left: 0; width: 100%; background: #05050A; border-top: 1px solid var(--border); display: flex; justify-content: space-around; padding: 10px 0; z-index: 100; box-shadow: 0 0 15px rgba(255,0,245,0.1); }
+ .bottom-nav button { background: none; border: none; color: var(--text); font-size: 24px; cursor: pointer; }
+ .post-btn { background: linear-gradient(135deg, var(--blue-neon), var(--pink-neon))!important; color: #000!important; width: 50px; height: 50px; border-radius: 14px; font-size: 30px!important; margin-top: -5px; font-weight: 900; box-shadow: 0 0 15px var(--pink-neon); }
 
-   .modal { display: none; position: fixed; top:0; left:0; width:100%; height:100%; background: rgba(0,0,0,0.9); z-index: 999; justify-content: center; align-items: center; }
-   .modal-content { background: var(--card); padding: 20px; border-radius: 12px; width: 90%; max-width: 500px; }
-   .modal-content h3 { color: var(--gold); margin-top: 0; }
-   .modal-content input,.modal-content textarea,.modal-content select { width: 100%; background: #000; border: 1px solid var(--border); color: #fff; padding: 10px; margin-bottom: 10px; border-radius: 8px; }
-   .modal-content button { background: var(--red); color: #fff; border: none; padding: 12px; width: 100%; border-radius: 8px; font-weight: 700; cursor: pointer; }
+ .modal { display: none; position: fixed; top:0; left:0; width:100%; height:100%; background: rgba(1,1,1,0.95); z-index: 999; justify-content: center; align-items: center; }
+ .modal-content { background: var(--card); padding: 20px; border-radius: 12px; width: 90%; max-width: 500px; border: 1px solid var(--blue-neon); box-shadow: 0 0 20px var(--blue-neon); }
+ .modal-content h3 { color: var(--pink-neon); margin-top: 0; text-align: center; text-shadow: 0 0 8px var(--pink-neon); }
+ .modal-content input,.modal-content textarea,.modal-content select { width: 100%; background: #000; border: 1px solid var(--border); color: #fff; padding: 12px; margin-bottom: 12px; border-radius: 8px; font-family: 'Orbitron'; }
+ .modal-content button { background: linear-gradient(90deg, var(--blue-neon), var(--pink-neon)); color: #000; border: none; padding: 12px; width: 100%; border-radius: 8px; font-weight: 900; cursor: pointer; }
 
-   .admin-panel { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #000; z-index: 9999; padding: 20px; overflow-y: auto; }
-   .admin-active { display: block; }
-   .admin-header { color: var(--red); font-size: 1.5rem; margin-bottom: 20px; text-align: center; }
-   .admin-btn { background: #222; color: #fff; border: 1px solid #444; padding: 8px 12px; margin: 4px; cursor: pointer; border-radius: 4px; }
-   .admin-btn.danger { background: var(--red); }
-   .admin-btn.verify { background: #0095f6; }
-   .user-row { display: flex; justify-content: space-between; align-items: center; background: #111; padding: 10px; margin-bottom: 8px; border-radius: 4px; }
+ .admin-panel { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #010101; z-index: 9999; padding: 20px; overflow-y: auto; }
+ .admin-active { display: block; }
+ .admin-header { color: var(--pink-neon); font-size: 1.5rem; margin-bottom: 20px; text-align: center; font-weight: 900; text-shadow: 0 0 10px var(--pink-neon); }
+ .admin-btn { background: #222; color: #fff; border: 1px solid var(--blue-neon); padding: 8px 12px; margin: 4px; cursor: pointer; border-radius: 4px; font-family: 'Orbitron'; }
+ .admin-btn.danger { background: var(--pink-neon); color:#000; font-weight: 700; }
+ .admin-btn.verify { background: var(--blue-neon); color:#000; font-weight: 700; }
+ .user-row { display: flex; justify-content: space-between; align-items: center; background: #0A0A12; padding: 10px; margin-bottom: 8px; border-radius: 4px; border:1px solid var(--border); }
 </style>
 </head>
 <body>
 
 <div id="loginScreen" class="login-screen">
     <img src="https://i.postimg.cc/vBJj3bNH/chilx-live.jpg" alt="Logo">
-    <h2>Karibu CHILX NETWORK</h2>
+    <h2>CHILX <span style="color:var(--pink-neon);">LIVE</span></h2>
+    <p style="color:#888;">Mtandao rasmi wa Wachezaji</p>
     <input type="text" id="loginUsername" placeholder="Weka Jina la Mtumiaji">
-    <button onclick="login()">INGIA</button>
+    <input type="text" id="loginPfp" placeholder="Weka Link ya Profile Pic: postimg.cc/...">
+    <button onclick="login()">INGIA CHILX LIVE</button>
 </div>
 
 <div id="mainApp" style="display:none;">
     <div class="header">
         <div class="logo" onclick="handleLogoClick()">
-            <img src="https://i.postimg.cc/vBJj3bNH/chilx-live.jpg">
-            <h1>CHILX NETWORK</h1>
+            <img id="myHeaderPfp" src="https://i.postimg.cc/vBJj3bNH/chilx-live.jpg">
+            <h1>CHILX <span>LIVE</span></h1>
         </div>
     </div>
 
@@ -87,21 +95,21 @@
             <option value="reel">REEL/VIDEO LINK</option>
         </select>
         <input id="postTitle" placeholder="Title ya Post">
-        <input id="postLink" placeholder="Weka Link ya YouTube, Picha, etc">
+        <input id="postLink" placeholder="Weka Link ya Picha/Video: postimg.cc au youtube">
         <textarea id="postDesc" placeholder="Andika maelezo..." rows="3"></textarea>
-        <button onclick="sendPost()">POST</button>
-        <button style="background:#333; margin-top:10px;" onclick="closePostModal()">Funga</button>
+        <button onclick="sendPost()">POST SASA</button>
+        <button style="background:#333; margin-top:10px; color:#fff;" onclick="closePostModal()">Funga</button>
     </div>
 </div>
 
 <div class="admin-panel" id="adminPanel">
-    <div class="admin-header">DIRECTOR CONTROL CENTER</div>
-    <div style="background:#111; padding:12px; border-radius:4px; margin-bottom:20px;">
+    <div class="admin-header">DIRECTOR CONTROL CENTER - CHILX LIVE</div>
+    <div style="background:#0A0A12; padding:12px; border-radius:4px; margin-bottom:20px; border:1px solid var(--border);">
         <p>Badilisha Password ya Siri:</p>
-        <input id="newPassInput" type="text" placeholder="Password Mpya..." style="background:#000; border:1px solid #333; color:#fff; padding:8px; width: 70%;">
+        <input id="newPassInput" type="text" placeholder="Password Mpya..." style="background:#000; border:1px solid var(--border); color:#fff; padding:8px; width: 70%;">
         <button class="admin-btn" onclick="changeSecretPassword()">Hifadhi</button>
     </div>
-    <h3>WACHEZAJI:</h3>
+    <h3>WACHEZAJI WA CHILX LIVE:</h3>
     <div id="adminUserList"></div>
     <button class="admin-btn danger" style="width:100%; margin-top:20px; padding:12px;" onclick="closeAdmin()">Funga Panel</button>
 </div>
@@ -127,14 +135,17 @@ const adminRef = ref(db, "admin");
 
 let currentUser = "";
 let logoClicks = 0;
+let myPfp = "https://i.postimg.cc/vBJj3bNH/chilx-live.jpg";
 
 get(adminRef).then(snap => { if(!snap.exists()) set(adminRef, {password: "CHILX Director"}) });
 
 // LOGIN
 window.login = function() {
     currentUser = document.getElementById('loginUsername').value.trim();
-    if(!currentUser) return alert("Tafadhali weka jina");
-    set(ref(db, 'users/' + currentUser), {verified: false});
+    myPfp = document.getElementById('loginPfp').value.trim() || myPfp;
+    if(!currentUser) return alert("Tafadhali weka jina la kucheza");
+    set(ref(db, 'users/' + currentUser), {pfp: myPfp, verified: false});
+    document.getElementById('myHeaderPfp').src = myPfp;
     document.getElementById('loginScreen').style.display = 'none';
     document.getElementById('mainApp').style.display = 'block';
 }
@@ -149,9 +160,10 @@ window.sendPost = function() {
     const title = document.getElementById('postTitle').value.trim();
     const link = document.getElementById('postLink').value.trim();
     const desc = document.getElementById('postDesc').value.trim();
-    if(!title ||!link) return alert("Jaza Title na Link");
-    push(postsRef, {user: currentUser, type:type, title, link, desc, likes: 0, likedBy: {}, comments: {}, time: Date.now()});
+    if(!title ||!link) return alert("Jaza Title na Link lazima");
+    push(postsRef, {user: currentUser, pfp: myPfp, type:type, title, link, desc, likes: 0, likedBy: {}, comments: {}, time: Date.now()});
     closePostModal();
+    alert("Post imetumwa CHILX LIVE!");
 }
 
 // ONYESHA FEED
@@ -161,14 +173,17 @@ onValue(postsRef, (snap) => {
     const posts = [];
     snap.forEach(child => posts.push({id: child.key,...child.val()}));
     posts.sort((a,b) => b.time - a.time);
+    if(posts.length === 0) feed.innerHTML = "<div style='text-align:center; color:#555; padding: 40px;'>Hakuna taarifa bado. Kuwa wa kwanza kupost!</div>";
     posts.forEach(post => {
         get(ref(db, 'users/' + post.user)).then(uSnap => {
-            const verified = uSnap.exists() && uSnap.val().verified? '<span class="v-badge">☑</span>' : '';
+            const userData = uSnap.val() || {};
+            const pfp = post.pfp || userData.pfp || "https://i.postimg.cc/vBJj3bNH/chilx-live.jpg";
+            const verified = userData.verified? '<span class="v-badge"><svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg></span>' : '';
             const liked = post.likedBy && post.likedBy[currentUser]? 'liked' : '';
             const media = post.type === 'reel'? `<iframe src="${post.link}" frameborder="0" allowfullscreen></iframe>` : `<img src="${post.link}">`;
             feed.innerHTML += `
             <div class="post">
-                <div class="post-header"><img src="https://i.postimg.cc/vBJj3bNH/chilx-live.jpg"><div><div class="post-user">${post.user}${verified}</div></div></div>
+                <div class="post-header"><img src="${pfp}"><div><div class="post-user">${post.user}${verified}</div></div></div>
                 <div class="post-body">${media}</div>
                 <div class="post-actions"><span class="${liked}" onclick="likePost('${post.id}')">❤️ ${post.likes || 0}</span></div>
                 <div class="post-caption"><strong>${post.user}</strong> ${post.title}: ${post.desc}</div>
@@ -203,8 +218,8 @@ window.handleLogoClick = function() {
     }
 }
 window.closeAdmin = () => document.getElementById('adminPanel').classList.remove('admin-active');
-window.changeSecretPassword = () => { const newP = document.getElementById('newPassInput').value; if(newP.length < 4) return alert("Password fupi"); update(adminRef, {password: newP}); alert("Imehifadhiwa!"); }
-function loadUsers() { get(usersRef).then(snap => { let html = ""; snap.forEach(child => { const u = child.key; const d = child.val(); html += `<div class="user-row"><div><strong>${u}</strong><br><span style="color:#666;">${d.verified? "Verified ☑" : "Unverified"}</span></div><div><button class="admin-btn verify" onclick="verifyUser('${u}')">Verify</button><button class="admin-btn danger" onclick="deleteUser('${u}')">Futa</button></div></div>`; }); document.getElementById('adminUserList').innerHTML = html; }) }
+window.changeSecretPassword = () => { const newP = document.getElementById('newPassInput').value; if(newP.length < 4) return alert("Password fupi"); update(adminRef, {password: newP}); alert("Password imebadilika!"); }
+function loadUsers() { get(usersRef).then(snap => { let html = ""; snap.forEach(child => { const u = child.key; const d = child.val(); html += `<div class="user-row"><div style="display:flex; align-items:center; gap:10px;"><img src="${d.pfp}" style="width:35px; height:35px; border-radius:50%; object-fit:cover;"><div><strong style="color:var(--blue-neon)">${u}</strong><br><span style="color:#666;">${d.verified? "Verified ☑" : "Unverified"}</span></div></div><div><button class="admin-btn verify" onclick="verifyUser('${u}')">Verify</button><button class="admin-btn danger" onclick="deleteUser('${u}')">Futa</button></div></div>`; }); document.getElementById('adminUserList').innerHTML = html; }) }
 window.verifyUser = (u) => { update(ref(db, 'users/' + u), {verified: true}); loadUsers(); }
 window.deleteUser = (u) => { if(confirm("Futa "+u+"?")) remove(ref(db, 'users/' + u)); loadUsers(); }
 </script>
