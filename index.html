@@ -25,19 +25,31 @@
     .login-screen { text-align: center; padding: 40px 20px; display: flex; flex-direction: column; justify-content: center; align-items: center; width: 100%; height: 100vh; background: var(--bg); position: absolute; top: 0; left: 0; z-index: 1000; }
     .login-screen img { width: 120px; height: 120px; border-radius: 25px; margin-bottom: 20px; border: 3px solid var(--pink-neon); object-fit: cover; box-shadow: 0 0 20px var(--pink-neon); }
     .login-screen h2 { color: var(--blue-neon); text-shadow: 0 0 10px var(--blue-neon); margin-bottom: 5px; }
-    .login-screen select { width: 90%; background: var(--card); border: 1px solid var(--blue-neon); color: #fff; padding: 14px; margin-bottom: 15px; border-radius: 8px; font-size: 16px; box-shadow: 0 0 5px var(--blue-neon); font-family: 'Orbitron'; text-align: center; text-align-last: center; outline: none; }
+    .login-screen select, .login-screen input { width: 90%; background: var(--card); border: 1px solid var(--blue-neon); color: #fff; padding: 14px; margin-bottom: 15px; border-radius: 8px; font-size: 16px; box-shadow: 0 0 5px var(--blue-neon); font-family: 'Orbitron'; text-align: center; text-align-last: center; outline: none; }
     .login-screen button { background: linear-gradient(90deg, var(--blue-neon), var(--pink-neon)); color: #000; border: none; padding: 14px; width: 90%; border-radius: 8px; font-weight: 900; cursor: pointer; font-size: 16px; font-family: 'Orbitron'; }
 
     .media-indicators { background: #050510; border-bottom: 1px solid var(--border); padding: 8px 15px; display: flex; justify-content: space-around; font-size: 11px; }
     .indicator-btn { background: none; border: 1px dashed var(--pink-neon); padding: 4px 10px; border-radius: 4px; color: var(--pink-neon); font-family: 'Orbitron'; cursor: pointer; }
     .indicator-btn.active { background: var(--pink-neon); color: #000; font-weight: 900; box-shadow: 0 0 10px var(--pink-neon); }
 
-    .chat-area { flex: 1; overflow-y: auto; padding: 15px; display: flex; flex-direction: column; gap: 10px; background: rgba(10,10,18,0.4); }
-    .msg { font-size: 14px; padding: 10px 14px; border-radius: 12px; max-width: 80%; line-height: 1.4; border: 1px solid var(--border); box-shadow: 0 0 8px rgba(0,0,0,0.3); }
-    .msg.incoming { background: var(--card); align-self: flex-start; border-left: 3px solid var(--pink-neon); }
-    .msg.outgoing { background: #111424; align-self: flex-end; border-right: 3px solid var(--blue-neon); color: #fff; }
-    .msg strong { color: var(--blue-neon); display: block; font-size: 11px; margin-bottom: 4px; letter-spacing: 1px; }
-    .v-badge { color: var(--blue-neon); margin-left: 4px; font-weight: 900; }
+    .chat-area { flex: 1; overflow-y: auto; padding: 15px; display: flex; flex-direction: column; gap: 12px; background: rgba(10,10,18,0.4); }
+    
+    /* MSG MPYA NA PROFILE PIC */
+    .msg-wrapper { display: flex; gap: 10px; max-width: 85%; }
+    .msg-wrapper.outgoing { align-self: flex-end; flex-direction: row-reverse; }
+    .msg-wrapper.incoming { align-self: flex-start; }
+    .msg-pfp { width: 35px; height: 35px; border-radius: 50%; object-fit: cover; border: 2px solid var(--pink-neon); flex-shrink: 0; }
+    .msg { font-size: 14px; padding: 10px 14px; border-radius: 12px; line-height: 1.4; border: 1px solid var(--border); box-shadow: 0 0 8px rgba(0,0,0,0.3); }
+    .msg.incoming { background: var(--card); border-left: 3px solid var(--pink-neon); }
+    .msg.outgoing { background: #111424; border-right: 3px solid var(--blue-neon); color: #fff; }
+    .msg-header { color: var(--blue-neon); display: flex; align-items: center; gap: 4px; font-size: 11px; margin-bottom: 4px; letter-spacing: 1px; font-weight: 700; }
+    
+    /* VERIFIED BADGE YA IG */
+    .v-badge { width: 14px; height: 14px; background: var(--blue-neon); border-radius: 50%; display: inline-flex; justify-content: center; align-items: center; }
+    .v-badge svg { width: 9px; height: 9px; fill: #000; }
+
+    .msg img { max-width: 100%; border-radius: 8px; margin-top: 5px; }
+    .msg iframe { width: 100%; aspect-ratio: 16/9; border-radius: 8px; margin-top: 5px; border: none; }
 
     .input-area { padding: 15px; background: #05050A; border-top: 1px solid var(--border); display: flex; gap: 10px; align-items: center; }
     .chat-input { flex: 1; background: #000; border: 1px solid var(--border); color: #fff; padding: 12px 18px; border-radius: 25px; font-family: 'Orbitron'; font-size: 14px; }
@@ -46,9 +58,13 @@
     .media-btn { background: none; border: none; font-size: 20px; cursor: pointer; color: var(--text); padding: 0 5px; transition: 0.2s; }
     .media-btn:hover { color: var(--blue-neon); text-shadow: 0 0 8px var(--blue-neon); }
     .send-btn { background: linear-gradient(135deg, var(--blue-neon), var(--pink-neon)); color: #000; border: none; border-radius: 50%; width: 45px; height: 45px; cursor: pointer; font-weight: 900; font-size: 18px; display: flex; justify-content: center; align-items: center; box-shadow: 0 0 10px var(--pink-neon); }
+
+    /* CAMERA MODAL */
+    #cameraModal { display: none; position: fixed; top:0; left:0; width:100%; height:100%; background: #000; z-index: 2000; flex-direction: column; justify-content: center; align-items: center; }
+    #cameraVideo { width: 100%; height: 80%; object-fit: cover; }
+    #closeCamera { position: absolute; top: 20px; right: 20px; background: var(--pink-neon); color: #000; border: none; padding: 10px 15px; border-radius: 50%; font-weight: 900; cursor: pointer; }
 </style>
 
-<!-- FIREBASE V8 -->
 <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
 <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
 </head>
@@ -69,6 +85,8 @@
         <option value="IRENE">IRENE</option>
         <option value="ZAISAN">ZAISAN</option>
     </select>
+
+    <input type="text" id="loginPfp" placeholder="Weka Link ya Profile Pic yako: postimg.cc/...">
    
     <button onclick="login()">INGIA KWENYE GROUP</button>
 </div>
@@ -83,19 +101,25 @@
     </div>
 
     <div class="media-indicators">
-        <button class="indicator-btn" id="liveVideoIndicator" onclick="toggleActingIndicator('liveVideoIndicator', 'LIVE VIDEO BROADCAST')">📹 LIVE VIDEO</button>
+        <button class="indicator-btn" id="liveVideoIndicator" onclick="openCamera()">📹 LIVE VIDEO</button>
         <button class="indicator-btn" id="voiceNoteIndicator" onclick="toggleActingIndicator('voiceNoteIndicator', 'RECORDING AUDIO STREAM')">🎙️ VOICE NOTE</button>
     </div>
 
     <div class="chat-area" id="chatBox"></div>
 
     <div class="input-area">
-        <button class="media-btn" onclick="triggerActingClick('LIVE VIDEO ENGINE ACTIVE')">📹</button>
+        <button class="media-btn" onclick="sendMedia('media')">📎</button>
         <button class="media-btn" onclick="triggerActingClick('AUDIO RECORDING LAYER START')">🎙️</button>
        
-        <input type="text" id="msgInput" class="chat-input" placeholder="Andika ujumbe...">
+        <input type="text" id="msgInput" class="chat-input" placeholder="Andika ujumbe au link ya media...">
         <button class="send-btn" onclick="sendMessage()">></button>
     </div>
+</div>
+
+<!-- CAMERA MODAL -->
+<div id="cameraModal">
+    <video id="cameraVideo" autoplay playsinline></video>
+    <button id="closeCamera" onclick="closeCamera()">X</button>
 </div>
 
 <script>
@@ -104,13 +128,22 @@
     const db = firebase.database();
 
     let currentUser = "";
+    let currentPfp = "";
     const verifiedArtists = ["ZORAVALY", "PAUL", "WILLIAMS", "MASON", "SHANIYA", "IRENE", "ZAISAN"];
+    let cameraStream = null;
 
     function login() {
         let name = document.getElementById('loginUsername').value;
+        let pfp = document.getElementById('loginPfp').value.trim();
         if(!name) { alert("Tafadhali chagua Jina lako la usanii!"); return; }
+        if(!pfp) { alert("Tafadhali weka Link ya Profile Pic yako!"); return; }
        
         currentUser = name;
+        currentPfp = pfp;
+        
+        // Hifadhi profile kwenye DB
+        db.ref("users/" + currentUser).set({pfp: currentPfp});
+
         document.getElementById('loginScreen').style.display = 'none';
         document.getElementById('mainApp').style.display = 'flex';
         document.getElementById('userBadge').innerText = currentUser + " ✓";
@@ -123,13 +156,30 @@
             let data = snapshot.val();
             let chatBox = document.getElementById('chatBox');
 
-            let msgDiv = document.createElement('div');
-            msgDiv.className = (data.sender === currentUser) ? "msg outgoing" : "msg incoming";
+            let wrapper = document.createElement('div');
+            wrapper.className = (data.sender === currentUser) ? "msg-wrapper outgoing" : "msg-wrapper incoming";
            
-            let badge = verifiedArtists.includes(data.sender) ? '<span class="v-badge">✓</span>' : '';
-            msgDiv.innerHTML = `<strong>${data.sender}${badge}</strong>${data.text}`;
+            let badge = verifiedArtists.includes(data.sender) ? '<span class="v-badge"><svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg></span>' : '';
+            let content = data.text;
+
+            // KAMA NI LINK YA PICHA
+            if(content.match(/\.(jpeg|jpg|gif|png)$/) || content.includes("postimg.cc")) {
+                content = `<img src="${content}">`;
+            }
+            // KAMA NI LINK YA VIDEO
+            else if(content.includes("youtube.com") || content.includes("streamable.com")) {
+                content = `<iframe src="${content}" allowfullscreen></iframe>`;
+            }
+
+            wrapper.innerHTML = `
+                <img class="msg-pfp" src="${data.pfp || 'https://i.postimg.cc/vBJj3bNH/chilx-live.jpg'}">
+                <div class="msg ${data.sender === currentUser ? 'outgoing' : 'incoming'}">
+                    <div class="msg-header">${data.sender}${badge}</div>
+                    ${content}
+                </div>
+            `;
            
-            chatBox.appendChild(msgDiv);
+            chatBox.appendChild(wrapper);
             chatBox.scrollTop = chatBox.scrollHeight;
         });
     }
@@ -141,10 +191,42 @@
        
         db.ref("group_messages").push().set({
             sender: currentUser,
+            pfp: currentPfp,
             text: text,
             timestamp: Date.now()
         });
         input.value = "";
+    }
+
+    function sendMedia(type) {
+        let link = prompt(`WEKA LINK YA PICHA/VIDEO:\nMfano: https://postimg.cc/... au https://streamable.com/...`);
+        if(!link) return;
+        db.ref("group_messages").push().set({
+            sender: currentUser,
+            pfp: currentPfp,
+            text: link,
+            timestamp: Date.now()
+        });
+    }
+
+    // CAMERA FUNCTION
+    async function openCamera() {
+        document.getElementById('cameraModal').style.display = 'flex';
+        document.getElementById('liveVideoIndicator').classList.add('active');
+        try {
+            cameraStream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: "user" }, audio: true });
+            document.getElementById('cameraVideo').srcObject = cameraStream;
+        } catch(err) {
+            alert("Ruhusu camera na microphone tafadhali");
+            closeCamera();
+        }
+    }
+    function closeCamera() {
+        document.getElementById('cameraModal').style.display = 'none';
+        document.getElementById('liveVideoIndicator').classList.remove('active');
+        if(cameraStream) {
+            cameraStream.getTracks().forEach(track => track.stop());
+        }
     }
 
     function toggleActingIndicator(id, systemMsg) {
