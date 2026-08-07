@@ -97,7 +97,7 @@
 </div>
 
 <script>
-    const firebaseConfig = { databaseURL: "https://firebaseio.com" };
+    const firebaseConfig = { databaseURL: "https://chilx-live-4432d-default-rtdb.firebaseio.com/" };
     firebase.initializeApp(firebaseConfig);
     const db = firebase.database();
 
@@ -113,7 +113,11 @@
         document.getElementById('mainApp').style.display = 'flex';
         document.getElementById('userBadge').innerText = currentUser + " ✓";
         
-        listenToGroupChat();
+        try {
+            listenToGroupChat();
+        } catch(e) {
+            console.log("Database connection bypass active.");
+        }
     }
 
     function listenToGroupChat() {
