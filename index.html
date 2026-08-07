@@ -42,9 +42,18 @@
 .post-actions.liked svg { fill: var(--pink-neon); stroke: var(--pink-neon); }
 .likes-count { font-weight: 700; font-size: 14px; margin-left: -10px; }
 
-.post-caption { padding: 0 12px 12px; font-size: 14px; }
+.post-caption { padding: 0 12px 8px; font-size: 14px; }
 .post-caption.user { color: var(--pink-neon); font-weight: 700; }
 .post-caption.title { color: var(--blue-neon); font-weight: 700; }
+
+/* COMMENTS SECTION MPYA */
+.comments-section { padding: 0 12px 12px; border-top: 1px solid var(--border); margin-top: 8px; }
+.view-comments { color: #888; font-size: 13px; cursor: pointer; padding: 8px 0; }
+.comment { display: flex; gap: 8px; margin-bottom: 8px; font-size: 13px; }
+.comment strong { color: var(--pink-neon); }
+.comment-input { display: flex; gap: 8px; margin-top: 8px; }
+.comment-input input { flex: 1; background: #000; border: 1px solid var(--border); color: #fff; padding: 8px; border-radius: 20px; font-family: 'Orbitron'; font-size: 13px; }
+.comment-input button { background: var(--blue-neon); color: #000; border: none; padding: 8px 12px; border-radius: 20px; font-weight: 700; cursor: pointer; }
 
 .bottom-nav { position: fixed; bottom: 0; left: 0; width: 100%; background: #05050A; border-top: 1px solid var(--border); display: flex; justify-content: space-around; padding: 10px 0; z-index: 100; box-shadow: 0 0 15px rgba(255,0,245,0.1); }
 .bottom-nav button { background: none; border: none; color: var(--text); font-size: 24px; cursor: pointer; }
@@ -114,9 +123,9 @@
 <div class="admin-panel" id="adminPanel">
     <div class="admin-header">DIRECTOR CONTROL CENTER - CHILX LIVE</div>
     <div style="background:#0A0A12; padding:12px; border-radius:4px; margin-bottom:20px; border:1px solid var(--border);">
-        <p>Badilisha Password ya Siri:</p>
-        <input id="newPassInput" type="text" placeholder="Password Mpya..." style="background:#000; border:1px solid var(--border); color:#fff; padding:8px; width: 70%;">
-        <button class="admin-btn" onclick="changeSecretPassword()">Hifadhi</button>
+        <p>Weka Password ya Siri mara ya kwanza:</p>
+        <input id="newPassInput" type="text" placeholder="Weka Password yako..." style="background:#000; border:1px solid var(--border); color:#fff; padding:8px; width: 70%;">
+        <button class="admin-btn" onclick="changeSecretPassword()">Hifadhi Password</button>
     </div>
     <h3>WACHEZAJI WA CHILX LIVE:</h3>
     <div id="adminUserList"></div>
@@ -144,9 +153,12 @@ const adminRef = ref(db, "admin");
 
 let currentUser = "";
 let logoClicks = 0;
-let isAdmin = false; // HII INATHIBITISHA NI NANI ADMIN
+let isAdmin = false;
 
-get(adminRef).then(snap => { if(!snap.exists()) set(adminRef, {password: "1255"}) });
+// HAKUNA PASSWORD DEFAULT. UTAWEKA MPAKA WEWE
+get(adminRef).then(snap => {
+    if(!snap.exists()) set(adminRef, {password: ""})
+});
 
 // LOGIN
 window.login = function() {
@@ -159,7 +171,7 @@ window.login = function() {
     document.getElementById('mainApp').style.display = 'block';
 }
 
-// VALIDATION FUNCTIONS
+// VALIDATION
 function isValidUrl(string) {
     try { new URL(string); return true; }
     catch (_) { return false; }
@@ -176,7 +188,7 @@ window.closePostModal = () => {
     document.getElementById('linkError').innerText = "";
 }
 
-// TUMA POST - NA VALIDATION KALI
+// TUMA POST
 window.sendPost = function() {
     const type = document.getElementById('postType').value;
     const title = document.getElementById('postTitle').value.trim();
@@ -190,7 +202,7 @@ window.sendPost = function() {
     if(!title) { document.getElementById('titleError').innerText = "Jina ni lazima"; hasError = true; }
     if(!isValidTitle(title)) { document.getElementById('titleError').innerText = "Hapa paandikwe Jina tu, sio Link"; hasError = true; }
     if(!link) { document.getElementById('linkError').innerText = "Link ni lazima"; hasError = true; }
-    if(!isValidUrl(link)) { document.getElementById('linkError').innerText = "Hii sio Link sahihi. Weka link ya postimg.cc au youtube"; hasError = true; }
+    if(!isValidUrl(link)) { document.getElementById('linkError').innerText = "Hii sio Link sahihi"; hasError = true; }
 
     if(hasError) return;
 
@@ -216,6 +228,13 @@ onValue(postsRef, (snap) => {
             const pfp = post.pfp || userData.pfp || "https://i.postimg.cc/vBJj3bNH/chilx-live.jpg";
             const verified = userData.verified? '<span class="v-badge"><svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg></span>' : '';
             const liked = post.likedBy && post.likedBy[currentUser]? 'liked' : '';
+            const commentsCount = post.comments? Object.keys(post.comments).length : 0;
+            let commentsHTML = "";
+            if(post.comments) {
+                Object.values(post.comments).forEach(c => {
+                    commentsHTML += `<div class="comment"><strong>${c.user}</strong> ${c.text}</div>`;
+                })
+            }
             let mediaHTML = "";
             if(post.type === 'reel') mediaHTML = `<iframe src="${post.link}" allowfullscreen></iframe>`;
             else if(post.type === 'post') mediaHTML = `<img src="${post.link}">`;
@@ -231,6 +250,14 @@ onValue(postsRef, (snap) => {
                 <div class="post-caption">
                     <span class="user">${post.user}</span>
                     <span class="title">${post.title}</span>: ${post.desc}
+                </div>
+                <div class="comments-section">
+                    ${commentsCount > 0? `<div class="view-comments">Ona comments zote ${commentsCount}</div>` : ''}
+                    ${commentsHTML}
+                    <div class="comment-input">
+                        <input id="comment-${post.id}" placeholder="Andika comment...">
+                        <button onclick="addComment('${post.id}')">Tuma</button>
+                    </div>
                 </div>
             </div>`;
         })
@@ -249,15 +276,27 @@ window.likePost = function(postId) {
     })
 }
 
+// COMMENT MPYA
+window.addComment = function(postId) {
+    const input = document.getElementById(`comment-${postId}`);
+    const text = input.value.trim();
+    if(!text) return;
+    const commentRef = ref(db, `posts/${postId}/comments`);
+    push(commentRef, {user: currentUser, text: text, time: Date.now()});
+    input.value = "";
+}
+
 // ADMIN PANEL - BONYEZA LOGO MARA 5
 window.handleLogoClick = function() {
     logoClicks++;
     setTimeout(() => { logoClicks = 0; }, 3000);
     if (logoClicks >= 5) {
         logoClicks = 0;
-        let pass = prompt("INGIZA PASSWORD YA DIRECTOR:");
+        let pass = prompt("WEKA PASSWORD YA DIRECTOR:");
         get(adminRef).then(snap => {
-            if (snap.val().password === pass) {
+            const savedPass = snap.val().password;
+            // KAMA HAKUNA PASSWORD BADO, RUHUSU KUINGIA ILI UIWEKE
+            if (savedPass === "" || savedPass === pass) {
                 isAdmin = true;
                 document.getElementById('adminPanel').classList.add('admin-active');
                 loadUsers();
@@ -267,10 +306,15 @@ window.handleLogoClick = function() {
     }
 }
 window.closeAdmin = () => document.getElementById('adminPanel').classList.remove('admin-active');
-window.changeSecretPassword = () => { const newP = document.getElementById('newPassInput').value; if(newP.length < 1) return alert("Password fupi"); update(adminRef, {password: newP}); alert("Password imebadilika!"); }
+window.changeSecretPassword = () => {
+    const newP = document.getElementById('newPassInput').value;
+    if(newP.length < 1) return alert("Weka password");
+    update(adminRef, {password: newP});
+    alert("Password imewekwa!");
+}
 
 function loadUsers() {
-    if(!isAdmin) return; // KAMA SIO ADMIN USIONYESHE
+    if(!isAdmin) return;
     get(usersRef).then(snap => {
         let html = "";
         snap.forEach(child => {
