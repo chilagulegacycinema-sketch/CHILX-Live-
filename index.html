@@ -9,85 +9,67 @@
     @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&display=swap');
     :root {
         --bg:#010101; --card:#0A0A12; --border:#1E1E2E;
-        --blue-neon:#00F0FF; --pink-neon:#FF00F5; --text:#E0E0FF; --error:#FF0040;
+        --blue-neon:#00F0FF; --pink-neon:#FF00F5; --text:#E0E0FF; --error:#FF0040; --love:#FF3366;
     }
     * { box-sizing: border-box; margin: 0; padding: 0; }
     body { background: var(--bg); color: var(--text); font-family: 'Orbitron', sans-serif; height: 100vh; display: flex; justify-content: center; overflow: hidden; }
 
     .app-container { width: 100%; max-width: 500px; background: #000; border-left: 1px solid var(--border); border-right: 1px solid var(--border); display: flex; flex-direction: column; height: 100vh; position: relative; }
    
-    .header { background: #05050A; padding: 12px 16px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; box-shadow: 0 0 15px rgba(0,240,255,0.1); position: relative; }
-    .logo { display: flex; align-items: center; gap: 10px; cursor: pointer; user-select: none; }
-    .logo img { width: 38px; height: 38px; border-radius: 50%; object-fit: cover; border: 2px solid var(--blue-neon); box-shadow: 0 0 10px var(--blue-neon); }
-    .logo h1 { font-size: 18px; font-weight: 900; color: var(--blue-neon); text-shadow: 0 0 8px var(--blue-neon); }
-    .logo h1 span { color: var(--pink-neon); text-shadow: 0 0 8px var(--pink-neon); }
+    .header { background: #05050A; padding: 12px 16px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; }
+    .logo { display: flex; align-items: center; gap: 10px; }
+    .logo img { width: 38px; height: 38px; border-radius: 50%; object-fit: cover; border: 2px solid var(--blue-neon); }
+    .logo h1 { font-size: 18px; font-weight: 900; color: var(--blue-neon); }
+    .logo h1 span { color: var(--pink-neon); }
     
-    /* LIVE STATUS INAYOBONYEZWA */
-    .live-status { display: flex; align-items: center; gap: 6px; font-size: 10px; color: var(--error); font-weight: 900; cursor: pointer; padding: 4px 8px; border-radius: 12px; background: rgba(255,0,64,0.1); }
-    .live-status:hover { background: rgba(255,0,64,0.2); }
+    .live-status { display: flex; align-items: center; gap: 6px; font-size: 10px; color: var(--error); font-weight: 900; padding: 4px 8px; border-radius: 12px; background: rgba(255,0,64,0.1); }
     .live-dot { width: 8px; height: 8px; background: var(--error); border-radius: 50%; animation: blink 1s infinite; }
-    @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0} }
 
-    .user-profile { display: flex; align-items: center; gap: 8px; cursor: pointer; position: relative; }
+    .user-profile { display: flex; align-items: center; gap: 8px; }
     .user-profile img { width: 32px; height: 32px; border-radius: 50%; object-fit: cover; border: 2px solid var(--blue-neon); }
-    .user-name { font-size: 12px; font-weight: 700; color: var(--blue-neon); display: flex; align-items: center; gap: 4px; }
-    .profile-menu { display: none; position: absolute; top: 45px; right: 0; background: var(--card); border: 1px solid var(--border); border-radius: 8px; padding: 10px; width: 180px; z-index: 100; box-shadow: 0 0 15px rgba(0,240,255,0.2); }
-    .profile-menu.active { display: block; }
-    .profile-menu-item { padding: 10px; color: var(--text); font-size: 12px; cursor: pointer; border-radius: 5px; display: flex; align-items: center; gap: 8px; }
-    .profile-menu-item:hover { background: #111424; }
-    .profile-menu-item.signout { color: var(--error); }
+    .user-name { font-size: 12px; font-weight: 700; color: var(--blue-neon); }
+    .role-badge { font-size: 8px; background: var(--pink-neon); color: #000; padding: 2px 5px; border-radius: 4px; }
 
     .login-screen { text-align: center; padding: 40px 20px; display: flex; flex-direction: column; justify-content: center; align-items: center; width: 100%; height: 100vh; background: var(--bg); position: absolute; top: 0; left: 0; z-index: 1000; }
-    .login-screen img { width: 120px; height: 120px; border-radius: 25px; margin-bottom: 20px; border: 3px solid var(--pink-neon); object-fit: cover; box-shadow: 0 0 20px var(--pink-neon); }
-    .login-screen h2 { color: var(--blue-neon); text-shadow: 0 0 10px var(--blue-neon); margin-bottom: 5px; }
-    .login-screen select, .login-screen input { width: 90%; background: var(--card); border: 1px solid var(--blue-neon); color: #fff; padding: 14px; margin-bottom: 15px; border-radius: 8px; font-size: 16px; box-shadow: 0 0 5px var(--blue-neon); font-family: 'Orbitron'; text-align: center; text-align-last: center; outline: none; }
-    .login-screen button { background: linear-gradient(90deg, var(--blue-neon), var(--pink-neon)); color: #000; border: none; padding: 14px; width: 90%; border-radius: 8px; font-weight: 900; cursor: pointer; font-size: 16px; font-family: 'Orbitron'; }
+    .login-screen img { width: 120px; height: 120px; border-radius: 25px; margin-bottom: 20px; border: 3px solid var(--pink-neon); }
+    .login-screen h2 { color: var(--blue-neon); margin-bottom: 5px; }
+    .login-screen input { width: 90%; background: var(--card); border: 1px solid var(--blue-neon); color: #fff; padding: 14px; margin-bottom: 15px; border-radius: 8px; font-size: 16px; font-family: 'Orbitron'; text-align: center; }
+    .login-screen button { background: linear-gradient(90deg, var(--blue-neon), var(--pink-neon)); color: #000; border: none; padding: 14px; width: 90%; border-radius: 8px; font-weight: 900; cursor: pointer; font-size: 16px; font-family: 'Orbitron'; margin-bottom: 10px; }
+    .login-screen .viewer-btn { background: #333; color: var(--text); }
 
-    .media-indicators { background: #050510; border-bottom: 1px solid var(--border); padding: 8px 15px; display: flex; justify-content: space-between; font-size: 11px; }
-    .indicator-btn { background: none; border: 1px dashed var(--pink-neon); padding: 4px 10px; border-radius: 4px; color: var(--pink-neon); font-family: 'Orbitron'; cursor: pointer; }
+    .media-indicators { background: #050510; border-bottom: 1px solid var(--border); padding: 8px 15px; display: flex; justify-content: center; }
+    .indicator-btn { background: linear-gradient(90deg, var(--blue-neon), var(--pink-neon)); border: none; padding: 8px 20px; border-radius: 20px; color: #000; font-family: 'Orbitron'; font-weight: 900; cursor: pointer; }
 
     .chat-area { flex: 1; overflow-y: auto; padding: 15px; display: flex; flex-direction: column; gap: 15px; background: rgba(10,10,18,0.4); }
     
     .post { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 12px; }
     .post-header { display: flex; gap: 10px; align-items: center; margin-bottom: 8px; }
     .post-pfp { width: 35px; height: 35px; border-radius: 50%; object-fit: cover; border: 2px solid var(--pink-neon); }
-    .post-info { flex: 1; }
     .post-name { font-size: 12px; font-weight: 700; color: var(--blue-neon); display: flex; align-items: center; gap: 4px; }
-    .post-time { font-size: 9px; color: #888; }
-    .post-content { font-size: 14px; line-height: 1.4; }
-    .post-content img { max-width: 100%; border-radius: 8px; margin-top: 8px; }
-    .post-content iframe { width: 100%; aspect-ratio: 16/9; border-radius: 8px; margin-top: 8px; border: none; }
     
     .v-badge { width: 14px; height: 14px; background: #0095F6; border-radius: 50%; display: inline-flex; justify-content: center; align-items: center; }
     .v-badge svg { width: 9px; height: 9px; fill: #fff; }
 
-    .replies { margin-top: 10px; padding-left: 15px; border-left: 2px solid var(--border); display: flex; flex-direction: column; gap: 8px; }
-    .reply { display: flex; gap: 8px; font-size: 12px; }
-    .reply-pfp { width: 25px; height: 25px; border-radius: 50%; object-fit: cover; }
-    .reply-bubble { background: #111424; padding: 6px 10px; border-radius: 8px; flex: 1; }
-    .reply-name { font-size: 10px; color: var(--blue-neon); font-weight: 700; }
-    .reply-btn { font-size: 10px; color: var(--pink-neon); cursor: pointer; margin-top: 8px; }
+    /* LOVE BUTTON */
+    .love-btn { position: fixed; bottom: 80px; right: 20px; width: 50px; height: 50px; background: var(--love); border-radius: 50%; display: flex; justify-content: center; align-items: center; font-size: 24px; cursor: pointer; z-index: 999; box-shadow: 0 0 20px var(--love); }
+    .love-animation { position: absolute; font-size: 20px; color: var(--love); animation: fly 1s forwards; }
+    @keyframes fly { 0%{opacity:1; transform:translateY(0) scale(1)} 100%{opacity:0; transform:translateY(-100px) scale(2)} }
 
     .input-area { padding: 15px; background: #05050A; border-top: 1px solid var(--border); display: flex; gap: 10px; align-items: center; }
     .chat-input { flex: 1; background: #000; border: 1px solid var(--border); color: #fff; padding: 12px 18px; border-radius: 25px; font-family: 'Orbitron'; font-size: 14px; }
-    .chat-input:focus { border-color: var(--blue-neon); outline: none; box-shadow: 0 0 8px rgba(0,240,255,0.2); }
-   
-    .media-btn { background: none; border: none; font-size: 20px; cursor: pointer; color: var(--text); padding: 0 5px; transition: 0.2s; }
-    .media-btn:hover { color: var(--blue-neon); text-shadow: 0 0 8px var(--blue-neon); }
-    .media-btn.recording { color: var(--pink-neon); animation: pulse 1s infinite; }
-    @keyframes pulse { 0%{transform:scale(1)} 50%{transform:scale(1.2)} 100%{transform:scale(1)} }
-    .send-btn { background: linear-gradient(135deg, var(--blue-neon), var(--pink-neon)); color: #000; border: none; border-radius: 50%; width: 45px; height: 45px; cursor: pointer; font-weight: 900; font-size: 18px; display: flex; justify-content: center; align-items: center; box-shadow: 0 0 10px var(--pink-neon); }
+    .send-btn { background: linear-gradient(135deg, var(--blue-neon), var(--pink-neon)); color: #000; border: none; border-radius: 50%; width: 45px; height: 45px; cursor: pointer; font-weight: 900; font-size: 18px; }
 
-    /* CAMERA MODAL NA LIVE BADGE NDANI YAKE STYLE YA YOUTUBE */
-    #cameraModal { display: none; position: fixed; top:0; left:0; width:100%; height:100%; background: #000; z-index: 2000; justify-content: center; align-items: center; flex-direction: column; }
+    /* CAMERA NA KOPAKOPA */
+    #cameraModal { display: none; position: fixed; top:0; left:0; width:100%; height:100%; background: #000; z-index: 2000; }
     #cameraVideo { width: 100%; height: 100%; object-fit: cover; }
-    .live-overlay { position: absolute; top: 20px; left: 20px; background: var(--error); padding: 6px 14px; border-radius: 6px; display: flex; align-items: center; gap: 8px; font-size: 14px; font-weight: 900; letter-spacing: 1px; box-shadow: 0 0 15px var(--error); }
-    .live-dot { width: 10px; height: 10px; background: #fff; border-radius: 50%; animation: blink 1s infinite; }
-    #closeCamera { position: absolute; top: 20px; right: 20px; background: var(--pink-neon); color: #000; border: none; padding: 10px 15px; border-radius: 50%; font-weight: 900; cursor: pointer; z-index: 2001; }
-
-    #mediaModal { display: none; position: fixed; top:0; left:0; width:100%; height:100%; background: rgba(0,0,0,0.9); z-index: 2000; justify-content: center; align-items: center; flex-direction: column; padding: 20px; }
-    #mediaCaption { width: 90%; background: #000; border: 1px solid var(--blue-neon); color: #fff; padding: 12px; border-radius: 8px; margin: 15px 0; font-family: 'Orbitron'; }
-    #closeMedia { position: absolute; top: 20px; right: 20px; background: var(--pink-neon); color: #000; border: none; padding: 10px 15px; border-radius: 50%; font-weight: 900; cursor: pointer; }
+    .live-overlay { position: absolute; top: 20px; left: 20px; background: var(--error); padding: 6px 14px; border-radius: 6px; display: flex; align-items: center; gap: 8px; font-size: 14px; font-weight: 900; }
+    
+    /* KOPAKOPA CONTAINER */
+    #danmakuContainer { position: absolute; top: 80px; left: 0; width: 100%; height: calc(100% - 160px); pointer-events: none; overflow: hidden; }
+    .danmaku { position: absolute; white-space: nowrap; font-size: 14px; font-weight: 700; color: #fff; text-shadow: 2px 2px 4px #000; animation: danmakuMove 8s linear; display: flex; align-items: center; gap: 6px; }
+    .danmaku img { width: 24px; height: 24px; border-radius: 50%; }
+    @keyframes danmakuMove { from { transform: translateX(100%); } to { transform: translateX(-100%); } }
+    @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0} }
 </style>
 
 <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
@@ -98,22 +80,13 @@
 <div id="loginScreen" class="login-screen">
     <img src="https://i.postimg.cc/vBJj3bNH/chilx-live.jpg" alt="Logo">
     <h2>CHILX <span style="color:var(--pink-neon);">LIVE CHANNEL</span></h2>
-    <p style="color:#888; font-size:11px; margin-bottom:25px; letter-spacing:1px;">WASANII SABA OFFICIAL</p>
+    <p style="color:#888; font-size:11px; margin-bottom:25px;">WASANII SABA + WATAZAMAJI</p>
    
-    <select id="loginUsername">
-        <option value="" disabled selected>Chagua Jina Lako la Game</option>
-        <option value="ZORAVALY">ZORAVALY</option>
-        <option value="PAUL">PAUL</option>
-        <option value="WILLIAMS">WILLIAMS</option>
-        <option value="MASON">MASON</option>
-        <option value="SHANIYA">SHANIYA</option>
-        <option value="IRENE">IRENE</option>
-        <option value="ZAISAN">ZAISAN</option>
-    </select>
-
-    <input type="text" id="loginPfp" placeholder="Weka Link ya Profile Pic yako: postimg.cc/...">
+    <input type="text" id="loginName" placeholder="Weka Jina lako">
+    <input type="text" id="loginPfp" placeholder="Weka Link ya Picha yako">
    
-    <button onclick="login()">INGIA KWENYE CHANNEL</button>
+    <button onclick="loginAsArtist()">INGIA KAMA MSANII</button>
+    <button class="viewer-btn" onclick="loginAsViewer()">INGIA KAMA MTAZAMAJI</button>
 </div>
 
 <div id="mainApp" class="app-container" style="display:none;">
@@ -123,45 +96,42 @@
             <h1>CHILX <span>LIVE</span></h1>
         </div>
         <div style="display:flex;align-items:center;gap:10px;">
-            <!-- LIVE STATUS INAYOBONYEZWA -->
-            <div class="live-status" onclick="openCamera()">
+            <div class="live-status">
                 <div class="live-dot"></div>
                 <span id="liveCount">0 LIVE</span>
             </div>
-            <div class="user-profile" id="userProfile" onclick="toggleProfileMenu()"></div>
+            <div class="user-profile" id="userProfile"></div>
         </div>
-        <div class="profile-menu" id="profileMenu"></div>
     </div>
 
-    <div class="media-indicators">
-        <span style="color:#888;font-size:10px;">CHANNEL YA UMMA</span>
-        <button class="indicator-btn" onclick="openMediaModal()">📎 POST MEDIA</button>
+    <div class="media-indicators" id="artistControls">
+        <button class="indicator-btn" onclick="openCamera()">🔴 ANZA LIVE</button>
     </div>
 
     <div class="chat-area" id="chatBox"></div>
 
-    <div class="input-area">
-        <button class="media-btn" id="voiceBtn">🎙️</button>
+    <div class="input-area" id="artistInput">
         <input type="text" id="msgInput" class="chat-input" placeholder="Andika Post yako...">
         <button class="send-btn" onclick="sendPost()">></button>
     </div>
+
+    <div class="love-btn" id="loveBtn" onclick="sendLove()">❤️</div>
 </div>
 
-<!-- CAMERA MODAL NA BADGE YA LIVE NDANI -->
+<!-- CAMERA NA KOPAKOPA NDANI YAKE -->
 <div id="cameraModal">
     <video id="cameraVideo" autoplay playsinline></video>
     <div class="live-overlay">
         <div class="live-dot"></div>
         <span>LIVE • <span id="liveViewers">1</span> WAKITAZAMA</span>
     </div>
-    <button id="closeCamera" onclick="closeCamera()">X</button>
-</div>
-
-<div id="mediaModal">
-    <input type="text" id="mediaLink" placeholder="Bandika link ya picha/video: postimg.cc au youtube">
-    <input type="text" id="mediaCaption" placeholder="Andika maelezo ya post yako...">
-    <button class="send-btn" onclick="sendMediaPost()">POST</button>
-    <button id="closeMedia" onclick="closeMediaModal()">X</button>
+    <div id="danmakuContainer"></div>
+    
+    <!-- INPUT YA KOPAKOPA KWA WOTE -->
+    <div style="position:absolute; bottom:20px; left:10px; right:10px; display:flex; gap:10px;">
+        <input type="text" id="liveComment" placeholder="Tuma ujumbe..." style="flex:1; background:rgba(0,0,0,0.6); border:1px solid #fff; color:#fff; padding:10px; border-radius:20px; font-family:Orbitron;">
+        <button onclick="sendDanmaku()" style="background:var(--pink-neon); border:none; padding:10px 15px; border-radius:20px; color:#000; font-weight:900;">TUMA</button>
+    </div>
 </div>
 
 <script>
@@ -171,59 +141,49 @@
 
     let currentUser = "";
     let currentPfp = "";
-    const verifiedArtists = ["ZORAVALY", "PAUL", "WILLIAMS", "MASON", "SHANIYA", "IRENE", "ZAISAN"];
+    let userRole = "";
+    const artistsList = ["ZORAVALY", "PAUL", "WILLIAMS", "MASON", "SHANIYA", "IRENE", "ZAISAN"];
     let cameraStream = null;
-    let mediaRecorder, audioChunks = [];
 
-    window.onload = function() {
-        let savedUser = localStorage.getItem('chilxUser');
-        let savedPfp = localStorage.getItem('chilxPfp');
-        if(savedUser && savedPfp) {
-            currentUser = savedUser;
-            currentPfp = savedPfp;
-            enterApp();
-        }
-        document.addEventListener('click', function(e) {
-            if(!e.target.closest('.user-profile') && !e.target.closest('.profile-menu')) {
-                document.getElementById('profileMenu').classList.remove('active');
-            }
-        });
+    function loginAsArtist() {
+        let name = document.getElementById('loginName').value.trim().toUpperCase();
+        let pfp = document.getElementById('loginPfp').value.trim();
+        if(!artistsList.includes(name)) { alert("Jina hili halipo kwenye orodha ya wasanii 7"); return; }
+        if(!pfp) { alert("Weka link ya picha"); return; }
+        setupUser(name, pfp, "artist");
     }
 
-    function login() {
-        let name = document.getElementById('loginUsername').value;
-        let pfp = document.getElementById('loginPfp').value.trim();
-        if(!name) { alert("Tafadhali chagua Jina lako la usanii!"); return; }
-        if(!pfp) { alert("Tafadhali weka Link ya Profile Pic yako!"); return; }
-       
+    function loginAsViewer() {
+        let name = document.getElementById('loginName').value.trim();
+        let pfp = document.getElementById('loginPfp').value.trim() || "https://i.postimg.cc/vBJj3bNH/chilx-live.jpg";
+        if(!name) { alert("Weka jina lako"); return; }
+        setupUser(name, pfp, "viewer");
+    }
+
+    function setupUser(name, pfp, role) {
         currentUser = name;
         currentPfp = pfp;
-        
+        userRole = role;
         localStorage.setItem('chilxUser', currentUser);
         localStorage.setItem('chilxPfp', currentPfp);
-        db.ref("online/" + currentUser).set({pfp: currentPfp, lastSeen: Date.now()});
+        localStorage.setItem('chilxRole', userRole);
+        db.ref("online/" + currentUser).set({pfp: currentPfp, role: userRole});
         db.ref("online/" + currentUser).onDisconnect().remove();
-
         enterApp();
     }
 
     function enterApp() {
         document.getElementById('loginScreen').style.display = 'none';
         document.getElementById('mainApp').style.display = 'flex';
-        
-        let badge = verifiedArtists.includes(currentUser) ? '<span class="v-badge"><svg viewBox="0 0 24 24"><path d="M12 2L3 5l9 19 9-19-9-3z"/></svg></span>' : '';
-        document.getElementById('userProfile').innerHTML = `<img src="${currentPfp}"><div class="user-name">${currentUser}${badge}</div>`;
-        document.getElementById('profileMenu').innerHTML = `
-            <div class="profile-menu-item">
-                <img src="${currentPfp}" style="width:25px;height:25px;border-radius:50%">
-                <span>${currentUser}${badge}</span>
-            </div>
-            <div class="profile-menu-item signout" onclick="signOut()">🚪 Sign Out</div>
-        `;
-
+        let badge = artistsList.includes(currentUser) ? '<span class="v-badge"><svg viewBox="0 0 24 24"><path d="M12 2L3 5l9 19 9-19-9-3z"/></svg></span>' : '';
+        document.getElementById('userProfile').innerHTML = `<img src="${currentPfp}"><div><div class="user-name">${currentUser}${badge}</div><div class="role-badge">${userRole}</div></div>`;
+        if(userRole === "viewer") {
+            document.getElementById('artistControls').style.display = 'none';
+            document.getElementById('artistInput').style.display = 'none';
+        }
         listenToOnlineCount();
         listenToChannel();
-        setupVoiceRecorder();
+        listenToDanmaku(); // SIKILIZA KOPAKOPA
     }
 
     function listenToOnlineCount() {
@@ -234,161 +194,82 @@
         });
     }
 
-    function toggleProfileMenu() {
-        document.getElementById('profileMenu').classList.toggle('active');
+    // TUMA KOPAKOPA
+    function sendDanmaku() {
+        let text = document.getElementById('liveComment').value.trim();
+        if(!text) return;
+        db.ref("live_comments").push({
+            sender: currentUser, pfp: currentPfp, text: text, time: Date.now()
+        });
+        document.getElementById('liveComment').value = "";
     }
 
-    function signOut() {
-        if(confirm("Una uhakika unataka kutoka?")) {
-            db.ref("online/" + currentUser).remove();
-            localStorage.removeItem('chilxUser');
-            localStorage.removeItem('chilxPfp');
-            location.reload();
-        }
+    // SIKILIZA NA ONYESHA KOPAKOPA
+    function listenToDanmaku() {
+        db.ref("live_comments").limitToLast(50).on("child_added", snap => {
+            let data = snap.val();
+            showDanmaku(data);
+        });
+    }
+
+    function showDanmaku(data) {
+        let container = document.getElementById('danmakuContainer');
+        let dan = document.createElement('div');
+        dan.className = 'danmaku';
+        dan.style.top = Math.random() * 70 + 10 + '%'; // random height
+        dan.innerHTML = `<img src="${data.pfp}"> <span>${data.sender}: ${data.text}</span>`;
+        container.appendChild(dan);
+        setTimeout(() => dan.remove(), 8000);
+    }
+
+    function sendLove() {
+        let love = document.createElement('div');
+        love.className = 'love-animation';
+        love.innerHTML = '❤️';
+        love.style.left = Math.random() * 300 + 50 + 'px';
+        love.style.bottom = '80px';
+        document.body.appendChild(love);
+        setTimeout(() => love.remove(), 1000);
     }
 
     function listenToChannel() {
         db.ref("channel_posts").limitToLast(30).on("child_added", function(snapshot) {
             let data = snapshot.val();
-            let key = snapshot.key;
-            renderPost(key, data);
+            renderPost(snapshot.key, data);
         });
     }
 
     function renderPost(key, data) {
-        let chatBox = document.getElementById('chatBox');
-        let badge = verifiedArtists.includes(data.sender) ? '<span class="v-badge"><svg viewBox="0 0 24 24"><path d="M12 2L3 5l9 19 9-19-9-3z"/></svg></span>' : '';
-        let time = new Date(data.timestamp).toLocaleTimeString('sw-TZ', {hour:'2-digit', minute:'2-digit'});
-
-        let content = `<div>${data.caption || ''}</div>`;
-        if(data.text && (data.text.match(/\.(jpeg|jpg|gif|png)$/) || data.text.includes("postimg.cc"))) {
-            content += `<img src="${data.text}">`;
-        } else if(data.text && (data.text.includes("youtube.com") || data.text.includes("streamable.com"))) {
-            content += `<iframe src="${data.text}" allowfullscreen></iframe>`;
-        } else if(data.type === 'voice') {
-            content += `<audio controls src="${data.text}"></audio>`;
-        } else {
-            content += `<div>${data.text}</div>`;
-        }
-
-        let postDiv = document.createElement('div');
-        postDiv.className = 'post';
-        postDiv.id = 'post-' + key;
-        postDiv.innerHTML = `
-            <div class="post-header">
-                <img class="post-pfp" src="${data.pfp}">
-                <div class="post-info">
+        let badge = artistsList.includes(data.sender) ? '<span class="v-badge"><svg viewBox="0 0 24 24"><path d="M12 2L3 5l9 19 9-19-9-3z"/></svg></span>' : '';
+        document.getElementById('chatBox').innerHTML += `
+            <div class="post">
+                <div class="post-header">
+                    <img class="post-pfp" src="${data.pfp}">
                     <div class="post-name">${data.sender}${badge}</div>
-                    <div class="post-time">${time}</div>
                 </div>
+                <div>${data.text}</div>
             </div>
-            <div class="post-content">${content}</div>
-            <div class="replies" id="replies-${key}"></div>
-            <div class="reply-btn" onclick="replyToPost('${key}')">💬 Jibu</div>
         `;
-        chatBox.prepend(postDiv);
-
-        db.ref("channel_posts/" + key + "/replies").on("child_added", function(replySnap) {
-            let r = replySnap.val();
-            let rBadge = verifiedArtists.includes(r.sender) ? '<span class="v-badge"><svg viewBox="0 0 24 24"><path d="M12 2L3 5l9 19 9-19-9-3z"/></svg></span>' : '';
-            document.getElementById('replies-' + key).innerHTML += `
-                <div class="reply">
-                    <img class="reply-pfp" src="${r.pfp}">
-                    <div class="reply-bubble">
-                        <div class="reply-name">${r.sender}${rBadge}</div>
-                        <div>${r.text}</div>
-                    </div>
-                </div>
-            `;
-        });
     }
 
     function sendPost() {
-        let input = document.getElementById('msgInput');
-        let text = input.value.trim();
-        if (text === "") return;
-       
+        if(userRole !== "artist") return;
+        let text = document.getElementById('msgInput').value.trim();
+        if (!text) return;
         db.ref("channel_posts").push().set({
-            sender: currentUser, pfp: currentPfp, type: 'text', text: text, caption: "", timestamp: Date.now()
+            sender: currentUser, pfp: currentPfp, text: text, timestamp: Date.now()
         });
-        input.value = "";
+        document.getElementById('msgInput').value = "";
     }
 
-    function replyToPost(postKey) {
-        let replyText = prompt("Andika jibu lako:");
-        if(!replyText) return;
-        db.ref("channel_posts/" + postKey + "/replies").push().set({
-            sender: currentUser, pfp: currentPfp, text: replyText, timestamp: Date.now()
-        });
-    }
-
-    function openMediaModal() {
-        document.getElementById('mediaModal').style.display = 'flex';
-    }
-    function closeMediaModal() {
-        document.getElementById('mediaModal').style.display = 'none';
-    }
-    function sendMediaPost() {
-        let link = document.getElementById('mediaLink').value.trim();
-        let caption = document.getElementById('mediaCaption').value.trim();
-        if(!link) return;
-        db.ref("channel_posts").push().set({
-            sender: currentUser, pfp: currentPfp, type: 'media', text: link, caption: caption, timestamp: Date.now()
-        });
-        closeMediaModal();
-        document.getElementById('mediaLink').value = "";
-        document.getElementById('mediaCaption').value = "";
-    }
-
-    // CAMERA NA LIVE BADGE YA YOUTUBE STYLE
     async function openCamera() {
-        document.getElementById('cameraModal').style.display = 'flex';
-        try {
-            cameraStream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: "user" }, audio: true });
-            document.getElementById('cameraVideo').srcObject = cameraStream;
-        } catch(err) {
-            alert("Ruhusu camera na microphone tafadhali");
-            closeCamera();
-        }
-    }
-    function closeCamera() {
-        document.getElementById('cameraModal').style.display = 'none';
-        if(cameraStream) cameraStream.getTracks().forEach(track => track.stop());
+        if(userRole !== "artist") return;
+        document.getElementById('cameraModal').style.display = 'block';
+        cameraStream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: "user" }, audio: true });
+        document.getElementById('cameraVideo').srcObject = cameraStream;
     }
 
-    function setupVoiceRecorder() {
-        const voiceBtn = document.getElementById('voiceBtn');
-        voiceBtn.onmousedown = startRecording;
-        voiceBtn.onmouseup = stopRecording;
-        voiceBtn.ontouchstart = startRecording;
-        voiceBtn.ontouchend = stopRecording;
-    }
-    async function startRecording() {
-        document.getElementById('voiceBtn').classList.add('recording');
-        const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-        mediaRecorder = new MediaRecorder(stream, { mimeType: 'audio/webm' });
-        mediaRecorder.start();
-        audioChunks = [];
-        mediaRecorder.ondataavailable = e => audioChunks.push(e.data);
-    }
-    function stopRecording() {
-        document.getElementById('voiceBtn').classList.remove('recording');
-        if(!mediaRecorder) return;
-        mediaRecorder.stop();
-        mediaRecorder.onstop = () => {
-            const audioBlob = new Blob(audioChunks, { type: 'audio/webm' });
-            const reader = new FileReader();
-            reader.readAsDataURL(audioBlob); 
-            reader.onloadend = () => {
-                const base64Audio = reader.result;
-                db.ref("channel_posts").push().set({
-                    sender: currentUser, pfp: currentPfp, type: 'voice', text: base64Audio, caption: "", timestamp: Date.now()
-                });
-            }
-        };
-    }
-
-    document.getElementById('msgInput').addEventListener("keypress", function(e) { if (e.key === "Enter") sendPost(); });
+    document.getElementById('liveComment').addEventListener("keypress", function(e) { if (e.key === "Enter") sendDanmaku(); });
 </script>
 </body>
 </html>
