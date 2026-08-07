@@ -3,330 +3,161 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>CHILX LIVE</title>
-<link rel="icon" href="https://i.postimg.cc/vBJj3bNH/chilx-live.jpg">
+<title>CHILX LIVE - TIMU CHAT</title>
+<link rel="icon" href="https://postimg.cc">
 <style>
-    @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&display=swap');
+    @import url('https://googleapis.com');
     :root {
         --bg:#010101; --card:#0A0A12; --border:#1E1E2E;
         --blue-neon:#00F0FF; --pink-neon:#FF00F5; --text:#E0E0FF; --error:#FF0040;
     }
-    * { box-sizing: border-box; }
-    body { background: var(--bg); color: var(--text); font-family: 'Orbitron', sans-serif; margin:0; padding-bottom: 70px; overflow-x: hidden; }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { background: var(--bg); color: var(--text); font-family: 'Orbitron', sans-serif; height: 100vh; display: flex; justify-content: center; overflow: hidden; }
 
-.header { background: #05050A; padding: 12px 16px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; position: sticky; top:0; z-index: 100; box-shadow: 0 0 15px rgba(0,240,255,0.1); }
-.logo { display: flex; align-items: center; gap: 10px; cursor: pointer; }
-.logo img { width: 38px; height: 38px; border-radius: 50%; object-fit: cover; border: 2px solid var(--blue-neon); box-shadow: 0 0 10px var(--blue-neon); }
-.logo h1 { font-size: 22px; font-weight: 900; margin: 0; color: var(--blue-neon); text-shadow: 0 0 8px var(--blue-neon); }
-.logo h1 span { color: var(--pink-neon); text-shadow: 0 0 8px var(--pink-neon); }
+    .app-container { width: 100%; max-width: 500px; background: #000; border-left: 1px solid var(--border); border-right: 1px solid var(--border); display: flex; flex-direction: column; height: 100vh; position: relative; }
+    
+    .header { background: #05050A; padding: 12px 16px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; box-shadow: 0 0 15px rgba(0,240,255,0.1); }
+    .logo { display: flex; align-items: center; gap: 10px; cursor: pointer; user-select: none; }
+    .logo img { width: 38px; height: 38px; border-radius: 50%; object-fit: cover; border: 2px solid var(--blue-neon); box-shadow: 0 0 10px var(--blue-neon); }
+    .logo h1 { font-size: 20px; font-weight: 900; color: var(--blue-neon); text-shadow: 0 0 8px var(--blue-neon); }
+    .logo h1 span { color: var(--pink-neon); text-shadow: 0 0 8px var(--pink-neon); }
 
-.container { max-width: 600px; margin: 0 auto; }
-.login-screen { text-align: center; padding: 40px 20px; }
-.login-screen img { width: 120px; height: 120px; border-radius: 25px; margin-bottom: 20px; border: 3px solid var(--pink-neon); object-fit: cover; box-shadow: 0 0 20px var(--pink-neon); }
-.login-screen h2 { color: var(--blue-neon); text-shadow: 0 0 10px var(--blue-neon); }
-.login-screen input { width: 90%; background: var(--card); border: 1px solid var(--blue-neon); color: #fff; padding: 14px; margin-bottom: 15px; border-radius: 8px; font-size: 16px; box-shadow: 0 0 5px var(--blue-neon); }
-.login-screen button { background: linear-gradient(90deg, var(--blue-neon), var(--pink-neon)); color: #000; border: none; padding: 14px; width: 90%; border-radius: 8px; font-weight: 900; cursor: pointer; font-size: 16px; }
+    .login-screen { text-align: center; padding: 40px 20px; display: flex; flex-direction: column; justify-content: center; align-items: center; width: 100%; height: 100vh; background: var(--bg); }
+    .login-screen img { width: 120px; height: 120px; border-radius: 25px; margin-bottom: 20px; border: 3px solid var(--pink-neon); object-fit: cover; box-shadow: 0 0 20px var(--pink-neon); }
+    .login-screen h2 { color: var(--blue-neon); text-shadow: 0 0 10px var(--blue-neon); margin-bottom: 5px; }
+    .login-screen select { width: 90%; background: var(--card); border: 1px solid var(--blue-neon); color: #fff; padding: 14px; margin-bottom: 15px; border-radius: 8px; font-size: 16px; box-shadow: 0 0 5px var(--blue-neon); font-family: 'Orbitron'; text-align: center; text-align-last: center; outline: none; }
+    .login-screen button { background: linear-gradient(90deg, var(--blue-neon), var(--pink-neon)); color: #000; border: none; padding: 14px; width: 90%; border-radius: 8px; font-weight: 900; cursor: pointer; font-size: 16px; font-family: 'Orbitron'; }
 
-.post { background: var(--card); border: 1px solid var(--border); border-radius: 12px; margin: 15px 0; box-shadow: 0 0 10px rgba(0,240,255,0.05); }
-.post-header { display: flex; align-items: center; padding: 12px; gap: 10px; }
-.post-header img { width: 35px; height: 35px; border-radius: 50%; object-fit: cover; border: 1px solid var(--pink-neon); }
-.post-user { font-weight: 700; font-size: 14px; color: var(--blue-neon); display: flex; align-items: center; gap: 4px; }
-.v-badge { width: 16px; height: 16px; background: var(--blue-neon); border-radius: 50%; display: inline-flex; justify-content: center; align-items: center; }
-.v-badge svg { width: 10px; height: 10px; fill: #000; }
-.post-body { background: #000; }
-.post-body img { width: 100%; object-fit: contain; max-height: 600px; border-top:1px solid var(--border); border-bottom:1px solid var(--border); }
-.post-body iframe { width: 100%; aspect-ratio: 16/9; border: none; border-top:1px solid var(--border); border-bottom:1px solid var(--border); }
+    .media-indicators { background: #050510; border-bottom: 1px solid var(--border); padding: 8px 15px; display: flex; justify-content: space-around; font-size: 11px; }
+    .indicator-btn { background: none; border: 1px dashed var(--pink-neon); padding: 4px 10px; border-radius: 4px; color: var(--pink-neon); font-family: 'Orbitron'; cursor: pointer; }
+    .indicator-btn.active { background: var(--pink-neon); color: #000; font-weight: 900; box-shadow: 0 0 10px var(--pink-neon); }
 
-.post-actions { padding: 10px 12px; display: flex; gap: 15px; align-items: center; }
-.post-actions svg { width: 24px; height: 24px; cursor: pointer; fill: none; stroke: var(--text); stroke-width: 2; transition: 0.2s; }
-.post-actions.liked svg { fill: var(--pink-neon); stroke: var(--pink-neon); }
-.likes-count { font-weight: 700; font-size: 14px; margin-left: -10px; }
+    .chat-area { flex: 1; overflow-y: auto; padding: 15px; display: flex; flex-direction: column; gap: 10px; background: rgba(10,10,18,0.4); }
+    .msg { font-size: 14px; padding: 10px 14px; border-radius: 12px; max-width: 80%; line-height: 1.4; border: 1px solid var(--border); box-shadow: 0 0 8px rgba(0,0,0,0.3); }
+    .msg.incoming { background: var(--card); align-self: flex-start; border-left: 3px solid var(--pink-neon); }
+    .msg.outgoing { background: #111424; align-self: flex-end; border-right: 3px solid var(--blue-neon); color: #fff; }
+    .msg strong { color: var(--blue-neon); display: block; font-size: 11px; margin-bottom: 4px; letter-spacing: 1px; }
+    .v-badge { color: var(--blue-neon); margin-left: 4px; font-weight: 900; }
 
-.post-caption { padding: 0 12px 8px; font-size: 14px; }
-.post-caption.user { color: var(--pink-neon); font-weight: 700; }
-.post-caption.title { color: var(--blue-neon); font-weight: 700; }
-
-/* COMMENTS SECTION MPYA */
-.comments-section { padding: 0 12px 12px; border-top: 1px solid var(--border); margin-top: 8px; }
-.view-comments { color: #888; font-size: 13px; cursor: pointer; padding: 8px 0; }
-.comment { display: flex; gap: 8px; margin-bottom: 8px; font-size: 13px; }
-.comment strong { color: var(--pink-neon); }
-.comment-input { display: flex; gap: 8px; margin-top: 8px; }
-.comment-input input { flex: 1; background: #000; border: 1px solid var(--border); color: #fff; padding: 8px; border-radius: 20px; font-family: 'Orbitron'; font-size: 13px; }
-.comment-input button { background: var(--blue-neon); color: #000; border: none; padding: 8px 12px; border-radius: 20px; font-weight: 700; cursor: pointer; }
-
-.bottom-nav { position: fixed; bottom: 0; left: 0; width: 100%; background: #05050A; border-top: 1px solid var(--border); display: flex; justify-content: space-around; padding: 10px 0; z-index: 100; box-shadow: 0 0 15px rgba(255,0,245,0.1); }
-.bottom-nav button { background: none; border: none; color: var(--text); font-size: 24px; cursor: pointer; }
-.post-btn { background: linear-gradient(135deg, var(--blue-neon), var(--pink-neon))!important; color: #000!important; width: 50px; height: 50px; border-radius: 14px; font-size: 30px!important; margin-top: -5px; font-weight: 900; box-shadow: 0 0 15px var(--pink-neon); }
-
-.modal { display: none; position: fixed; top:0; left:0; width:100%; height:100%; background: rgba(1,1,1,0.95); z-index: 999; justify-content: center; align-items: center; }
-.modal-content { background: var(--card); padding: 20px; border-radius: 12px; width: 90%; max-width: 500px; border: 1px solid var(--blue-neon); box-shadow: 0 0 20px var(--blue-neon); }
-.modal-content h3 { color: var(--pink-neon); margin-top: 0; text-align: center; text-shadow: 0 0 8px var(--pink-neon); }
-.modal-content input,.modal-content textarea,.modal-content select { width: 100%; background: #000; border: 1px solid var(--border); color: #fff; padding: 12px; margin-bottom: 12px; border-radius: 8px; font-family: 'Orbitron'; }
-.modal-content button { background: linear-gradient(90deg, var(--blue-neon), var(--pink-neon)); color: #000; border: none; padding: 12px; width: 100%; border-radius: 8px; font-weight: 900; cursor: pointer; }
-.error-text { color: var(--error); font-size: 12px; margin-top: -8px; margin-bottom: 10px; text-align: left; }
-
-.admin-panel { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #010101; z-index: 9999; padding: 20px; overflow-y: auto; }
-.admin-active { display: block; }
-.admin-header { color: var(--pink-neon); font-size: 1.5rem; margin-bottom: 20px; text-align: center; font-weight: 900; text-shadow: 0 0 10px var(--pink-neon); }
-.admin-btn { background: #222; color: #fff; border: 1px solid var(--blue-neon); padding: 8px 12px; margin: 4px; cursor: pointer; border-radius: 4px; font-family: 'Orbitron'; }
-.admin-btn.danger { background: var(--pink-neon); color:#000; font-weight: 700; }
-.admin-btn.verify { background: var(--blue-neon); color:#000; font-weight: 700; }
-.user-row { display: flex; justify-content: space-between; align-items: center; background: #0A0A12; padding: 10px; margin-bottom: 8px; border-radius: 4px; border:1px solid var(--border); }
+    .input-area { padding: 15px; background: #05050A; border-top: 1px solid var(--border); display: flex; gap: 10px; align-items: center; }
+    .chat-input { flex: 1; background: #000; border: 1px solid var(--border); color: #fff; padding: 12px 18px; border-radius: 25px; font-family: 'Orbitron'; font-size: 14px; }
+    .chat-input:focus { border-color: var(--blue-neon); outline: none; box-shadow: 0 0 8px rgba(0,240,255,0.2); }
+    
+    .media-btn { background: none; border: none; font-size: 20px; cursor: pointer; color: var(--text); padding: 0 5px; transition: 0.2s; }
+    .media-btn:hover { color: var(--blue-neon); text-shadow: 0 0 8px var(--blue-neon); }
+    .send-btn { background: linear-gradient(135deg, var(--blue-neon), var(--pink-neon)); color: #000; border: none; border-radius: 50%; width: 45px; height: 45px; cursor: pointer; font-weight: 900; font-size: 18px; display: flex; justify-content: center; align-items: center; box-shadow: 0 0 10px var(--pink-neon); }
 </style>
+<script src="https://gstatic.com"></script>
+<script src="https://gstatic.com"></script>
 </head>
 <body>
 
 <div id="loginScreen" class="login-screen">
-    <img src="https://i.postimg.cc/vBJj3bNH/chilx-live.jpg" alt="Logo">
+    <img src="https://postimg.cc" alt="Logo">
     <h2>CHILX <span style="color:var(--pink-neon);">LIVE</span></h2>
-    <p style="color:#888;">Mtandao rasmi wa Wachezaji</p>
-    <input type="text" id="loginUsername" placeholder="Weka Jina la Mtumiaji">
-    <input type="text" id="loginPfp" placeholder="Weka Link ya Profile Pic yako: postimg.cc/...">
-    <button onclick="login()">INGIA CHILX LIVE</button>
+    <p style="color:#888; font-size:11px; margin-bottom:25px; letter-spacing:1px;">MTANDAO RASMI WA WASANII SABA</p>
+    
+    <select id="loginUsername">
+        <option value="" disabled selected>Chagua Jina Lako la Game</option>
+        <option value="ZORAVALY">ZORAVALY</option>
+        <option value="PAUL">PAUL</option>
+        <option value="WILLIAMS">WILLIAMS</option>
+        <option value="MASON">MASON</option>
+        <option value="SHANIYA">SHANIYA</option>
+        <option value="IRENE">IRENE</option>
+        <option value="ZAISAN">ZAISAN</option>
+    </select>
+    
+    <button onclick="login()">INGIA KWENYE GROUP</button>
 </div>
 
-<div id="mainApp" style="display:none;">
+<div id="mainApp" class="app-container" style="display:none;">
     <div class="header">
-        <div class="logo" onclick="handleLogoClick()">
-            <img src="https://i.postimg.cc/vBJj3bNH/chilx-live.jpg">
+        <div class="logo">
+            <img src="https://postimg.cc" alt="Logo">
             <h1>CHILX <span>LIVE</span></h1>
         </div>
+        <div style="font-size:11px; color:var(--blue-neon); border:1px solid var(--blue-neon); padding:4px 10px; border-radius:4px; font-weight:700;" id="userBadge">--</div>
     </div>
 
-    <div class="container" id="feed"></div>
-
-    <div class="bottom-nav">
-        <button>🏠</button>
-        <button class="post-btn" onclick="openPostModal()">+</button>
-        <button>👤</button>
+    <div class="media-indicators">
+        <button class="indicator-btn" id="liveVideoIndicator" onclick="toggleActingIndicator('liveVideoIndicator', 'LIVE VIDEO BROADCAST')">📹 LIVE VIDEO</button>
+        <button class="indicator-btn" id="voiceNoteIndicator" onclick="toggleActingIndicator('voiceNoteIndicator', 'RECORDING AUDIO STREAM')">🎙️ VOICE NOTE</button>
     </div>
-</div>
 
-<div id="postModal" class="modal">
-    <div class="modal-content">
-        <h3>TENGENEZA POST MPYA</h3>
-        <select id="postType">
-            <option value="post">POST YA PICHA</option>
-            <option value="reel">REEL/VIDEO</option>
-        </select>
-        <input id="postTitle" placeholder="Andika Jina la Picha/Video">
-        <div id="titleError" class="error-text"></div>
-        <input id="postLink" placeholder="Weka Link ya Picha/Video: postimg.cc au youtube">
-        <div id="linkError" class="error-text"></div>
-        <textarea id="postDesc" placeholder="Andika maelezo..." rows="3"></textarea>
-        <button onclick="sendPost()">POST SASA</button>
-        <button style="background:#333; margin-top:10px; color:#fff;" onclick="closePostModal()">Funga</button>
+    <div class="chat-area" id="chatBox"></div>
+
+    <div class="input-area">
+        <button class="media-btn" onclick="triggerActingClick('LIVE VIDEO ENGINE ACTIVE')">📹</button>
+        <button class="media-btn" onclick="triggerActingClick('AUDIO RECORDING LAYER START')">🎙️</button>
+        
+        <input type="text" id="msgInput" class="chat-input" placeholder="Andika ujumbe...">
+        <button class="send-btn" onclick="sendMessage()">></button>
     </div>
 </div>
 
-<div class="admin-panel" id="adminPanel">
-    <div class="admin-header">DIRECTOR CONTROL CENTER - CHILX LIVE</div>
-    <div style="background:#0A0A12; padding:12px; border-radius:4px; margin-bottom:20px; border:1px solid var(--border);">
-        <p>Weka Password ya Siri mara ya kwanza:</p>
-        <input id="newPassInput" type="text" placeholder="Weka Password yako..." style="background:#000; border:1px solid var(--border); color:#fff; padding:8px; width: 70%;">
-        <button class="admin-btn" onclick="changeSecretPassword()">Hifadhi Password</button>
-    </div>
-    <h3>WACHEZAJI WA CHILX LIVE:</h3>
-    <div id="adminUserList"></div>
-    <button class="admin-btn danger" style="width:100%; margin-top:20px; padding:12px;" onclick="closeAdmin()">Funga Panel</button>
-</div>
+<script>
+    const firebaseConfig = { databaseURL: "https://firebaseio.com" };
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.database();
 
-<script type="module">
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-import { getDatabase, ref, push, onValue, get, update, remove, set } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
+    let currentUser = "";
+    const verifiedArtists = ["ZORAVALY", "PAUL", "WILLIAMS", "MASON", "SHANIYA", "IRENE", "ZAISAN"];
 
-const firebaseConfig = {
-  apiKey: "AIzaSyAGne9pWm-czJUJgtvsvNGnPXMpXi4vxDY",
-  authDomain: "chilx-live.firebaseapp.com",
-  databaseURL: "https://chilx-live-4432d-default-rtdb.firebaseio.com",
-  projectId: "chilx-live",
-  storageBucket: "chilx-live.firebasestorage.app",
-  messagingSenderId: "298470644583",
-  appId: "1:298470644583:web:bb7606e8e68518476bedc2"
-};
-const app = initializeApp(firebaseConfig);
-const db = getDatabase(app);
-const postsRef = ref(db, "posts");
-const usersRef = ref(db, "users");
-const adminRef = ref(db, "admin");
-
-let currentUser = "";
-let logoClicks = 0;
-let isAdmin = false;
-
-// HAKUNA PASSWORD DEFAULT. UTAWEKA MPAKA WEWE
-get(adminRef).then(snap => {
-    if(!snap.exists()) set(adminRef, {password: ""})
-});
-
-// LOGIN
-window.login = function() {
-    currentUser = document.getElementById('loginUsername').value.trim();
-    const pfp = document.getElementById('loginPfp').value.trim();
-    if(!currentUser) return alert("Tafadhali weka jina la kucheza");
-    if(!pfp) return alert("Tafadhali weka Link ya Profile Pic yako");
-    set(ref(db, 'users/' + currentUser), {pfp: pfp, verified: false});
-    document.getElementById('loginScreen').style.display = 'none';
-    document.getElementById('mainApp').style.display = 'block';
-}
-
-// VALIDATION
-function isValidUrl(string) {
-    try { new URL(string); return true; }
-    catch (_) { return false; }
-}
-function isValidTitle(string) {
-    return!string.startsWith("http") &&!string.startsWith("www");
-}
-
-// POST MODAL
-window.openPostModal = () => document.getElementById('postModal').style.display = 'flex';
-window.closePostModal = () => {
-    document.getElementById('postModal').style.display = 'none';
-    document.getElementById('titleError').innerText = "";
-    document.getElementById('linkError').innerText = "";
-}
-
-// TUMA POST
-window.sendPost = function() {
-    const type = document.getElementById('postType').value;
-    const title = document.getElementById('postTitle').value.trim();
-    const link = document.getElementById('postLink').value.trim();
-    const desc = document.getElementById('postDesc').value.trim();
-
-    document.getElementById('titleError').innerText = "";
-    document.getElementById('linkError').innerText = "";
-    let hasError = false;
-
-    if(!title) { document.getElementById('titleError').innerText = "Jina ni lazima"; hasError = true; }
-    if(!isValidTitle(title)) { document.getElementById('titleError').innerText = "Hapa paandikwe Jina tu, sio Link"; hasError = true; }
-    if(!link) { document.getElementById('linkError').innerText = "Link ni lazima"; hasError = true; }
-    if(!isValidUrl(link)) { document.getElementById('linkError').innerText = "Hii sio Link sahihi"; hasError = true; }
-
-    if(hasError) return;
-
-    get(ref(db, 'users/' + currentUser)).then(snap => {
-        const userData = snap.val();
-        push(postsRef, {user: currentUser, pfp: userData.pfp, type:type, title, link, desc, likes: 0, likedBy: {}, comments: {}, time: Date.now()});
-    })
-    closePostModal();
-    alert("Post imetumwa CHILX LIVE!");
-}
-
-// ONYESHA FEED
-onValue(postsRef, (snap) => {
-    const feed = document.getElementById('feed');
-    feed.innerHTML = "";
-    const posts = [];
-    snap.forEach(child => posts.push({id: child.key,...child.val()}));
-    posts.sort((a,b) => b.time - a.time);
-    if(posts.length === 0) feed.innerHTML = "<div style='text-align:center; color:#555; padding: 40px;'>Hakuna taarifa bado. Kuwa wa kwanza kupost!</div>";
-    posts.forEach(post => {
-        get(ref(db, 'users/' + post.user)).then(uSnap => {
-            const userData = uSnap.val() || {};
-            const pfp = post.pfp || userData.pfp || "https://i.postimg.cc/vBJj3bNH/chilx-live.jpg";
-            const verified = userData.verified? '<span class="v-badge"><svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg></span>' : '';
-            const liked = post.likedBy && post.likedBy[currentUser]? 'liked' : '';
-            const commentsCount = post.comments? Object.keys(post.comments).length : 0;
-            let commentsHTML = "";
-            if(post.comments) {
-                Object.values(post.comments).forEach(c => {
-                    commentsHTML += `<div class="comment"><strong>${c.user}</strong> ${c.text}</div>`;
-                })
-            }
-            let mediaHTML = "";
-            if(post.type === 'reel') mediaHTML = `<iframe src="${post.link}" allowfullscreen></iframe>`;
-            else if(post.type === 'post') mediaHTML = `<img src="${post.link}">`;
-
-            feed.innerHTML += `
-            <div class="post">
-                <div class="post-header"><img src="${pfp}"><div><div class="post-user">${post.user}${verified}</div></div></div>
-                <div class="post-body">${mediaHTML}</div>
-                <div class="post-actions ${liked}">
-                    <span onclick="likePost('${post.id}')"><svg viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg></span>
-                    <span class="likes-count">${post.likes || 0} likes</span>
-                </div>
-                <div class="post-caption">
-                    <span class="user">${post.user}</span>
-                    <span class="title">${post.title}</span>: ${post.desc}
-                </div>
-                <div class="comments-section">
-                    ${commentsCount > 0? `<div class="view-comments">Ona comments zote ${commentsCount}</div>` : ''}
-                    ${commentsHTML}
-                    <div class="comment-input">
-                        <input id="comment-${post.id}" placeholder="Andika comment...">
-                        <button onclick="addComment('${post.id}')">Tuma</button>
-                    </div>
-                </div>
-            </div>`;
-        })
-    })
-});
-
-// LIKE
-window.likePost = function(postId) {
-    const postRef = ref(db, 'posts/' + postId);
-    get(postRef).then(snap => {
-        const post = snap.val();
-        if(!post.likedBy) post.likedBy = {};
-        if(post.likedBy[currentUser]) { post.likes--; delete post.likedBy[currentUser]; }
-        else { post.likes = (post.likes || 0) + 1; post.likedBy[currentUser] = true; }
-        update(postRef, {likes: post.likes, likedBy: post.likedBy});
-    })
-}
-
-// COMMENT MPYA
-window.addComment = function(postId) {
-    const input = document.getElementById(`comment-${postId}`);
-    const text = input.value.trim();
-    if(!text) return;
-    const commentRef = ref(db, `posts/${postId}/comments`);
-    push(commentRef, {user: currentUser, text: text, time: Date.now()});
-    input.value = "";
-}
-
-// ADMIN PANEL - BONYEZA LOGO MARA 5
-window.handleLogoClick = function() {
-    logoClicks++;
-    setTimeout(() => { logoClicks = 0; }, 3000);
-    if (logoClicks >= 5) {
-        logoClicks = 0;
-        let pass = prompt("WEKA PASSWORD YA DIRECTOR:");
-        get(adminRef).then(snap => {
-            const savedPass = snap.val().password;
-            // KAMA HAKUNA PASSWORD BADO, RUHUSU KUINGIA ILI UIWEKE
-            if (savedPass === "" || savedPass === pass) {
-                isAdmin = true;
-                document.getElementById('adminPanel').classList.add('admin-active');
-                loadUsers();
-            }
-            else alert("PASSWORD SIO SAHI!");
-        })
+    function login() {
+        let name = document.getElementById('loginUsername').value;
+        if(!name) { alert("Tafadhali chagua Jina lako la usanii!"); return; }
+        
+        currentUser = name;
+        document.getElementById('loginScreen').style.display = 'none';
+        document.getElementById('mainApp').style.display = 'flex';
+        document.getElementById('userBadge').innerText = currentUser + " ✓";
+        
+        listenToGroupChat();
     }
-}
-window.closeAdmin = () => document.getElementById('adminPanel').classList.remove('admin-active');
-window.changeSecretPassword = () => {
-    const newP = document.getElementById('newPassInput').value;
-    if(newP.length < 1) return alert("Weka password");
-    update(adminRef, {password: newP});
-    alert("Password imewekwa!");
-}
 
-function loadUsers() {
-    if(!isAdmin) return;
-    get(usersRef).then(snap => {
-        let html = "";
-        snap.forEach(child => {
-            const u = child.key;
-            const d = child.val();
-            html += `<div class="user-row"><div style="display:flex; align-items:center; gap:10px;"><img src="${d.pfp}" style="width:35px; height:35px; border-radius:50%; object-fit:cover;"><div><strong style="color:var(--blue-neon)">${u}</strong><br><span style="color:#666;">${d.verified? "Verified ☑" : "Unverified"}</span></div></div><div><button class="admin-btn verify" onclick="verifyUser('${u}')">Verify</button><button class="admin-btn danger" onclick="deleteUser('${u}')">Futa</button></div></div>`;
+    function listenToGroupChat() {
+        db.ref("group_messages").limitToLast(40).on("child_added", function(snapshot) {
+            let data = snapshot.val();
+            let chatBox = document.getElementById('chatBox');
+
+            let msgDiv = document.createElement('div');
+            msgDiv.className = (data.sender === currentUser) ? "msg outgoing" : "msg incoming";
+            
+            let badge = verifiedArtists.includes(data.sender) ? '<span class="v-badge">✓</span>' : '';
+            msgDiv.innerHTML = `<strong>${data.sender}${badge}</strong>${data.text}`;
+            
+            chatBox.appendChild(msgDiv);
+            chatBox.scrollTop = chatBox.scrollHeight;
         });
-        document.getElementById('adminUserList').innerHTML = html;
-    })
-}
-window.verifyUser = (u) => { if(!isAdmin) return alert("Huna ruhusa"); update(ref(db, 'users/' + u), {verified: true}); loadUsers(); }
-window.deleteUser = (u) => { if(!isAdmin) return alert("Huna ruhusa"); if(confirm("Futa "+u+"?")) remove(ref(db, 'users/' + u)); loadUsers(); }
+    }
+
+    function sendMessage() {
+        let input = document.getElementById('msgInput');
+        let text = input.value.trim();
+        if (text === "") return;
+        
+        db.ref("group_messages").push().set({
+            sender: currentUser,
+            text: text,
+            timestamp: Date.now()
+        });
+        input.value = "";
+    }
+
+    function toggleActingIndicator(id, systemMsg) {
+        let element = document.getElementById(id);
+        element.classList.toggle('active');
+        if(element.classList.contains('active')) {
+            alert(`SYSTEM NOTICE // ${systemMsg} CONNECTED`);
+        }
+    }
+
+    function triggerActingClick(msg) {
+        alert(`CHILX LIVE // ${msg}`);
+    }
+
+    document.getElementById('msgInput').addEventListener("keypress", function(e) { if (e.key === "Enter") sendMessage(); });
 </script>
 </body>
 </html>
