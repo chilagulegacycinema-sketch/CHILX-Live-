@@ -22,7 +22,6 @@
     .logo h1 { font-size: 20px; font-weight: 900; color: var(--blue-neon); text-shadow: 0 0 8px var(--blue-neon); }
     .logo h1 span { color: var(--pink-neon); text-shadow: 0 0 8px var(--pink-neon); }
     
-    /* PROFILE YA MSANII KULIA */
     .user-profile { display: flex; align-items: center; gap: 8px; }
     .user-profile img { width: 32px; height: 32px; border-radius: 50%; object-fit: cover; border: 2px solid var(--blue-neon); }
     .user-name { font-size: 12px; font-weight: 700; color: var(--blue-neon); display: flex; align-items: center; gap: 4px; }
@@ -48,13 +47,12 @@
     .msg.outgoing { background: #111424; border-right: 3px solid var(--blue-neon); color: #fff; }
     .msg-header { color: var(--blue-neon); display: flex; align-items: center; gap: 4px; font-size: 11px; margin-bottom: 4px; letter-spacing: 1px; font-weight: 700; }
     
-    /* TIKI OFFICIAL YA META */
     .v-badge { width: 14px; height: 14px; background: #0095F6; border-radius: 50%; display: inline-flex; justify-content: center; align-items: center; }
     .v-badge svg { width: 9px; height: 9px; fill: #fff; }
 
     .msg img { max-width: 100%; border-radius: 8px; margin-top: 5px; }
     .msg iframe { width: 100%; aspect-ratio: 16/9; border-radius: 8px; margin-top: 5px; border: none; }
-    .voice-player { display: flex; align-items: center; gap: 8px; color: var(--pink-neon); font-size: 12px; }
+    .voice-player audio { width: 200px; height: 30px; }
 
     .input-area { padding: 15px; background: #05050A; border-top: 1px solid var(--border); display: flex; gap: 10px; align-items: center; }
     .chat-input { flex: 1; background: #000; border: 1px solid var(--border); color: #fff; padding: 12px 18px; border-radius: 25px; font-family: 'Orbitron'; font-size: 14px; }
@@ -103,7 +101,6 @@
             <img src="https://i.postimg.cc/vBJj3bNH/chilx-live.jpg" alt="Logo">
             <h1>CHILX <span>LIVE</span></h1>
         </div>
-        <!-- PROFILE YA MSANII KULIA -->
         <div class="user-profile" id="userProfile"></div>
     </div>
 
@@ -115,10 +112,10 @@
     <div class="chat-area" id="chatBox"></div>
 
     <div class="input-area">
-        <button class="media-btn" onclick="sendMedia('media')">📎</button>
+        <button class="media-btn" onclick="sendMedia()">📎</button>
         <button class="media-btn" id="voiceBtn">🎙️</button>
        
-        <input type="text" id="msgInput" class="chat-input" placeholder="Andika ujumbe au link ya media...">
+        <input type="text" id="msgInput" class="chat-input" placeholder="Andika SMC au bandika link ya media...">
         <button class="send-btn" onclick="sendMessage()">></button>
     </div>
 </div>
@@ -139,7 +136,6 @@
     let cameraStream = null;
     let mediaRecorder, audioChunks = [];
 
-    // KUMBU KUMBU: KAMA TUMESHA LOGIN - HII NI YA LOCAL TU
     window.onload = function() {
         let savedUser = localStorage.getItem('chilxUser');
         let savedPfp = localStorage.getItem('chilxPfp');
@@ -159,10 +155,8 @@
         currentUser = name;
         currentPfp = pfp;
         
-        // HIFADHI KWA LOCAL KWA KUKUMBUKA WEWE TU
         localStorage.setItem('chilxUser', currentUser);
         localStorage.setItem('chilxPfp', currentPfp);
-        // HIFADHI KWA FIREBASE ILI WATU WAKUONE
         db.ref("users/" + currentUser).set({pfp: currentPfp, name: currentUser});
 
         enterApp();
@@ -172,7 +166,6 @@
         document.getElementById('loginScreen').style.display = 'none';
         document.getElementById('mainApp').style.display = 'flex';
         
-        // ONYESHA PROFILE KULIA NA TIKI
         let badge = verifiedArtists.includes(currentUser) ? '<span class="v-badge"><svg viewBox="0 0 24 24"><path d="M12 2L3 5l9 19 9-19-9-3z"/></svg></span>' : '';
         document.getElementById('userProfile').innerHTML = `<img src="${currentPfp}"><div class="user-name">${currentUser}${badge}</div>`;
 
@@ -180,7 +173,6 @@
         setupVoiceRecorder();
     }
 
-    // HII NDIO INATUMA NA KUPOKEA KWA FIREBASE KWENDA SIMU NYINGINE
     function listenToGroupChat() {
         db.ref("group_messages").limitToLast(40).on("child_added", function(snapshot) {
             let data = snapshot.val();
@@ -193,10 +185,11 @@
             let content = data.text;
 
             if(data.type === 'voice') {
-                content = `<div class="voice-player">🎙️ <audio controls src="${data.text}"></audio></div>`;
+                // SAHIHISHO: TUMIA AUDIO TAG ILI ICHEZE KWENYE SIMU NYINGINE
+                content = `<div class="voice-player"><audio controls src="${data.text}"></audio></div>`;
             } else if(content.match(/\.(jpeg|jpg|gif|png)$/) || content.includes("postimg.cc")) {
                 content = `<img src="${content}">`;
-            } else if(content.includes("youtube.com") || content.includes("streamable.com")) {
+            } else if(content.includes("youtube.com") || content.includes("streamable.com") || content.includes("vimeo")) {
                 content = `<iframe src="${content}" allowfullscreen></iframe>`;
             }
 
@@ -218,22 +211,22 @@
         let text = input.value.trim();
         if (text === "") return;
        
-        // TUMA KWENDA FIREBASE ILI SIMU NYINGINE IONE
         db.ref("group_messages").push().set({
             sender: currentUser, pfp: currentPfp, type: 'text', text: text, timestamp: Date.now()
         });
         input.value = "";
     }
 
-    function sendMedia(type) {
-        let link = prompt(`WEKA LINK YA PICHA/VIDEO:\nMfano: https://postimg.cc/... au https://streamable.com/...`);
+    // SEHEMU MPYA YA KUTUMA PICHA/VIDEO
+    function sendMedia() {
+        let link = prompt(`POSTI PICHA AU VIDEO:\n\n1. Picha: Weka link ya postimg.cc\n2. Video: Weka link ya youtube.com au streamable.com\n\nBandika link hapa:`);
         if(!link) return;
         db.ref("group_messages").push().set({
             sender: currentUser, pfp: currentPfp, type: 'media', text: link, timestamp: Date.now()
         });
     }
 
-    // VOICE NOTE RECORDER
+    // VOICE NOTE SAHIHI
     function setupVoiceRecorder() {
         const voiceBtn = document.getElementById('voiceBtn');
         voiceBtn.onmousedown = startRecording;
@@ -244,7 +237,7 @@
     async function startRecording() {
         document.getElementById('voiceBtn').classList.add('recording');
         const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-        mediaRecorder = new MediaRecorder(stream);
+        mediaRecorder = new MediaRecorder(stream, { mimeType: 'audio/webm' });
         mediaRecorder.start();
         audioChunks = [];
         mediaRecorder.ondataavailable = e => audioChunks.push(e.data);
@@ -255,10 +248,15 @@
         mediaRecorder.stop();
         mediaRecorder.onstop = () => {
             const audioBlob = new Blob(audioChunks, { type: 'audio/webm' });
-            const audioUrl = URL.createObjectURL(audioBlob);
-            db.ref("group_messages").push().set({
-                sender: currentUser, pfp: currentPfp, type: 'voice', text: audioUrl, timestamp: Date.now()
-            });
+            const reader = new FileReader();
+            reader.readAsDataURL(audioBlob); 
+            reader.onloadend = () => {
+                const base64Audio = reader.result;
+                // TUMA KWENDA FIREBASE ILI SIMU NYINGINE ICHEZE
+                db.ref("group_messages").push().set({
+                    sender: currentUser, pfp: currentPfp, type: 'voice', text: base64Audio, timestamp: Date.now()
+                });
+            }
         };
     }
 
