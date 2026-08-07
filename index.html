@@ -4,9 +4,9 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>CHILX LIVE</title>
-<link rel="icon" href="https://postimg.cc">
+<link rel="icon" href="https://i.postimg.cc/vBJj3bNH/chilx-live.jpg">
 <style>
-    @import url('https://googleapis.com');
+    @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&display=swap');
     :root {
         --bg:#010101; --card:#0A0A12; --border:#1E1E2E;
         --blue-neon:#00F0FF; --pink-neon:#FF00F5; --text:#E0E0FF; --error:#FF0040;
@@ -15,7 +15,7 @@
     body { background: var(--bg); color: var(--text); font-family: 'Orbitron', sans-serif; height: 100vh; display: flex; justify-content: center; overflow: hidden; }
 
     .app-container { width: 100%; max-width: 500px; background: #000; border-left: 1px solid var(--border); border-right: 1px solid var(--border); display: flex; flex-direction: column; height: 100vh; position: relative; }
-    
+   
     .header { background: #05050A; padding: 12px 16px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; box-shadow: 0 0 15px rgba(0,240,255,0.1); }
     .logo { display: flex; align-items: center; gap: 10px; cursor: pointer; user-select: none; }
     .logo img { width: 38px; height: 38px; border-radius: 50%; object-fit: cover; border: 2px solid var(--blue-neon); box-shadow: 0 0 10px var(--blue-neon); }
@@ -42,21 +42,23 @@
     .input-area { padding: 15px; background: #05050A; border-top: 1px solid var(--border); display: flex; gap: 10px; align-items: center; }
     .chat-input { flex: 1; background: #000; border: 1px solid var(--border); color: #fff; padding: 12px 18px; border-radius: 25px; font-family: 'Orbitron'; font-size: 14px; }
     .chat-input:focus { border-color: var(--blue-neon); outline: none; box-shadow: 0 0 8px rgba(0,240,255,0.2); }
-    
+   
     .media-btn { background: none; border: none; font-size: 20px; cursor: pointer; color: var(--text); padding: 0 5px; transition: 0.2s; }
     .media-btn:hover { color: var(--blue-neon); text-shadow: 0 0 8px var(--blue-neon); }
     .send-btn { background: linear-gradient(135deg, var(--blue-neon), var(--pink-neon)); color: #000; border: none; border-radius: 50%; width: 45px; height: 45px; cursor: pointer; font-weight: 900; font-size: 18px; display: flex; justify-content: center; align-items: center; box-shadow: 0 0 10px var(--pink-neon); }
 </style>
-<script src="https://gstatic.com"></script>
-<script src="https://gstatic.com"></script>
+
+<!-- FIREBASE V8 -->
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
 </head>
 <body>
 
 <div id="loginScreen" class="login-screen">
-    <img src="https://postimg.cc" alt="Logo">
+    <img src="https://i.postimg.cc/vBJj3bNH/chilx-live.jpg" alt="Logo">
     <h2>CHILX <span style="color:var(--pink-neon);">LIVE</span></h2>
     <p style="color:#888; font-size:11px; margin-bottom:25px; letter-spacing:1px;">MTANDAO RASMI WA WASANII SABA</p>
-    
+   
     <select id="loginUsername">
         <option value="" disabled selected>Chagua Jina Lako la Game</option>
         <option value="ZORAVALY">ZORAVALY</option>
@@ -67,14 +69,14 @@
         <option value="IRENE">IRENE</option>
         <option value="ZAISAN">ZAISAN</option>
     </select>
-    
+   
     <button onclick="login()">INGIA KWENYE GROUP</button>
 </div>
 
 <div id="mainApp" class="app-container" style="display:none;">
     <div class="header">
         <div class="logo">
-            <img src="https://postimg.cc" alt="Logo">
+            <img src="https://i.postimg.cc/vBJj3bNH/chilx-live.jpg" alt="Logo">
             <h1>CHILX <span>LIVE</span></h1>
         </div>
         <div style="font-size:11px; color:var(--blue-neon); border:1px solid var(--blue-neon); padding:4px 10px; border-radius:4px; font-weight:700;" id="userBadge">--</div>
@@ -90,7 +92,7 @@
     <div class="input-area">
         <button class="media-btn" onclick="triggerActingClick('LIVE VIDEO ENGINE ACTIVE')">📹</button>
         <button class="media-btn" onclick="triggerActingClick('AUDIO RECORDING LAYER START')">🎙️</button>
-        
+       
         <input type="text" id="msgInput" class="chat-input" placeholder="Andika ujumbe...">
         <button class="send-btn" onclick="sendMessage()">></button>
     </div>
@@ -107,17 +109,13 @@
     function login() {
         let name = document.getElementById('loginUsername').value;
         if(!name) { alert("Tafadhali chagua Jina lako la usanii!"); return; }
-        
+       
         currentUser = name;
         document.getElementById('loginScreen').style.display = 'none';
         document.getElementById('mainApp').style.display = 'flex';
         document.getElementById('userBadge').innerText = currentUser + " ✓";
-        
-        try {
-            listenToGroupChat();
-        } catch(e) {
-            console.log("Database connection bypass active.");
-        }
+       
+        listenToGroupChat();
     }
 
     function listenToGroupChat() {
@@ -127,10 +125,10 @@
 
             let msgDiv = document.createElement('div');
             msgDiv.className = (data.sender === currentUser) ? "msg outgoing" : "msg incoming";
-            
+           
             let badge = verifiedArtists.includes(data.sender) ? '<span class="v-badge">✓</span>' : '';
             msgDiv.innerHTML = `<strong>${data.sender}${badge}</strong>${data.text}`;
-            
+           
             chatBox.appendChild(msgDiv);
             chatBox.scrollTop = chatBox.scrollHeight;
         });
@@ -140,7 +138,7 @@
         let input = document.getElementById('msgInput');
         let text = input.value.trim();
         if (text === "") return;
-        
+       
         db.ref("group_messages").push().set({
             sender: currentUser,
             text: text,
