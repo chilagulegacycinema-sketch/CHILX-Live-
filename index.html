@@ -61,10 +61,14 @@
 .artist-input { width: 100%; background: #000; border: 1px solid var(--border); color: #fff; padding: 12px 18px; border-radius: 12px; font-family: 'Orbitron'; font-size: 14px; }
 .post-btn { background: linear-gradient(135deg, var(--blue-neon), var(--pink-neon)); color: #000; border: none; border-radius: 12px; padding: 12px; cursor: pointer; font-weight: 900; font-size: 16px; font-family: 'Orbitron'; }
 
-    #cameraModal { display: none; position: fixed; top:0; left:0; width:100%; height:100%; background: #000; z-index: 2000; }
-    #cameraVideo { width: 100%; height: 100%; object-fit: cover; background: #000; }
-    #viewerScreen { display: none; width: 100%; height: 100%; background: #000; justify-content: center; align-items: center; color: #fff; font-size: 18px; text-align: center; padding: 20px; }
-.live-overlay { position: absolute; top: 20px; left: 20px; background: var(--error); padding: 6px 14px; border-radius: 6px; display: flex; align-items: center; gap: 8px; font-size: 14px; font-weight: 900; }
+    #cameraModal { display: none; position: fixed; top:0; left:0; width:100%; height:100%; background: #000; z-index: 2000; flex-direction: column; }
+    /* GRID YA WASANII WANAO LIVE */
+    #liveGrid { flex: 1; display: grid; gap: 4px; background: #000; padding: 4px; }
+    .live-box { background: #111; border-radius: 8px; position: relative; overflow: hidden; border: 2px solid var(--border); }
+    .live-box video { width: 100%; height: 100%; object-fit: cover; }
+    .live-box .artist-name { position: absolute; bottom: 5px; left: 5px; background: rgba(0,0,0,0.7); padding: 3px 8px; border-radius: 10px; font-size: 10px; font-weight: 700; }
+    #viewerScreen { display: none; width: 100%; height: 100%; background: #000; justify-content: center; align-items: center; }
+.live-overlay { position: absolute; top: 20px; left: 20px; background: rgba(0,0,0,0.6); padding: 6px 14px; border-radius: 20px; display: flex; align-items: center; gap: 8px; font-size: 14px; font-weight: 900; border: 1px solid var(--error); z-index: 10; }
 
     #danmakuContainer { position: absolute; top: 80px; left: 0; width: 100%; height: calc(100% - 160px); pointer-events: none; overflow: hidden; }
 .danmaku { position: absolute; white-space: nowrap; font-size: 13px; font-weight: 700; color: #fff; text-shadow: 0 0 5px #000; animation: danmakuMove 7s linear; display: flex; align-items: center; gap: 6px; background: rgba(0,240,255,0.1); padding: 4px 10px; border-radius: 15px; border: 1px solid var(--blue-neon); }
@@ -133,13 +137,13 @@
 </div>
 
 <div id="cameraModal">
-    <video id="cameraVideo" autoplay playsinline></video>
-    <div id="viewerScreen">
-        <div>🔴 MSANII ANA LIVE...<br><br>Subiri kidogo<br>Tuma ❤️ kama unampenda</div>
-    </div>
+    <!-- HII NDIO GRID MPYA -->
+    <div id="liveGrid"></div>
+    <div id="viewerScreen"></div>
+
     <div class="live-overlay">
         <div class="live-dot"></div>
-        <span>LIVE • <span id="liveViewers">1</span> WAKITAZAMA</span>
+        <span><span id="liveViewers">1</span></span>
     </div>
     <div id="danmakuContainer"></div>
     <div class="live-love-btn" id="liveLoveBtn" onclick="sendLove()">
@@ -162,6 +166,7 @@
     const artistsList = ["ZORAVALY", "PAUL", "WILLIAMS", "MASON", "SHANIYA", "IRENE", "ZAISAN"];
     let cameraStream = null;
     let isArtist = false;
+    let myLiveRef = null;
 
     function loginAsArtist() {
         let name = document.getElementById('loginName').value.trim();
@@ -196,12 +201,14 @@
             document.getElementById('userProfile').onclick = null;
         }
         listenToOnlineCount();
-        listenToChannel(); // HAPA NDIO REALTIME
+        listenToChannel();
         listenToDanmaku();
+        listenToLiveArtists(); // SIKILIZA WASANII WANAO LIVE
     }
 
     function logout() {
         if(confirm("Una uhakika unataka kutoka?")) {
+            if(myLiveRef) myLiveRef.remove();
             db.ref("online/" + currentUser).remove();
             localStorage.clear();
             location.reload();
@@ -214,7 +221,7 @@
         document.getElementById('profilePage').style.display = 'flex';
         document.getElementById('profilePagePfp').src = currentPfp;
         document.getElementById('profilePageName').innerText = currentUser;
-        loadMyPosts(); // HAPA NDIO REALTIME
+        loadMyPosts();
     }
     function backToChannel() {
         document.getElementById('channelView').style.display = 'block';
@@ -230,58 +237,78 @@
             document.getElementById('userProfile').querySelector('img').src = currentPfp;
         }
     }
-
-    // REALTIME KWA PROFILE YAKO
     function loadMyPosts() {
         document.getElementById('profilePosts').innerHTML = "";
         let myPostsRef = db.ref("channel_posts").orderByChild("sender").equalTo(currentUser);
-
         myPostsRef.on("child_added", snap => renderMyPost(snap.key, snap.val()));
-        myPostsRef.on("child_removed", snap => { // KAMA KIMEFUTWA
-            let el = document.getElementById("my-post-" + snap.key);
-            if(el) el.remove();
-        });
-        myPostsRef.on("child_changed", snap => { // KAMA KIMEHARIRIWA
-            let data = snap.val();
-            document.getElementById("caption-" + snap.key).innerText = data.caption;
-            document.getElementById("media-" + snap.key).innerHTML = getMediaHTML(data.link);
-        });
+        myPostsRef.on("child_removed", snap => { let el = document.getElementById("my-post-" + snap.key); if(el) el.remove(); });
+        myPostsRef.on("child_changed", snap => { let data = snap.val(); document.getElementById("caption-" + snap.key).innerText = data.caption; document.getElementById("media-" + snap.key).innerHTML = getMediaHTML(data.link); });
     }
-
     function renderMyPost(key, data) {
-        if(document.getElementById("my-post-" + key)) return; // Zisidoblike
+        if(document.getElementById("my-post-" + key)) return;
         let media = getMediaHTML(data.link);
-        document.getElementById('profilePosts').innerHTML += `
-            <div class="post" id="my-post-${key}">
-                <div class="post-header">
-                    <img class="post-pfp" src="${data.pfp}">
-                    <div><div class="post-name">${data.sender}</div></div>
-                    <div class="post-settings" onclick="postOptions('${key}')">⋮</div>
-                </div>
-                <div class="post-caption" id="caption-${key}">${data.caption}</div>
-                <div class="post-media" id="media-${key}">${media}</div>
-            </div>
-        `;
+        document.getElementById('profilePosts').innerHTML += `<div class="post" id="my-post-${key}"><div class="post-header"><img class="post-pfp" src="${data.pfp}"><div><div class="post-name">${data.sender}</div></div><div class="post-settings" onclick="postOptions('${key}')">⋮</div></div><div class="post-caption" id="caption-${key}">${data.caption}</div><div class="post-media" id="media-${key}">${media}</div></div>`;
     }
     function postOptions(key) {
         let action = prompt("Chagua: \n1. Futa Post \n2. Hariri Maelezo \n3. Hariri Link");
-        if(action == "1") {
-            if(confirm("Una uhakika unataka kufuta post hii?")) {
-                db.ref("channel_posts/" + key).remove();
-            }
-        }
-        if(action == "2") {
-            let newCap = prompt("Andika maelezo mapya:");
-            if(newCap) { db.ref("channel_posts/" + key + "/caption").set(newCap); }
-        }
-        if(action == "3") {
-            let newLink = prompt("Bandika link mpya:");
-            if(newLink) { db.ref("channel_posts/" + key + "/link").set(newLink); }
-        }
+        if(action == "1") { if(confirm("Una uhakika unataka kufuta post hii?")) { db.ref("channel_posts/" + key).remove(); } }
+        if(action == "2") { let newCap = prompt("Andika maelezo mapya:"); if(newCap) { db.ref("channel_posts/" + key + "/caption").set(newCap); } }
+        if(action == "3") { let newLink = prompt("Bandika link mpya:"); if(newLink) { db.ref("channel_posts/" + key + "/link").set(newLink); } }
     }
 
     function handleLiveClick() {
-        if(isArtist) { openCamera(); } else { openViewerScreen(); }
+        if(isArtist) { toggleMyLive(); } else { openViewerScreen(); }
+    }
+
+    // REALTIME: SIKILIZA WASANII WOTE WANAO LIVE
+    function listenToLiveArtists() {
+        db.ref("live_artists").on("value", snap => {
+            let artists = snap.val() || {};
+            let count = Object.keys(artists).length;
+            updateLiveGrid(artists, count);
+        });
+    }
+
+    function updateLiveGrid(artists, count) {
+        let grid = document.getElementById('liveGrid');
+        grid.innerHTML = "";
+        
+        // SET GRID COLUMNS KWA IDADI
+        if(count == 1) grid.style.gridTemplateColumns = "1fr";
+        if(count == 2) grid.style.gridTemplateColumns = "1fr 1fr";
+        if(count == 3) grid.style.gridTemplateColumns = "1fr 1fr";
+        if(count >= 4) grid.style.gridTemplateColumns = "1fr 1fr";
+
+        for(let artistName in artists) {
+            let data = artists[artistName];
+            let box = document.createElement('div');
+            box.className = 'live-box';
+            box.id = 'live-box-' + artistName;
+            box.innerHTML = `
+                <video id="video-${artistName}" autoplay playsinline muted></video>
+                <div class="artist-name">${artistName}</div>
+            `;
+            grid.appendChild(box);
+            
+            // KAMA NI MIMI WEKA CAMERA YANGU
+            if(artistName === currentUser && data.stream) {
+                document.getElementById(`video-${artistName}`).srcObject = cameraStream;
+            }
+        }
+    }
+
+    function toggleMyLive() {
+        myLiveRef = db.ref("live_artists/" + currentUser);
+        myLiveRef.once("value", snap => {
+            if(snap.exists()) { // NIPO LIVE, TOKA
+                myLiveRef.remove();
+                closeCamera();
+            } else { // SIJAINGIA LIVE, INGA
+                openCamera();
+                myLiveRef.set({pfp: currentPfp, time: Date.now()});
+                myLiveRef.onDisconnect().remove();
+            }
+        });
     }
 
     function listenToOnlineCount() {
@@ -330,68 +357,41 @@
         }
     }
     function renderPost(key, data) {
-        if(document.getElementById("post-" + key)) return; // Zisidoblike
+        if(document.getElementById("post-" + key)) return;
         let badge = artistsList.includes(data.sender.toUpperCase())? '<span class="v-badge"><svg viewBox="0 0 24 24"><path d="M12 2L3 5l9 19 9-19-9-3z"/></svg></span>' : '';
         let time = new Date(data.timestamp).toLocaleTimeString('sw-TZ', {hour:'2-digit', minute:'2-digit'});
-        document.getElementById('chatBox').innerHTML += `
-            <div class="post" id="post-${key}">
-                <div class="post-header">
-                    <img class="post-pfp" src="${data.pfp}">
-                    <div><div class="post-name">${data.sender}${badge}</div><div class="post-time">${time}</div></div>
-                </div>
-                <div class="post-caption">${data.caption}</div>
-                <div class="post-media">${getMediaHTML(data.link)}</div>
-            </div>
-        `;
+        document.getElementById('chatBox').innerHTML += `<div class="post" id="post-${key}"><div class="post-header"><img class="post-pfp" src="${data.pfp}"><div><div class="post-name">${data.sender}${badge}</div><div class="post-time">${time}</div></div></div><div class="post-caption">${data.caption}</div><div class="post-media">${getMediaHTML(data.link)}</div></div>`;
     }
-
-    // REALTIME KWA CHANNEL YOTE
     function listenToChannel() {
         let postsRef = db.ref("channel_posts").limitToLast(30);
-        document.getElementById('chatBox').innerHTML = ""; // Futa kwanza
-
+        document.getElementById('chatBox').innerHTML = "";
         postsRef.on("child_added", snap => renderPost(snap.key, snap.val()));
-        postsRef.on("child_removed", snap => { // KAMA KIMEFUTWA
-            let el = document.getElementById("post-" + snap.key);
-            if(el) el.remove();
-        });
-        postsRef.on("child_changed", snap => { // KAMA KIMEHARIRIWA
-            let el = document.getElementById("post-" + snap.key);
-            if(el) el.remove(); // Futa ya zamani iingie mpya
-            renderPost(snap.key, snap.val());
-        });
+        postsRef.on("child_removed", snap => { let el = document.getElementById("post-" + snap.key); if(el) el.remove(); });
+        postsRef.on("child_changed", snap => { let el = document.getElementById("post-" + snap.key); if(el) el.remove(); renderPost(snap.key, snap.val()); });
     }
-
     function sendPost() {
         if(!isArtist) return;
         let caption = document.getElementById('postCaption').value.trim();
         let link = document.getElementById('postLink').value.trim();
         if (!caption &&!link) return;
-        db.ref("channel_posts").push().set({
-            sender: currentUser,
-            pfp: currentPfp,
-            caption: caption,
-            link: link,
-            timestamp: Date.now()
-        });
+        db.ref("channel_posts").push().set({ sender: currentUser, pfp: currentPfp, caption: caption, link: link, timestamp: Date.now() });
         document.getElementById('postCaption').value = "";
         document.getElementById('postLink').value = "";
     }
 
     async function openCamera() {
-        document.getElementById('cameraModal').style.display = 'block';
-        document.getElementById('cameraVideo').style.display = 'block';
+        document.getElementById('cameraModal').style.display = 'flex';
+        document.getElementById('liveGrid').style.display = 'grid';
         document.getElementById('viewerScreen').style.display = 'none';
         document.getElementById('liveLoveBtn').style.display = 'flex';
         document.getElementById('liveChatInput').style.display = 'flex';
         cameraStream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
-        document.getElementById('cameraVideo').srcObject = cameraStream;
     }
 
     function openViewerScreen() {
-        document.getElementById('cameraModal').style.display = 'block';
-        document.getElementById('cameraVideo').style.display = 'none';
-        document.getElementById('viewerScreen').style.display = 'flex';
+        document.getElementById('cameraModal').style.display = 'flex';
+        document.getElementById('liveGrid').style.display = 'grid';
+        document.getElementById('viewerScreen').style.display = 'none';
         document.getElementById('liveLoveBtn').style.display = 'flex';
         document.getElementById('liveChatInput').style.display = 'none';
     }
