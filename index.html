@@ -66,7 +66,7 @@
     #cameraModal { display: none; position: fixed; top:0; left:0; width:100%; height:100%; background: #000; z-index: 2000; flex-direction: column; }
     #liveGrid { flex: 1; display: grid; gap: 4px; background: #000; padding: 4px; overflow: hidden; }
     .live-box { background: #111; border-radius: 8px; position: relative; overflow: hidden; border: 2px solid var(--border); }
-    .live-box video { width: 100%; height: 100%; object-fit: cover; }
+    .live-box video { width: 100%; height: 100%; object-fit: cover; background: #000; } /* NIMEONGEZA BG */
     .live-box .artist-name { position: absolute; bottom: 5px; left: 5px; background: rgba(0,0,0,0.7); padding: 3px 8px; border-radius: 10px; font-size: 10px; font-weight: 700; }
     #viewerScreen { display: none; width: 100%; height: 100%; background: #000; justify-content: center; align-items: center; }
 .live-overlay { position: absolute; top: 20px; left: 20px; background: rgba(0,0,0,0.6); padding: 6px 14px; border-radius: 20px; display: flex; align-items: center; gap: 8px; font-size: 14px; font-weight: 900; border: 1px solid var(--error); z-index: 10; }
@@ -168,7 +168,6 @@
     let myLiveRef = null;
 
     function loginAsArtist() {
-        console.log("loginAsArtist clicked");
         let name = document.getElementById('loginName').value.trim();
         let pfp = document.getElementById('loginPfp').value.trim();
         if(!name ||!pfp) { alert("Jaza majina yote"); return; }
@@ -176,7 +175,6 @@
         setupUser(name, pfp, "artist");
     }
     function loginAsViewer() {
-        console.log("loginAsViewer clicked");
         let name = document.getElementById('loginName').value.trim();
         let pfp = document.getElementById('loginPfp').value.trim() || "https://i.postimg.cc/vBJj3bNH/chilx-live.jpg";
         if(!name) { alert("Weka jina lako"); return; }
@@ -250,26 +248,11 @@
         let media = getMediaHTML(data.link);
         document.getElementById('profilePosts').innerHTML += `<div class="post" id="my-post-${key}"><div class="post-header"><img class="post-pfp" src="${data.pfp}"><div><div class="post-name">${data.sender}</div></div><div class="post-settings" onclick="postOptions('${key}')">⋮</div></div><div class="post-caption" id="caption-${key}">${data.caption}</div><div class="post-media" id="media-${key}">${media}</div></div>`;
     }
-    // HAPA NDIO KULIKUWA NA BUG. NIMEREKEBISHA BRACKETS
     function postOptions(key) {
         let action = prompt("Chagua: \n1. Futa Post \n2. Hariri Maelezo \n3. Hariri Link");
-        if(action == "1") { 
-            if(confirm("Una uhakika unataka kufuta post hii?")) { 
-                db.ref("channel_posts/" + key).remove(); 
-            } 
-        }
-        if(action == "2") { 
-            let newCap = prompt("Andika maelezo mapya:"); 
-            if(newCap) { 
-                db.ref("channel_posts/" + key + "/caption").set(newCap); 
-            } 
-        }
-        if(action == "3") { 
-            let newLink = prompt("Bandika link mpya:"); 
-            if(newLink) { 
-                db.ref("channel_posts/" + key + "/link").set(newLink); 
-            } 
-        }
+        if(action == "1") { if(confirm("Una uhakika unataka kufuta post hii?")) { db.ref("channel_posts/" + key).remove(); } }
+        if(action == "2") { let newCap = prompt("Andika maelezo mapya:"); if(newCap) { db.ref("channel_posts/" + key + "/caption").set(newCap); } }
+        if(action == "3") { let newLink = prompt("Bandika link mpya:"); if(newLink) { db.ref("channel_posts/" + key + "/link").set(newLink); } }
     }
 
     function handleLiveClick() {
@@ -299,22 +282,33 @@
             box.id = 'live-box-' + artistName;
             box.innerHTML = `<video id="video-${artistName}" autoplay playsinline muted></video><div class="artist-name">${artistName}</div>`;
             grid.appendChild(box);
+            
+            // FIX 1: Weka stream BAADA ya video kuingia DOM
             if(artistName === currentUser && cameraStream) {
-                document.getElementById(`video-${artistName}`).srcObject = cameraStream;
+                setTimeout(() => {
+                    let myVideo = document.getElementById(`video-${artistName}`);
+                    if(myVideo) myVideo.srcObject = cameraStream;
+                }, 100);
             }
         }
     }
 
-    function toggleMyLive() {
+    async function toggleMyLive() {
         myLiveRef = db.ref("live_artists/" + currentUser);
-        myLiveRef.once("value", snap => {
+        myLiveRef.once("value", async snap => {
             if(snap.exists()) {
                 myLiveRef.remove();
                 closeCamera();
             } else {
-                openCamera();
-                myLiveRef.set({pfp: currentPfp, time: Date.now()});
-                myLiveRef.onDisconnect().remove();
+                // FIX 2: Omba permission kwanza kabla ya kuingia live
+                try {
+                    cameraStream = await navigator.mediaDevices.getUserMedia({ video: {facingMode: "user"}, audio: true });
+                    openCamera();
+                    myLiveRef.set({pfp: currentPfp, time: Date.now()});
+                    myLiveRef.onDisconnect().remove();
+                } catch(err) {
+                    alert("Ruhusu Camera na Microphone kwanza: " + err.message);
+                }
             }
         });
     }
@@ -387,13 +381,12 @@
         document.getElementById('postLink').value = "";
     }
 
-    async function openCamera() {
+    function openCamera() {
         document.getElementById('cameraModal').style.display = 'flex';
         document.getElementById('liveGrid').style.display = 'grid';
         document.getElementById('viewerScreen').style.display = 'none';
         document.getElementById('liveLoveBtn').style.display = 'flex';
         document.getElementById('liveChatInput').style.display = 'flex';
-        cameraStream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
     }
 
     function openViewerScreen() {
@@ -409,6 +402,7 @@
         document.getElementById('liveLoveBtn').style.display = 'none';
         document.getElementById('liveChatInput').style.display = 'none';
         if(cameraStream) cameraStream.getTracks().forEach(track => track.stop());
+        cameraStream = null;
     }
     document.getElementById('liveComment').addEventListener("keypress", e => { if (e.key === "Enter") sendDanmaku(); });
     document.getElementById('cameraModal').addEventListener('click', function(e){
