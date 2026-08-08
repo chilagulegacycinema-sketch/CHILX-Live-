@@ -12,10 +12,10 @@
         --blue-neon:#00F0FF; --pink-neon:#FF00F5; --text:#E0E0FF; --error:#FF0040;
     }
     * { box-sizing: border-box; margin: 0; padding: 0; }
-    html, body { height: 100%; overflow: hidden; } /* Muhimu */
+    html, body { height: 100%; overflow: hidden; }
     body { background: var(--bg); color: var(--text); font-family: 'Orbitron', sans-serif; display: flex; justify-content: center; }
 
-.app-container { width: 100%; max-width: 500px; background: #000; border-left: 1px solid var(--border); border-right: 1px solid var(--border); display: flex; flex-direction: column; height: 100%; } /* Badili kuwa 100% */
+.app-container { width: 100%; max-width: 500px; background: #000; border-left: 1px solid var(--border); border-right: 1px solid var(--border); display: flex; flex-direction: column; height: 100%; }
 
 .header { background: #05050A; padding: 12px 16px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; flex-shrink: 0; }
 .logo { display: flex; align-items: center; gap: 10px; }
@@ -37,8 +37,8 @@
 .login-screen input { width: 90%; background: var(--card); border: 1px solid var(--blue-neon); color: #fff; padding: 14px; margin: 15px 0; border-radius: 8px; font-size: 16px; font-family: 'Orbitron'; text-align: center; }
 .login-screen button { background: linear-gradient(90deg, var(--blue-neon), var(--pink-neon)); color: #000; border: none; padding: 14px; width: 90%; border-radius: 8px; font-weight: 900; cursor: pointer; font-size: 16px; font-family: 'Orbitron'; margin-bottom: 10px; }
 
-#channelView { flex: 1; display: flex; flex-direction: column; overflow: hidden; } /* MWINGE MPYA */
-.chat-area { flex: 1; overflow-y: auto; -webkit-overflow-scrolling: touch; padding: 15px; display: flex; flex-direction: column; gap: 15px; background: rgba(10,10,18,0.4); } /* HII NDIO ITASCROLL */
+#channelView { flex: 1; display: flex; flex-direction: column; overflow: hidden; }
+.chat-area { flex: 1; overflow-y: auto; -webkit-overflow-scrolling: touch; padding: 15px; display: flex; flex-direction: column; gap: 15px; background: rgba(10,10,18,0.4); }
 
 .post { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 0; overflow: hidden; flex-shrink: 0; }
 .post-header { display: flex; gap: 10px; align-items: center; padding: 10px 12px; }
@@ -74,7 +74,7 @@
     #danmakuContainer { position: absolute; top: 80px; left: 0; width: 100%; height: calc(100% - 160px); pointer-events: none; overflow: hidden; }
 .danmaku { position: absolute; white-space: nowrap; font-size: 13px; font-weight: 700; color: #fff; text-shadow: 0 0 5px #000; animation: danmakuMove 7s linear; display: flex; align-items: center; gap: 6px; background: rgba(0,240,255,0.1); padding: 4px 10px; border-radius: 15px; border: 1px solid var(--blue-neon); }
 .danmaku img { width: 22px; height: 22px; border-radius: 50%; border: 1px solid var(--pink-neon); }
-    @keyframes danmakuMove { from { transform: translateX(100%); } to { transform: translateX(-100%); }
+    @keyframes danmakuMove { from { transform: translateX(100%); } to { transform: translateX(-100%); } }
 .live-chat-input { position:absolute; bottom:20px; left:10px; right:10px; display:none; gap:10px; }
 
 .profile-page { display: none; flex-direction: column; height: 100%; }
@@ -168,6 +168,7 @@
     let myLiveRef = null;
 
     function loginAsArtist() {
+        console.log("loginAsArtist clicked");
         let name = document.getElementById('loginName').value.trim();
         let pfp = document.getElementById('loginPfp').value.trim();
         if(!name ||!pfp) { alert("Jaza majina yote"); return; }
@@ -175,6 +176,7 @@
         setupUser(name, pfp, "artist");
     }
     function loginAsViewer() {
+        console.log("loginAsViewer clicked");
         let name = document.getElementById('loginName').value.trim();
         let pfp = document.getElementById('loginPfp').value.trim() || "https://i.postimg.cc/vBJj3bNH/chilx-live.jpg";
         if(!name) { alert("Weka jina lako"); return; }
@@ -223,7 +225,7 @@
         loadMyPosts();
     }
     function backToChannel() {
-        document.getElementById('channelView').style.display = 'flex'; /* Badili kuwa flex */
+        document.getElementById('channelView').style.display = 'flex';
         document.getElementById('profilePage').style.display = 'none';
     }
     function changeProfilePic() {
@@ -248,11 +250,26 @@
         let media = getMediaHTML(data.link);
         document.getElementById('profilePosts').innerHTML += `<div class="post" id="my-post-${key}"><div class="post-header"><img class="post-pfp" src="${data.pfp}"><div><div class="post-name">${data.sender}</div></div><div class="post-settings" onclick="postOptions('${key}')">⋮</div></div><div class="post-caption" id="caption-${key}">${data.caption}</div><div class="post-media" id="media-${key}">${media}</div></div>`;
     }
+    // HAPA NDIO KULIKUWA NA BUG. NIMEREKEBISHA BRACKETS
     function postOptions(key) {
         let action = prompt("Chagua: \n1. Futa Post \n2. Hariri Maelezo \n3. Hariri Link");
-        if(action == "1") { if(confirm("Una uhakika unataka kufuta post hii?")) { db.ref("channel_posts/" + key).remove(); }
-        if(action == "2") { let newCap = prompt("Andika maelezo mapya:"); if(newCap) { db.ref("channel_posts/" + key + "/caption").set(newCap); }
-        if(action == "3") { let newLink = prompt("Bandika link mpya:"); if(newLink) { db.ref("channel_posts/" + key + "/link").set(newLink); }
+        if(action == "1") { 
+            if(confirm("Una uhakika unataka kufuta post hii?")) { 
+                db.ref("channel_posts/" + key).remove(); 
+            } 
+        }
+        if(action == "2") { 
+            let newCap = prompt("Andika maelezo mapya:"); 
+            if(newCap) { 
+                db.ref("channel_posts/" + key + "/caption").set(newCap); 
+            } 
+        }
+        if(action == "3") { 
+            let newLink = prompt("Bandika link mpya:"); 
+            if(newLink) { 
+                db.ref("channel_posts/" + key + "/link").set(newLink); 
+            } 
+        }
     }
 
     function handleLiveClick() {
