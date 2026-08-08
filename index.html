@@ -65,9 +65,9 @@
 
     #cameraModal { display: none; position: fixed; top:0; left:0; width:100%; height:100%; background: #000; z-index: 2000; flex-direction: column; }
     #liveGrid { flex: 1; display: grid; gap: 4px; background: #000; padding: 4px; overflow: hidden; }
-  .live-box { background: #111; border-radius: 8px; position: relative; overflow: hidden; border: 2px solid var(--border); }
-  .live-box video { width: 100%; height: 100%; object-fit: cover; background: #000; }
-  .live-box.artist-name { position: absolute; bottom: 5px; left: 5px; background: rgba(0,0,0,0.7); padding: 3px 8px; border-radius: 10px; font-size: 10px; font-weight: 700; z-index: 2; }
+ .live-box { background: #111; border-radius: 8px; position: relative; overflow: hidden; border: 2px solid var(--border); }
+ .live-box video { width: 100%; height: 100%; object-fit: cover; background: #000; }
+ .live-box.artist-name { position: absolute; bottom: 5px; left: 5px; background: rgba(0,0,0,0.7); padding: 3px 8px; border-radius: 10px; font-size: 10px; font-weight: 700; z-index: 2; }
     #viewerScreen { display: none; width: 100%; height: 100%; background: #000; justify-content: center; align-items: center; }
 .live-overlay { position: absolute; top: 20px; left: 20px; background: rgba(0,0,0,0.6); padding: 6px 14px; border-radius: 20px; display: flex; align-items: center; gap: 8px; font-size: 14px; font-weight: 900; border: 1px solid var(--error); z-index: 10; }
 
@@ -156,7 +156,6 @@
 </div>
 
 <script>
-    // APP ID YAKO IMEINGIA HAPA
     const AGORA_APP_ID = "f90fcaaafc3b4a03a4f75d9fce4230cc";
     const AGORA_CHANNEL = "chilx_live_room";
 
@@ -205,12 +204,56 @@
         if(userRole === "viewer") {
             document.getElementById('artistInput').style.display = 'none';
             document.getElementById('userProfile').onclick = null;
+        } else {
+            document.getElementById('userProfile').onclick = openProfile; // RUDISHA HII
         }
         listenToOnlineCount();
         listenToChannel();
         listenToDanmaku();
         listenToLiveArtists();
         setupAgoraListeners();
+    }
+
+    // NIMEREJESHA FUNCTIONS ZOTE ZA PROFILE
+    function openProfile() {
+        if(!isArtist) return;
+        document.getElementById('channelView').style.display = 'none';
+        document.getElementById('profilePage').style.display = 'flex';
+        document.getElementById('profilePagePfp').src = currentPfp;
+        document.getElementById('profilePageName').innerText = currentUser;
+        loadMyPosts();
+    }
+    function backToChannel() {
+        document.getElementById('channelView').style.display = 'flex';
+        document.getElementById('profilePage').style.display = 'none';
+    }
+    function changeProfilePic() {
+        let newPfp = prompt("Weka link mpya ya picha yako:");
+        if(newPfp) {
+            currentPfp = newPfp;
+            localStorage.setItem('chilxPfp', currentPfp);
+            db.ref("online/" + currentUser).update({pfp: currentPfp});
+            document.getElementById('profilePagePfp').src = currentPfp;
+            document.getElementById('userProfile').querySelector('img').src = currentPfp;
+        }
+    }
+    function loadMyPosts() {
+        document.getElementById('profilePosts').innerHTML = "";
+        let myPostsRef = db.ref("channel_posts").orderByChild("sender").equalTo(currentUser);
+        myPostsRef.on("child_added", snap => renderMyPost(snap.key, snap.val()));
+        myPostsRef.on("child_removed", snap => { let el = document.getElementById("my-post-" + snap.key); if(el) el.remove(); });
+        myPostsRef.on("child_changed", snap => { let data = snap.val(); document.getElementById("caption-" + snap.key).innerText = data.caption; document.getElementById("media-" + snap.key).innerHTML = getMediaHTML(data.link); });
+    }
+    function renderMyPost(key, data) {
+        if(document.getElementById("my-post-" + key)) return;
+        let media = getMediaHTML(data.link);
+        document.getElementById('profilePosts').innerHTML += `<div class="post" id="my-post-${key}"><div class="post-header"><img class="post-pfp" src="${data.pfp}"><div><div class="post-name">${data.sender}</div></div><div class="post-settings" onclick="postOptions('${key}')">⋮</div></div><div class="post-caption" id="caption-${key}">${data.caption}</div><div class="post-media" id="media-${key}">${media}</div></div>`;
+    }
+    function postOptions(key) {
+        let action = prompt("Chagua: \n1. Futa Post \n2. Hariri Maelezo \n3. Hariri Link");
+        if(action == "1") { if(confirm("Una uhakika unataka kufuta post hii?")) { db.ref("channel_posts/" + key).remove(); } }
+        if(action == "2") { let newCap = prompt("Andika maelezo mapya:"); if(newCap) { db.ref("channel_posts/" + key + "/caption").set(newCap); } }
+        if(action == "3") { let newLink = prompt("Bandika link mpya:"); if(newLink) { db.ref("channel_posts/" + key + "/link").set(newLink); } }
     }
 
     async function setupAgoraListeners() {
@@ -264,19 +307,23 @@
                 closeCamera();
             } else {
                 await joinAgora();
-                myLiveRef.set({uid: client.uid, pfp: currentPfp, time: Date.now()});
+                myLiveRef.set({uid: currentUser, pfp: currentPfp, time: Date.now()}); // TUMIA currentUser BADALA YA client.uid
                 myLiveRef.onDisconnect().remove();
             }
         });
     }
 
     async function joinAgora() {
-        await client.setClientRole("host");
-        [localTracks.audioTrack, localTracks.videoTrack] = await AgoraRTC.createMicrophoneAndCameraTracks();
-        await client.join(AGORA_APP_ID, AGORA_CHANNEL, null, currentUser);
-        await client.publish(Object.values(localTracks));
-        openCamera();
-        localTracks.videoTrack.play(`video-${client.uid}`);
+        try {
+            await client.setClientRole("host");
+            [localTracks.audioTrack, localTracks.videoTrack] = await AgoraRTC.createMicrophoneAndCameraTracks();
+            await client.join(AGORA_APP_ID, AGORA_CHANNEL, null, currentUser); // TUMIA currentUser
+            await client.publish(Object.values(localTracks));
+            openCamera();
+            localTracks.videoTrack.play(`video-${currentUser}`);
+        } catch(err) {
+            alert("Kuna shida kuingia Live: " + err.message);
+        }
     }
 
     async function leaveAgora() {
@@ -289,6 +336,10 @@
             }
         }
         await client.leave();
+    }
+
+    function handleLiveClick() {
+        if(isArtist) { toggleMyLive(); } else { openViewerScreen(); }
     }
 
     function listenToOnlineCount() {
@@ -357,6 +408,14 @@
         db.ref("channel_posts").push().set({ sender: currentUser, pfp: currentPfp, caption: caption, link: link, timestamp: Date.now() });
         document.getElementById('postCaption').value = "";
         document.getElementById('postLink').value = "";
+    }
+    function logout() {
+        if(confirm("Una uhakika unataka kutoka?")) {
+            if(myLiveRef) myLiveRef.remove();
+            db.ref("online/" + currentUser).remove();
+            localStorage.clear();
+            location.reload();
+        }
     }
 
     function openCamera() {
