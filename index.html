@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>CHILX LIVE CHANNEL V10.2</title>
+<title>CHILX LIVE CHANNEL V10.3</title>
 <link rel="icon" href="https://i.postimg.cc/vBJj3bNH/chilx-live.jpg">
 <style>
     @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&display=swap');
@@ -135,16 +135,23 @@
     const artistsList = ["ZORAVALY", "PAUL", "WILLIAMS", "MASON", "SHANIYA", "IRENE", "ZAISAN"];
     let isArtist = false; let myLiveRef = null;
     function formatNumber(num) { if (num >= 1000000) return (num / 1000000).toFixed(1) + 'M'; if (num >= 1000) return (num / 1000).toFixed(1) + 'K'; return num; }
+    
+    window.onload = function() {
+        let savedUser = localStorage.getItem('chilxUser');
+        let savedPfp = localStorage.getItem('chilxPfp');
+        if(savedUser && savedPfp) { setupUser(savedUser, savedPfp, "viewer"); }
+    }
+
     function loginAsArtist() { let name = document.getElementById('loginName').value.trim(); let pfp = document.getElementById('loginPfp').value.trim(); if(!name ||!pfp) { alert("Jaza majina yote"); return; } if(!artistsList.includes(name.toUpperCase())) { alert("Jina hili halipo kwenye orodha ya wasanii 7"); return; } setupUser(name, pfp, "artist"); }
     function loginAsViewer() { let name = document.getElementById('loginName').value.trim(); let pfp = document.getElementById('loginPfp').value.trim() || "https://i.postimg.cc/vBJj3bNH/chilx-live.jpg"; if(!name) { alert("Weka jina lako"); return; } setupUser(name, pfp, "viewer"); }
-    function setupUser(name, pfp, role) { currentUser = name; currentPfp = pfp; userRole = role; isArtist = artistsList.includes(currentUser.toUpperCase()); localStorage.setItem('chilxUser', currentUser); localStorage.setItem('chilxPfp', currentPfp); db.ref("online/" + currentUser).set({pfp: currentPfp}); db.ref("online/" + currentUser).onDisconnect().remove(); enterApp(); }
+    function setupUser(name, pfp, role) { currentUser = name; currentPfp = pfp; userRole = role; isArtist = artistsList.includes(currentUser.toUpperCase()); localStorage.setItem('chilxUser', currentUser); localStorage.setItem('chilxPfp', currentPfp); db.ref("online/" + currentUser).set({pfp: currentPfp}).then(()=>{enterApp();}).catch(err=>{alert("Hitilafu ya mtandao: "+err.message)}); db.ref("online/" + currentUser).onDisconnect().remove(); }
     function enterApp() { document.getElementById('loginScreen').style.display = 'none'; document.getElementById('mainApp').style.display = 'flex'; let badge = isArtist? '<span class="v-badge"><svg viewBox="0 0 24 24"><path d="M12 2L3 5l9 19 9-19-9-3z"/></svg></span>' : ''; document.getElementById('userProfile').innerHTML = `<img src="${currentPfp}"><div class="user-name">${currentUser}${badge}</div>`; if(userRole === "viewer") { document.getElementById('artistInput').style.display = 'none'; document.getElementById('userProfile').onclick = null; } else { document.getElementById('userProfile').onclick = openProfile; } listenToOnlineCount(); listenToChannel(); listenToDanmaku(); listenToLiveLoves(); listenToLiveArtists(); }
     function openProfile() { if(!isArtist) return; document.getElementById('channelView').style.display = 'none'; document.getElementById('profilePage').style.display = 'flex'; document.getElementById('profilePagePfp').src = currentPfp; document.getElementById('profilePageName').innerText = currentUser; loadMyPosts(); }
     function backToChannel() { document.getElementById('channelView').style.display = 'flex'; document.getElementById('profilePage').style.display = 'none'; }
     function changeProfilePic() { let newPfp = prompt("Weka link mpya ya picha yako:"); if(newPfp) { currentPfp = newPfp; localStorage.setItem('chilxPfp', currentPfp); db.ref("online/" + currentUser).update({pfp: currentPfp}); document.getElementById('profilePagePfp').src = currentPfp; document.getElementById('userProfile').querySelector('img').src = currentPfp; } }
     function loadMyPosts() { document.getElementById('profilePosts').innerHTML = ""; let myPostsRef = db.ref("channel_posts").orderByChild("sender").equalTo(currentUser); myPostsRef.on("child_added", snap => renderMyPost(snap.key, snap.val())); myPostsRef.on("child_removed", snap => { let el = document.getElementById("my-post-" + snap.key); if(el) el.remove(); }); myPostsRef.on("child_changed", snap => { let data = snap.val(); document.getElementById("caption-" + snap.key).innerText = data.caption; document.getElementById("media-" + snap.key).innerHTML = getMediaHTML(data.link); }); }
     function renderMyPost(key, data) { if(document.getElementById("my-post-" + key)) return; let media = getMediaHTML(data.link); document.getElementById('profilePosts').innerHTML += `<div class="post" id="my-post-${key}"><div class="post-header"><img class="post-pfp" src="${data.pfp}"><div><div class="post-name">${data.sender}</div></div><div class="post-settings" onclick="postOptions('${key}')">⋮</div></div><div class="post-caption" id="caption-${key}">${data.caption}</div><div class="post-media" id="media-${key}">${media}</div></div>`; }
-    function postOptions(key) { let action = prompt("Chagua: \n1. Futa Post \n2. Hariri Maelezo \n3. Hariri Link"); if(action == "1") { if(confirm("Una uhakika unataka kufuta post hii?")) { db.ref("channel_posts/" + key).remove(); } } if(action == "2") { let newCap = prompt("Andika maelezo mapya:"); if(newCap) { db.ref("channel_posts/" + key + "/caption").set(newCap); } if(action == "3") { let newLink = prompt("Bandika link mpya:"); if(newLink) { db.ref("channel_posts/" + key + "/link").set(newLink); } } }
+    function postOptions(key) { let action = prompt("Chagua: \n1. Futa Post \n2. Hariri Maelezo \n3. Hariri Link"); if(action == "1") { if(confirm("Una uhakika unataka kufuta post hii?")) { db.ref("channel_posts/" + key).remove(); } if(action == "2") { let newCap = prompt("Andika maelezo mapya:"); if(newCap) { db.ref("channel_posts/" + key + "/caption").set(newCap); } } if(action == "3") { let newLink = prompt("Bandika link mpya:"); if(newLink) { db.ref("channel_posts/" + key + "/link").set(newLink); } } }
     function listenToLiveArtists() { db.ref("live_artists").on("value", snap => { let artists = snap.val() || {}; let count = Object.keys(artists).length; updateLiveGrid(artists, count); }); }
     function updateLiveGrid(artists, count) {
         let grid = document.getElementById('liveGrid'); grid.innerHTML = "";
