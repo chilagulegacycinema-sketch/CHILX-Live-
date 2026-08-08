@@ -12,11 +12,11 @@
         --blue-neon:#00F0FF; --pink-neon:#FF00F5; --text:#E0E0FF; --error:#FF0040;
     }
     * { box-sizing: border-box; margin: 0; padding: 0; }
-    body { background: var(--bg); color: var(--text); font-family: 'Orbitron', sans-serif; height: 100vh; display: flex; justify-content: center; overflow: hidden; }
+    body { background: var(--bg); color: var(--text); font-family: 'Orbitron', sans-serif; height: 100vh; display: flex; justify-content: center; overflow: hidden; overscroll-behavior: none; }
 
 .app-container { width: 100%; max-width: 500px; background: #000; border-left: 1px solid var(--border); border-right: 1px solid var(--border); display: flex; flex-direction: column; height: 100vh; }
 
-.header { background: #05050A; padding: 12px 16px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; }
+.header { background: #05050A; padding: 12px 16px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; flex-shrink: 0; }
 .logo { display: flex; align-items: center; gap: 10px; }
 .logo img { width: 38px; height: 38px; border-radius: 50%; object-fit: cover; border: 2px solid var(--blue-neon); box-shadow: 0 0 10px var(--blue-neon); }
 .logo h1 { font-size: 18px; font-weight: 900; color: var(--blue-neon); text-shadow: 0 0 8px var(--blue-neon); }
@@ -36,9 +36,9 @@
 .login-screen input { width: 90%; background: var(--card); border: 1px solid var(--blue-neon); color: #fff; padding: 14px; margin: 15px 0; border-radius: 8px; font-size: 16px; font-family: 'Orbitron'; text-align: center; }
 .login-screen button { background: linear-gradient(90deg, var(--blue-neon), var(--pink-neon)); color: #000; border: none; padding: 14px; width: 90%; border-radius: 8px; font-weight: 900; cursor: pointer; font-size: 16px; font-family: 'Orbitron'; margin-bottom: 10px; }
 
-.chat-area { flex: 1; overflow-y: auto; padding: 15px; display: flex; flex-direction: column; gap: 15px; background: rgba(10,10,18,0.4); }
+.chat-area { flex: 1; overflow-y: auto; -webkit-overflow-scrolling: touch; padding: 15px; display: flex; flex-direction: column; gap: 15px; background: rgba(10,10,18,0.4); }
 
-.post { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 0; overflow: hidden; }
+.post { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 0; overflow: hidden; flex-shrink: 0; }
 .post-header { display: flex; gap: 10px; align-items: center; padding: 10px 12px; }
 .post-pfp { width: 32px; height: 32px; border-radius: 50%; object-fit: cover; border: 2px solid var(--pink-neon); }
 .post-name { font-size: 12px; font-weight: 700; color: var(--blue-neon); display: flex; align-items: center; gap: 4px; }
@@ -57,22 +57,23 @@
 .love-animation svg { width: 25px; height: 25px; fill: var(--pink-neon); }
     @keyframes fly { 0%{opacity:1; transform:translateY(0) scale(1)} 100%{opacity:0; transform:translateY(-120px) scale(1.5)} }
 
-.artist-post-area { padding: 15px; background: #05050A; border-top: 1px solid var(--border); display: flex; flex-direction: column; gap: 10px; }
+.artist-post-area { padding: 15px; background: #05050A; border-top: 1px solid var(--border); display: flex; flex-direction: column; gap: 10px; flex-shrink: 0; }
 .artist-input { width: 100%; background: #000; border: 1px solid var(--border); color: #fff; padding: 12px 18px; border-radius: 12px; font-family: 'Orbitron'; font-size: 14px; }
 .post-btn { background: linear-gradient(135deg, var(--blue-neon), var(--pink-neon)); color: #000; border: none; border-radius: 12px; padding: 12px; cursor: pointer; font-weight: 900; font-size: 16px; font-family: 'Orbitron'; }
 
     #cameraModal { display: none; position: fixed; top:0; left:0; width:100%; height:100%; background: #000; z-index: 2000; }
-    #cameraVideo { width: 100%; height: 100%; object-fit: cover; }
+    #cameraVideo { width: 100%; height: 100%; object-fit: cover; background: #000; }
+    #viewerScreen { display: none; width: 100%; height: 100%; background: #000; justify-content: center; align-items: center; color: #fff; font-size: 18px; text-align: center; padding: 20px; }
 .live-overlay { position: absolute; top: 20px; left: 20px; background: var(--error); padding: 6px 14px; border-radius: 6px; display: flex; align-items: center; gap: 8px; font-size: 14px; font-weight: 900; }
 
     #danmakuContainer { position: absolute; top: 80px; left: 0; width: 100%; height: calc(100% - 160px); pointer-events: none; overflow: hidden; }
 .danmaku { position: absolute; white-space: nowrap; font-size: 13px; font-weight: 700; color: #fff; text-shadow: 0 0 5px #000; animation: danmakuMove 7s linear; display: flex; align-items: center; gap: 6px; background: rgba(0,240,255,0.1); padding: 4px 10px; border-radius: 15px; border: 1px solid var(--blue-neon); }
 .danmaku img { width: 22px; height: 22px; border-radius: 50%; border: 1px solid var(--pink-neon); }
     @keyframes danmakuMove { from { transform: translateX(100%); } to { transform: translateX(-100%); } }
- .live-chat-input { position:absolute; bottom:20px; left:10px; right:10px; display:none; gap:10px; }
+.live-chat-input { position:absolute; bottom:20px; left:10px; right:10px; display:none; gap:10px; }
 
- .profile-page { display: none; flex-direction: column; height: 100%; }
-.profile-header { padding: 20px; text-align: center; border-bottom: 1px solid var(--border); }
+.profile-page { display: none; flex-direction: column; height: 100%; }
+.profile-header { padding: 20px; text-align: center; border-bottom: 1px solid var(--border); flex-shrink: 0; }
 .profile-header img { width: 80px; height: 80px; border-radius: 50%; border: 3px solid var(--blue-neon); margin-bottom: 10px; cursor: pointer; object-fit: cover; }
 .back-btn { background: none; border: 1px solid var(--blue-neon); color: var(--blue-neon); padding: 5px 12px; border-radius: 15px; font-size: 10px; cursor: pointer; margin-bottom: 10px; }
 .edit-pfp-btn { font-size: 10px; color: var(--pink-neon); cursor: pointer; }
@@ -110,7 +111,6 @@
 
     <div id="channelView">
         <div class="chat-area" id="chatBox"></div>
-        <!-- HII ITAFICHWA KWA MTAZAMAJI -->
         <div class="artist-post-area" id="artistInput">
             <input type="text" id="postCaption" class="artist-input" placeholder="Andika maelezo ya post yako...">
             <input type="text" id="postLink" class="artist-input" placeholder="Bandika link ya Picha/Video: postimg.cc au youtube">
@@ -134,6 +134,9 @@
 
 <div id="cameraModal">
     <video id="cameraVideo" autoplay playsinline></video>
+    <div id="viewerScreen">
+        <div>🔴 MSANII ANA LIVE...<br><br>Subiri kidogo<br>Tuma ❤️ kama unampenda</div>
+    </div>
     <div class="live-overlay">
         <div class="live-dot"></div>
         <span>LIVE • <span id="liveViewers">1</span> WAKITAZAMA</span>
@@ -164,7 +167,7 @@
         let name = document.getElementById('loginName').value.trim();
         let pfp = document.getElementById('loginPfp').value.trim();
         if(!name ||!pfp) { alert("Jaza majina yote"); return; }
-        if(!artistsList.includes(name.toUpperCase())) { alert("Jina hili halipo kwenye orodha ya wasanii 7"); return; } // LOCK KWA WASANII 7 TU
+        if(!artistsList.includes(name.toUpperCase())) { alert("Jina hili halipo kwenye orodha ya wasanii 7"); return; }
         setupUser(name, pfp, "artist");
     }
     function loginAsViewer() {
@@ -188,13 +191,10 @@
         document.getElementById('mainApp').style.display = 'flex';
         let badge = isArtist? '<span class="v-badge"><svg viewBox="0 0 24 24"><path d="M12 2L3 5l9 19 9-19-9-3z"/></svg></span>' : '';
         document.getElementById('userProfile').innerHTML = `<img src="${currentPfp}"><div class="user-name">${currentUser}${badge}</div>`;
-
-        // HAPA NDIO TUMEFUNGA KABISA KWA MTAZAMAJI
         if(userRole === "viewer") {
-            document.getElementById('artistInput').style.display = 'none'; // FICHA SEHEMU YA KUPOST
-            document.getElementById('userProfile').onclick = null; // FICHA PROFILE
+            document.getElementById('artistInput').style.display = 'none';
+            document.getElementById('userProfile').onclick = null;
         }
-
         listenToOnlineCount();
         listenToChannel();
         listenToDanmaku();
@@ -274,7 +274,13 @@
         }
     }
 
-    function handleLiveClick() { openCamera(); }
+    function handleLiveClick() {
+        if(isArtist) {
+            openCamera(); // MSANII ANAREKODI
+        } else {
+            openViewerScreen(); // MTAZAMAJI ANAANGALIA TU
+        }
+    }
 
     function listenToOnlineCount() {
         db.ref("online").on("value", snap => {
@@ -293,7 +299,7 @@
         setTimeout(() => love.remove(), 1500);
     }
     function sendDanmaku() {
-        if(!isArtist) return; // MTAZAMAJI HAWEZI KUTUMA KOPAKOPA
+        if(!isArtist) return;
         let text = document.getElementById('liveComment').value.trim();
         if(!text) return;
         db.ref("live_comments").push({sender: currentUser, pfp: currentPfp, text: text});
@@ -341,7 +347,7 @@
         });
     }
     function sendPost() {
-        if(!isArtist) return; // DOUBLE LOCK: MTAZAMAJI HAWEZI KUTUMA POST
+        if(!isArtist) return;
         let caption = document.getElementById('postCaption').value.trim();
         let link = document.getElementById('postLink').value.trim();
         if (!caption &&!link) return;
@@ -355,13 +361,25 @@
         document.getElementById('postCaption').value = "";
         document.getElementById('postLink').value = "";
     }
+
     async function openCamera() {
         document.getElementById('cameraModal').style.display = 'block';
+        document.getElementById('cameraVideo').style.display = 'block';
+        document.getElementById('viewerScreen').style.display = 'none';
         document.getElementById('liveLoveBtn').style.display = 'flex';
-        if(isArtist) document.getElementById('liveChatInput').style.display = 'flex'; // KOPAKOPA KWA MSANII TU
+        document.getElementById('liveChatInput').style.display = 'flex';
         cameraStream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
         document.getElementById('cameraVideo').srcObject = cameraStream;
     }
+
+    function openViewerScreen() {
+        document.getElementById('cameraModal').style.display = 'block';
+        document.getElementById('cameraVideo').style.display = 'none';
+        document.getElementById('viewerScreen').style.display = 'flex';
+        document.getElementById('liveLoveBtn').style.display = 'flex';
+        document.getElementById('liveChatInput').style.display = 'none';
+    }
+
     function closeCamera() {
         document.getElementById('cameraModal').style.display = 'none';
         document.getElementById('liveLoveBtn').style.display = 'none';
