@@ -1,168 +1,446 @@
 <!DOCTYPE html>
 <html lang="sw">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CHILX Live V9.9 - Streamable Engine</title>
-    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
-    <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font-family: 'Orbitron', sans-serif; background: #000; color: #fff; overflow: hidden; }
-       .header { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding: 15px; text-align: center; }
-       .container { display: flex; height: calc(100vh - 60px); }
-       .video-grid { flex: 1; display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 10px; padding: 10px; background: #111; overflow-y: auto; }
-       .video-box { background: #222; border-radius: 10px; position: relative; overflow: hidden; border: 2px solid #FF00F5; }
-       .video-box iframe,.video-box video { width: 100%; height: 100%; border: none; }
-       .user-label { position: absolute; bottom: 10px; left: 10px; background: rgba(255,0,245,0.8); padding: 5px 10px; border-radius: 5px; font-size: 12px; font-weight: 900; z-index: 10; }
-       .live-badge { position: absolute; top: 10px; left: 10px; background: #FF0040; padding: 3px 8px; border-radius: 5px; font-size: 10px; font-weight: 900; animation: blink 1s infinite; z-index: 10; }
-        @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0} }
-       .controls { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); display: flex; gap: 10px; background: rgba(0,0,0,0.9); padding: 15px; border-radius: 50px; z-index: 100; }
-       .btn { padding: 12px 20px; border: none; border-radius: 25px; background: #667eea; color: white; cursor: pointer; font-weight: bold; font-family: 'Orbitron'; }
-       .btn.danger { background: #e74c3c; }
-       .btn.success { background: #27ae60; }
-       .chat { width: 300px; background: #1a1a1a; display: flex; flex-direction: column; }
-       .chat-header { padding: 15px; background: #222; font-weight: bold; }
-       .chat-messages { flex: 1; padding: 10px; overflow-y: auto; }
-       .chat-input { display: flex; padding: 10px; }
-       .chat-input input { flex: 1; padding: 10px; background: #333; border: none; color: white; border-radius: 5px; }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CHILX LIVE CHANNEL V9.9</title>
+<link rel="icon" href="https://i.postimg.cc/vBJj3bNH/chilx-live.jpg">
+<style>
+    @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&display=swap');
+    :root {
+        --bg:#010101; --card:#0A0A12; --border:#1E1E2E;
+        --blue-neon:#00F0FF; --pink-neon:#FF00F5; --text:#E0E0FF; --error:#FF0040;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body { height: 100%; overflow: hidden; }
+    body { background: var(--bg); color: var(--text); font-family: 'Orbitron', sans-serif; display: flex; justify-content: center; }
 
-        /* FORM YA KUEKA LINK */
-        #uploadLiveForm { position:fixed; top:50%; left:50%; transform:translate(-50%,-50%); background:#0A0A12; padding:25px; border-radius:15px; border:2px solid #FF00F5; display:none; z-index:3000; box-shadow: 0 0 20px #FF00F5; }
-        #uploadLiveForm h3 { color:#00F0FF; margin-bottom:15px; text-align:center; }
-        #uploadLiveForm input { width:350px; padding:12px; margin-bottom:10px; background:#000; border:1px solid #00F0FF; color:#fff; border-radius:8px; font-family: 'Orbitron'; }
-    </style>
-    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&display=swap" rel="stylesheet">
+.app-container { width: 100%; max-width: 500px; background: #000; border-left: 1px solid var(--border); border-right: 1px solid var(--border); display: flex; flex-direction: column; height: 100%; }
+
+.header { background: #05050A; padding: 12px 16px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; flex-shrink: 0; }
+.logo { display: flex; align-items: center; gap: 10px; }
+.logo img { width: 38px; height: 38px; border-radius: 50%; object-fit: cover; border: 2px solid var(--blue-neon); box-shadow: 0 0 10px var(--blue-neon); }
+.logo h1 { font-size: 18px; font-weight: 900; color: var(--blue-neon); text-shadow: 0 0 8px var(--blue-neon); }
+.logo h1 span { color: var(--pink-neon); text-shadow: 0 0 8px var(--pink-neon); }
+
+.live-status { display: flex; align-items: center; gap: 6px; font-size: 10px; color: var(--error); font-weight: 900; cursor: pointer; padding: 4px 8px; border-radius: 12px; background: rgba(255,0,64,0.1); }
+.live-dot { width: 8px; height: 8px; background: var(--error); border-radius: 50%; animation: blink 1s infinite; }
+    @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0} }
+
+.user-profile { display: flex; align-items: center; gap: 8px; cursor: pointer; }
+.user-profile img { width: 32px; height: 32px; border-radius: 50%; object-fit: cover; border: 2px solid var(--blue-neon); }
+.user-name { font-size: 12px; font-weight: 700; color: var(--blue-neon); display: flex; align-items: center; gap: 4px; }
+
+.login-screen { text-align: center; padding: 40px 20px; display: flex; flex-direction: column; justify-content: center; align-items: center; width: 100%; height: 100%; background: var(--bg); position: absolute; top: 0; left: 0; z-index: 1000; }
+.login-screen img { width: 120px; height: 120px; border-radius: 25px; margin-bottom: 20px; border: 3px solid var(--pink-neon); object-fit: cover; }
+.login-screen h2 { color: var(--blue-neon); }
+.login-screen input { width: 90%; background: var(--card); border: 1px solid var(--blue-neon); color: #fff; padding: 14px; margin: 15px 0; border-radius: 8px; font-size: 16px; font-family: 'Orbitron'; text-align: center; }
+.login-screen button { background: linear-gradient(90deg, var(--blue-neon), var(--pink-neon)); color: #000; border: none; padding: 14px; width: 90%; border-radius: 8px; font-weight: 900; cursor: pointer; font-size: 16px; font-family: 'Orbitron'; margin-bottom: 10px; }
+
+#channelView { flex: 1; display: flex; flex-direction: column; overflow: hidden; }
+.chat-area { flex: 1; overflow-y: auto; -webkit-overflow-scrolling: touch; padding: 15px; display: flex; flex-direction: column; gap: 15px; background: rgba(10,10,18,0.4); }
+
+.post { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 0; overflow: hidden; flex-shrink: 0; }
+.post-header { display: flex; gap: 10px; align-items: center; padding: 10px 12px; }
+.post-pfp { width: 32px; height: 32px; border-radius: 50%; object-fit: cover; border: 2px solid var(--pink-neon); }
+.post-name { font-size: 12px; font-weight: 700; color: var(--blue-neon); display: flex; align-items: center; gap: 4px; }
+.post-time { font-size: 9px; color: #888; }
+.post-caption { font-size: 13px; line-height: 1.4; padding: 0 12px 8px 12px; }
+.post-media img { width: 100%; display: block; border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
+.post-media iframe { width: 100%; aspect-ratio: 1/1; display: block; border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
+
+.v-badge { width: 14px; height: 14px; background: #0095F6; border-radius: 50%; display: inline-flex; justify-content: center; align-items: center; }
+.v-badge svg { width: 9px; height: 9px; fill: #fff; }
+.post-settings { margin-left: auto; font-size: 18px; color: #888; cursor: pointer; }
+
+.live-love-btn { position: absolute; bottom: 120px; right: 20px; width: 50px; height: 50px; background: linear-gradient(135deg, var(--blue-neon), var(--pink-neon)); border-radius: 50%; display: none; justify-content: center; align-items: center; cursor: pointer; z-index: 2001; box-shadow: 0 0 20px var(--pink-neon); }
+.live-love-btn svg { width: 28px; height: 28px; fill: #000; }
+.love-animation { position: absolute; animation: fly 1.5s forwards; z-index: 2002; }
+.love-animation svg { width: 25px; height: 25px; fill: var(--pink-neon); }
+    @keyframes fly { 0%{opacity:1; transform:translateY(0) scale(1)} 100%{opacity:0; transform:translateY(-120px) scale(1.5)} }
+
+.artist-post-area { padding: 15px; background: #05050A; border-top: 1px solid var(--border); display: flex; flex-direction: column; gap: 10px; flex-shrink: 0; }
+.artist-input { width: 100%; background: #000; border: 1px solid var(--border); color: #fff; padding: 12px 18px; border-radius: 12px; font-family: 'Orbitron'; font-size: 14px; }
+.post-btn { background: linear-gradient(135deg, var(--blue-neon), var(--pink-neon)); color: #000; border: none; border-radius: 12px; padding: 12px; cursor: pointer; font-weight: 900; font-size: 16px; font-family: 'Orbitron'; }
+
+    #cameraModal { display: none; position: fixed; top:0; left:0; width:100%; height:100%; background: #000; z-index: 2000; flex-direction: column; }
+    #liveGrid { flex: 1; display: grid; gap: 4px; background: #000; padding: 4px; overflow: hidden; }
+.live-box { background: #111; border-radius: 8px; position: relative; overflow: hidden; border: 2px solid var(--border); }
+.live-box iframe { width: 100%; height: 100%; border: none; background: #000; } /* BADILIKO: VIDEO IMEKUWA IFRAME */
+.artist-name { position: absolute; bottom: 5px; left: 5px; background: rgba(0,0,0,0.7); padding: 3px 8px; border-radius: 10px; font-size: 10px; font-weight: 700; z-index: 2; }
+.live-badge { position: absolute; top: 5px; left: 5px; background: var(--error); padding: 2px 6px; border-radius: 8px; font-size: 9px; font-weight: 900; z-index: 2; }
+    #viewerScreen { display: none; width: 100%; height: 100%; background: #000; justify-content: center; align-items: center; }
+.live-overlay { position: absolute; top: 20px; left: 20px; background: rgba(0,0,0,0.6); padding: 6px 14px; border-radius: 20px; display: flex; align-items: center; gap: 8px; font-size: 14px; font-weight: 900; border: 1px solid var(--error); z-index: 10; }
+
+    #danmakuContainer { position: absolute; top: 80px; left: 0; width: 100%; height: calc(100% - 160px); pointer-events: none; overflow: hidden; }
+.danmaku { position: absolute; white-space: nowrap; font-size: 13px; font-weight: 700; color: #fff; text-shadow: 0 0 5px #000; animation: danmakuMove 7s linear; display: flex; align-items: center; gap: 6px; background: rgba(0,240,255,0.1); padding: 4px 10px; border-radius: 15px; border: 1px solid var(--blue-neon); }
+.danmaku img { width: 22px; height: 22px; border-radius: 50%; border: 1px solid var(--pink-neon); }
+    @keyframes danmakuMove { from { transform: translateX(100%); } to { transform: translateX(-100%); } }
+.live-chat-input { position:absolute; bottom:20px; left:10px; right:10px; display:none; gap:10px; }
+
+.profile-page { display: none; flex-direction: column; height: 100%; }
+.profile-header { padding: 20px; text-align: center; border-bottom: 1px solid var(--border); flex-shrink: 0; }
+.profile-header img { width: 80px; height: 80px; border-radius: 50%; border: 3px solid var(--blue-neon); margin-bottom: 10px; cursor: pointer; object-fit: cover; }
+.back-btn { background: none; border: 1px solid var(--blue-neon); color: var(--blue-neon); padding: 5px 12px; border-radius: 15px; font-size: 10px; cursor: pointer; margin-bottom: 10px; }
+.edit-pfp-btn { font-size: 10px; color: var(--pink-neon); cursor: pointer; }
+.logout-btn { background: var(--error); color: #fff; border: none; padding: 10px 20px; border-radius: 8px; font-weight: 900; cursor: pointer; margin-top: 15px; font-family: 'Orbitron'; }
+
+    /* FORM MPYA YA KUEKA LINK */
+    #uploadLiveForm { position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); background:var(--card); padding:20px; border-radius:15px; border:2px solid var(--pink-neon); display:none; z-index:3000; width:90%; max-width:400px; }
+    #uploadLiveForm h3 { color:var(--blue-neon); margin-bottom:10px; text-align:center; }
+    #uploadLiveForm input { width:100%; padding:12px; margin-bottom:10px; background:#000; border:1px solid var(--blue-neon); color:#fff; border-radius:8px; font-family:Orbitron; }
+</style>
+
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
 </head>
 <body>
-    <div class="header">
-        <h1>🔥 CHILX LIVE V9.9 - STREAMABLE ENGINE 🔥</h1>
-    </div>
 
-    <div class="container">
-        <div class="video-grid" id="videoGrid"></div>
-        <div class="chat">
-            <div class="chat-header">💬 Live Chat</div>
-            <div class="chat-messages" id="chatMessages"></div>
-            <div class="chat-input">
-                <input type="text" id="chatInput" placeholder="Andika ujumbe...">
+<div id="loginScreen" class="login-screen">
+    <img src="https://i.postimg.cc/vBJj3bNH/chilx-live.jpg" alt="Logo">
+    <h2>CHILX <span style="color:var(--pink-neon);">LIVE</span></h2>
+    <input type="text" id="loginName" placeholder="Weka Jina lako">
+    <input type="text" id="loginPfp" placeholder="Weka Link ya Picha yako: postimg.cc">
+    <button onclick="loginAsArtist()">INGIA KAMA MSANII</button>
+    <button onclick="loginAsViewer()">INGIA KAMA MTAZAMAJI</button>
+</div>
+
+<div id="mainApp" class="app-container" style="display:none;">
+    <div class="header">
+        <div class="logo">
+            <img src="https://i.postimg.cc/vBJj3bNH/chilx-live.jpg" alt="Logo">
+            <h1>CHILX <span>LIVE</span></h1>
+        </div>
+        <div style="display:flex;align-items:center;gap:10px;">
+            <div class="live-status" onclick="handleLiveClick()">
+                <div class="live-dot"></div>
+                <span id="liveCount">0 LIVE</span>
             </div>
+            <div class="user-profile" id="userProfile" onclick="openProfile()"></div>
         </div>
     </div>
 
-    <div class="controls">
-        <button class="btn success" id="liveBtn">ANZA LIVE</button>
-        <button class="btn danger" id="stopBtn" style="display:none;">TIBA LIVE</button>
+    <div id="channelView">
+        <div class="chat-area" id="chatBox"></div>
+        <div class="artist-post-area" id="artistInput">
+            <input type="text" id="postCaption" class="artist-input" placeholder="Andika maelezo ya post yako...">
+            <input type="text" id="postLink" class="artist-input" placeholder="Bandika link ya Picha/Video: postimg.cc au youtube">
+            <button class="post-btn" onclick="sendPost()">POST</button>
+        </div>
     </div>
 
-    <!-- FORM YA KUEKA LINK YA STREAMABLE -->
+    <div id="profilePage" class="profile-page">
+        <div class="profile-header">
+            <button class="back-btn" onclick="backToChannel()">← RUDI CHANNEL</button>
+            <img id="profilePagePfp" src="" onclick="changeProfilePic()">
+            <div class="edit-pfp-btn" onclick="changeProfilePic()">Badili Picha</div>
+            <h2 id="profilePageName"></h2>
+            <button class="logout-btn" onclick="logout()">TOKA ACCOUNT</button>
+            <p style="color:#888;font-size:11px; margin-top:15px;">Post zako</p>
+        </div>
+        <div class="chat-area" id="profilePosts"></div>
+    </div>
+
+</div>
+
+<div id="cameraModal">
+    <div id="liveGrid"></div>
+    <div id="viewerScreen"></div>
+    <div class="live-overlay">
+        <div class="live-dot"></div>
+        <span><span id="liveViewers">1</span> WATAZAMAJI</span>
+    </div>
+    <div id="danmakuContainer"></div>
+    <div class="live-love-btn" id="liveLoveBtn" onclick="sendLove()">
+        <svg viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
+    </div>
+    <div class="live-chat-input" id="liveChatInput">
+        <input type="text" id="liveComment" placeholder="Tuma ujumbe..." style="flex:1; background:rgba(0,0,0,0.6); border:1px solid var(--blue-neon); color:#fff; padding:10px; border-radius:20px; font-family:Orbitron;">
+        <button onclick="sendDanmaku()" style="background:var(--pink-neon); border:none; padding:10px 15px; border-radius:20px; color:#000; font-weight:900;">TUMA</button>
+    </div>
+
+    <!-- FORM MPYA YA KUEKA LINK YA STREAMABLE -->
     <div id="uploadLiveForm">
         <h3>ANZA LIVE YAKO</h3>
-        <input type="text" id="artistName" placeholder="Weka Jina lako la Msanii">
         <input type="text" id="liveVideoLink" placeholder="Bandika Link ya Streamable/Cutbox">
-        <button onclick="startFakeLive()" class="btn success" style="width:100%;">ANZA LIVE</button>
-        <button onclick="closeUploadForm()" class="btn danger" style="width:100%; margin-top:5px;">GHARIMI</button>
+        <button onclick="startFakeLive()" class="post-btn">ANZA LIVE</button>
+        <button onclick="closeUploadForm()" class="post-btn" style="background:#555; margin-top:5px;">GHARIMI</button>
     </div>
+</div>
 
-    <script>
-        // === FIREBASE SETTINGS ===
-        const firebaseConfig = { databaseURL: "https://chilx-live-4432d-default-rtdb.firebaseio.com/" };
-        firebase.initializeApp(firebaseConfig);
-        const db = firebase.database();
+<script>
+    const AGORA_APP_ID = "410cf579f7ec4536b505e50f0fdc5119"; // Hii hatuitumii tena lakini tuiachi
+    const AGORA_CHANNEL = "chilx_live_room";
 
-        let currentArtist = "";
-        let myLiveRef = null;
-        const videoGrid = document.getElementById('videoGrid');
+    const firebaseConfig = { databaseURL: "https://chilx-live-4432d-default-rtdb.firebaseio.com/" };
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.database();
 
-        function showForm() { document.getElementById('uploadLiveForm').style.display = 'block'; }
-        function closeUploadForm() { document.getElementById('uploadLiveForm').style.display = 'none'; }
+    let currentUser = "";
+    let currentPfp = "";
+    let userRole = "";
+    const artistsList = ["ZORAVALY", "PAUL", "WILLIAMS", "MASON", "SHANIYA", "IRENE", "ZAISAN"];
+    let isArtist = false;
+    let myLiveRef = null;
 
-        // MSANII AKIBONYEZA ANZA LIVE
-        document.getElementById('liveBtn').onclick = () => {
-            showForm();
+    function loginAsArtist() {
+        let name = document.getElementById('loginName').value.trim();
+        let pfp = document.getElementById('loginPfp').value.trim();
+        if(!name ||!pfp) { alert("Jaza majina yote"); return; }
+        if(!artistsList.includes(name.toUpperCase())) { alert("Jina hili halipo kwenye orodha ya wasanii 7"); return; }
+        setupUser(name, pfp, "artist");
+    }
+    function loginAsViewer() {
+        let name = document.getElementById('loginName').value.trim();
+        let pfp = document.getElementById('loginPfp').value.trim() || "https://i.postimg.cc/vBJj3bNH/chilx-live.jpg";
+        if(!name) { alert("Weka jina lako"); return; }
+        setupUser(name, pfp, "viewer");
+    }
+    function setupUser(name, pfp, role) {
+        currentUser = name; currentPfp = pfp; userRole = role;
+        isArtist = artistsList.includes(currentUser.toUpperCase());
+        localStorage.setItem('chilxUser', currentUser);
+        localStorage.setItem('chilxPfp', currentPfp);
+        db.ref("online/" + currentUser).set({pfp: currentPfp});
+        db.ref("online/" + currentUser).onDisconnect().remove();
+        enterApp();
+    }
+
+    function enterApp() {
+        document.getElementById('loginScreen').style.display = 'none';
+        document.getElementById('mainApp').style.display = 'flex';
+        let badge = isArtist? '<span class="v-badge"><svg viewBox="0 0 24 24"><path d="M12 2L3 5l9 19 9-19-9-3z"/></svg></span>' : '';
+        document.getElementById('userProfile').innerHTML = `<img src="${currentPfp}"><div class="user-name">${currentUser}${badge}</div>`;
+        if(userRole === "viewer") {
+            document.getElementById('artistInput').style.display = 'none';
+            document.getElementById('userProfile').onclick = null;
+        } else {
+            document.getElementById('userProfile').onclick = openProfile;
         }
+        listenToOnlineCount();
+        listenToChannel();
+        listenToDanmaku();
+        listenToLiveArtists();
+    }
 
-        async function startFakeLive() {
-            currentArtist = document.getElementById('artistName').value.trim();
-            let videoLink = document.getElementById('liveVideoLink').value.trim();
-
-            if(!currentArtist ||!videoLink) { alert("Jaza majina yote mzee"); return; }
-
-            let expireTime = Date.now() + (24 * 60 * 60 * 1000); // Saa 24
-
-            myLiveRef = db.ref("live_artists/" + currentArtist);
-            await myLiveRef.set({
-                name: currentArtist,
-                videoLink: videoLink,
-                startTime: Date.now(),
-                expireTime: expireTime
-            });
-            myLiveRef.onDisconnect().remove();
-
-            closeUploadForm();
-            document.getElementById('liveBtn').style.display = 'none';
-            document.getElementById('stopBtn').style.display = 'block';
-            alert(currentArtist + " uko LIVE sasa!");
+    function openProfile() {
+        if(!isArtist) return;
+        document.getElementById('channelView').style.display = 'none';
+        document.getElementById('profilePage').style.display = 'flex';
+        document.getElementById('profilePagePfp').src = currentPfp;
+        document.getElementById('profilePageName').innerText = currentUser;
+        loadMyPosts();
+    }
+    function backToChannel() {
+        document.getElementById('channelView').style.display = 'flex';
+        document.getElementById('profilePage').style.display = 'none';
+    }
+    function changeProfilePic() {
+        let newPfp = prompt("Weka link mpya ya picha yako:");
+        if(newPfp) {
+            currentPfp = newPfp;
+            localStorage.setItem('chilxPfp', currentPfp);
+            db.ref("online/" + currentUser).update({pfp: currentPfp});
+            document.getElementById('profilePagePfp').src = currentPfp;
+            document.getElementById('userProfile').querySelector('img').src = currentPfp;
         }
+    }
+    function loadMyPosts() {
+        document.getElementById('profilePosts').innerHTML = "";
+        let myPostsRef = db.ref("channel_posts").orderByChild("sender").equalTo(currentUser);
+        myPostsRef.on("child_added", snap => renderMyPost(snap.key, snap.val()));
+        myPostsRef.on("child_removed", snap => { let el = document.getElementById("my-post-" + snap.key); if(el) el.remove(); });
+        myPostsRef.on("child_changed", snap => { let data = snap.val(); document.getElementById("caption-" + snap.key).innerText = data.caption; document.getElementById("media-" + snap.key).innerHTML = getMediaHTML(data.link); });
+    }
+    function renderMyPost(key, data) {
+        if(document.getElementById("my-post-" + key)) return;
+        let media = getMediaHTML(data.link);
+        document.getElementById('profilePosts').innerHTML += `<div class="post" id="my-post-${key}"><div class="post-header"><img class="post-pfp" src="${data.pfp}"><div><div class="post-name">${data.sender}</div></div><div class="post-settings" onclick="postOptions('${key}')">⋮</div></div><div class="post-caption" id="caption-${key}">${data.caption}</div><div class="post-media" id="media-${key}">${media}</div></div>`;
+    }
+    function postOptions(key) {
+        let action = prompt("Chagua: \n1. Futa Post \n2. Hariri Maelezo \n3. Hariri Link");
+        if(action == "1") { if(confirm("Una uhakika unataka kufuta post hii?")) { db.ref("channel_posts/" + key).remove(); } }
+        if(action == "2") { let newCap = prompt("Andika maelezo mapya:"); if(newCap) { db.ref("channel_posts/" + key + "/caption").set(newCap); } }
+        if(action == "3") { let newLink = prompt("Bandika link mpya:"); if(newLink) { db.ref("channel_posts/" + key + "/link").set(newLink); } }
+    }
 
-        // MSANII AKIBONYEZA TIBA
-        document.getElementById('stopBtn').onclick = async () => {
-            if(myLiveRef) await myLiveRef.remove();
-            document.getElementById('liveBtn').style.display = 'block';
-            document.getElementById('stopBtn').style.display = 'none';
-        }
-
-        // KUSOMA WASANII WOTE WALIO LIVE
+    function listenToLiveArtists() {
         db.ref("live_artists").on("value", snap => {
             let artists = snap.val() || {};
-            videoGrid.innerHTML = "";
-            let count = 0;
-            let now = Date.now();
+            let count = Object.keys(artists).length;
+            updateLiveGrid(artists, count);
+        });
+    }
 
-            for(let key in artists) {
-                let data = artists[key];
+    function updateLiveGrid(artists, count) {
+        let grid = document.getElementById('liveGrid');
+        grid.innerHTML = "";
+        if(count == 1) grid.style.gridTemplateColumns = "1fr";
+        if(count == 2) grid.style.gridTemplateColumns = "1fr 1fr";
+        if(count >= 3) grid.style.gridTemplateColumns = "1fr 1fr";
 
-                // AUTO DELETE BAADA YA SAA 24
-                if(data.expireTime < now) {
-                    db.ref("live_artists/" + key).remove();
-                    continue;
-                }
-                count++;
+        let now = Date.now();
+        for(let artistName in artists) {
+            let data = artists[artistName];
 
-                let box = document.createElement('div');
-                box.className = 'video-box';
-
-                // HAPA NDIO TRIKE: TUMIA IFRAME YA STREAMABLE/CUTBOX
-                box.innerHTML = `
-                    <div class="live-badge">🔴 LIVE</div>
-                    <div class="user-label">${data.name}</div>
-                    <iframe src="${data.videoLink}"
-                    allow="autoplay; fullscreen"
-                    allowfullscreen></iframe>
-                `;
-                videoGrid.appendChild(box);
+            // AUTO DELETE BAADA YA SAA 24
+            if(data.expireTime && data.expireTime < now) {
+                db.ref("live_artists/" + artistName).remove();
+                continue;
             }
 
-            // Kama hakuna mtu, onyesha ujumbe
-            if(count === 0) {
-                videoGrid.innerHTML = `<div style="grid-column:1/-1; text-align:center; padding:50px; color:#888;">Hakuna msanii aliye LIVE kwa sasa</div>`;
+            let box = document.createElement('div');
+            box.className = 'live-box';
+            box.id = 'live-box-' + artistName;
+            // HAPA NDIO TRIKE: BADALA YA VIDEO TUMIA IFRAME YA STREAMABLE
+            box.innerHTML = `
+                <div class="live-badge">🔴 LIVE</div>
+                <div class="artist-name">${artistName}</div>
+                <iframe src="${data.videoLink}" allow="autoplay; fullscreen" allowfullscreen></iframe>
+            `;
+            grid.appendChild(box);
+        }
+    }
+
+    function toggleMyLive() {
+        myLiveRef = db.ref("live_artists/" + currentUser);
+        myLiveRef.once("value", snap => {
+            if(snap.exists()) {
+                // Kama niko live, niulize kama nataka kubadilisha link
+                document.getElementById('uploadLiveForm').style.display = 'block';
+                document.getElementById('liveVideoLink').value = snap.val().videoLink || "";
+            } else {
+                // Kama sijaanza, nionyeshe form
+                document.getElementById('uploadLiveForm').style.display = 'block';
             }
         });
+    }
 
-        // CHAT RAHISI
-        document.getElementById('chatInput').addEventListener("keypress", e => {
-            if (e.key === "Enter") {
-                let msg = e.target.value.trim();
-                if(msg) {
-                    db.ref("chat").push({text: msg, time: Date.now()});
-                    e.target.value = "";
-                }
-            }
+    function closeUploadForm() {
+        document.getElementById('uploadLiveForm').style.display = 'none';
+    }
+
+    async function startFakeLive() {
+        let videoLink = document.getElementById('liveVideoLink').value.trim();
+        if(!videoLink) { alert("Weka link ya video kwanza"); return; }
+
+        let expireTime = Date.now() + (24 * 60 * 60 * 1000); // Saa 24
+
+        myLiveRef.set({
+            name: currentUser,
+            pfp: currentPfp,
+            videoLink: videoLink,
+            startTime: Date.now(),
+            expireTime: expireTime
         });
-        db.ref("chat").limitToLast(50).on("child_added", snap => {
+        myLiveRef.onDisconnect().remove();
+        closeUploadForm();
+        openCamera();
+    }
+
+    function handleLiveClick() {
+        if(isArtist) { toggleMyLive(); } else { openViewerScreen(); }
+    }
+
+    function listenToOnlineCount() {
+        db.ref("online").on("value", snap => {
+            let count = snap.numChildren();
+            document.getElementById('liveCount').innerText = count + " ONLINE";
+            document.getElementById('liveViewers').innerText = count;
+        });
+    }
+    function sendLove() {
+        let love = document.createElement('div');
+        love.className = 'love-animation';
+        love.style.right = '30px';
+        love.style.bottom = '180px';
+        love.innerHTML = `<svg viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>`;
+        document.getElementById('cameraModal').appendChild(love);
+        setTimeout(() => love.remove(), 1500);
+    }
+    function sendDanmaku() {
+        let text = document.getElementById('liveComment').value.trim();
+        if(!text) return;
+        db.ref("live_comments").push({sender: currentUser, pfp: currentPfp, text: text});
+        document.getElementById('liveComment').value = "";
+    }
+    function listenToDanmaku() {
+        db.ref("live_comments").limitToLast(50).on("child_added", snap => {
             let data = snap.val();
-            document.getElementById('chatMessages').innerHTML += `<div style="margin-bottom:8px;">${data.text}</div>`;
+            let dan = document.createElement('div');
+            dan.className = 'danmaku';
+            dan.style.top = Math.random() * 70 + 10 + '%';
+            dan.innerHTML = `<img src="${data.pfp}"> <span>${data.sender}: ${data.text}</span>`;
+            document.getElementById('danmakuContainer').appendChild(dan);
+            setTimeout(() => dan.remove(), 7000);
         });
-    </script>
+    }
+    function getMediaHTML(link) {
+        if(!link) return "";
+        if(link.match(/\.(jpeg|jpg|gif|png)$/) || link.includes("postimg.cc")) {
+            return `<img src="${link}">`;
+        } else if(link.includes("youtube.com") || link.includes("youtu.be") || link.includes("streamable.com") || link.includes("cutbox.com")) {
+            return `<iframe src="${link}" allowfullscreen></iframe>`; // SASA INASAPOTI STREAMABLE
+        } else {
+            return "";
+        }
+    }
+    function renderPost(key, data) {
+        if(document.getElementById("post-" + key)) return;
+        let badge = artistsList.includes(data.sender.toUpperCase())? '<span class="v-badge"><svg viewBox="0 0 24 24"><path d="M12 2L3 5l9 19 9-19-9-3z"/></svg></span>' : '';
+        let time = new Date(data.timestamp).toLocaleTimeString('sw-TZ', {hour:'2-digit', minute:'2-digit'});
+        document.getElementById('chatBox').innerHTML += `<div class="post" id="post-${key}"><div class="post-header"><img class="post-pfp" src="${data.pfp}"><div><div class="post-name">${data.sender}${badge}</div><div class="post-time">${time}</div></div></div><div class="post-caption">${data.caption}</div><div class="post-media">${getMediaHTML(data.link)}</div></div>`;
+    }
+    function listenToChannel() {
+        let postsRef = db.ref("channel_posts").limitToLast(30);
+        document.getElementById('chatBox').innerHTML = "";
+        postsRef.on("child_added", snap => renderPost(snap.key, snap.val()));
+        postsRef.on("child_removed", snap => { let el = document.getElementById("post-" + snap.key); if(el) el.remove(); });
+        postsRef.on("child_changed", snap => { let el = document.getElementById("post-" + snap.key); if(el) el.remove(); renderPost(snap.key, snap.val()); });
+    }
+    function sendPost() {
+        if(!isArtist) return;
+        let caption = document.getElementById('postCaption').value.trim();
+        let link = document.getElementById('postLink').value.trim();
+        if (!caption &&!link) return;
+        db.ref("channel_posts").push().set({ sender: currentUser, pfp: currentPfp, caption: caption, link: link, timestamp: Date.now() });
+        document.getElementById('postCaption').value = "";
+        document.getElementById('postLink').value = "";
+    }
+    function logout() {
+        if(confirm("Una uhakika unataka kutoka?")) {
+            if(myLiveRef) myLiveRef.remove();
+            db.ref("online/" + currentUser).remove();
+            localStorage.clear();
+            location.reload();
+        }
+    }
+
+    function openCamera() {
+        document.getElementById('cameraModal').style.display = 'flex';
+        document.getElementById('liveGrid').style.display = 'grid';
+        document.getElementById('viewerScreen').style.display = 'none';
+        document.getElementById('liveLoveBtn').style.display = 'flex';
+        document.getElementById('liveChatInput').style.display = 'flex';
+    }
+
+    function openViewerScreen() {
+        document.getElementById('cameraModal').style.display = 'flex';
+        document.getElementById('liveGrid').style.display = 'grid';
+        document.getElementById('viewerScreen').style.display = 'none';
+        document.getElementById('liveLoveBtn').style.display = 'flex';
+        document.getElementById('liveChatInput').style.display = 'none';
+    }
+
+    function closeCamera() {
+        document.getElementById('cameraModal').style.display = 'none';
+        document.getElementById('liveLoveBtn').style.display = 'none';
+        document.getElementById('liveChatInput').style.display = 'none';
+    }
+    document.getElementById('liveComment').addEventListener("keypress", e => { if (e.key === "Enter") sendDanmaku(); });
+    document.getElementById('cameraModal').addEventListener('click', function(e){
+        if(e.target.id === 'cameraModal') closeCamera();
+    });
+</script>
 </body>
 </html>
