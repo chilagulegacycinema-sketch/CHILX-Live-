@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>CHILX LIVE CHANNEL V9.9</title>
+<title>CHILX LIVE CHANNEL V9.9.1</title>
 <link rel="icon" href="https://i.postimg.cc/vBJj3bNH/chilx-live.jpg">
 <style>
     @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&display=swap');
@@ -85,8 +85,8 @@
 .edit-pfp-btn { font-size: 10px; color: var(--pink-neon); cursor: pointer; }
 .logout-btn { background: var(--error); color: #fff; border: none; padding: 10px 20px; border-radius: 8px; font-weight: 900; cursor: pointer; margin-top: 15px; font-family: 'Orbitron'; }
 
-    /* FORM YA KUEKA LINK */
-    #uploadLiveForm { position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); background:var(--card); padding:20px; border-radius:15px; border:2px solid var(--pink-neon); display:none; z-index:3000; width:90%; max-width:400px; box-shadow: 0 0 20px var(--pink-neon); }
+    /* FORM YA KUEKA LINK - NIMEPANDA Z-INDEX */
+    #uploadLiveForm { position:fixed; top:50%; left:50%; transform:translate(-50%,-50%); background:var(--card); padding:20px; border-radius:15px; border:2px solid var(--pink-neon); display:none; z-index:9999; width:90%; max-width:400px; box-shadow: 0 0 20px var(--pink-neon); }
     #uploadLiveForm h3 { color:var(--blue-neon); margin-bottom:10px; text-align:center; }
     #uploadLiveForm input { width:100%; padding:12px; margin-bottom:10px; background:#000; border:1px solid var(--blue-neon); color:#fff; border-radius:8px; font-family:Orbitron; }
 </style>
@@ -143,6 +143,14 @@
 
 </div>
 
+<!-- NIMETOA FORM HAPA NJE YA cameraModal ILI ISIFICHWE -->
+<div id="uploadLiveForm">
+    <h3>ANZA LIVE YAKO</h3>
+    <input type="text" id="liveVideoLink" placeholder="Bandika Link ya Streamable/Cutbox">
+    <button onclick="startFakeLive()" class="post-btn">ANZA LIVE</button>
+    <button onclick="closeUploadForm()" class="post-btn" style="background:#555; margin-top:5px;">GHARIMI</button>
+</div>
+
 <div id="cameraModal">
     <div id="liveGrid"></div>
     <div id="viewerScreen"></div>
@@ -157,14 +165,6 @@
     <div class="live-chat-input" id="liveChatInput">
         <input type="text" id="liveComment" placeholder="Tuma ujumbe..." style="flex:1; background:rgba(0,0,0,0.6); border:1px solid var(--blue-neon); color:#fff; padding:10px; border-radius:20px; font-family:Orbitron;">
         <button onclick="sendDanmaku()" style="background:var(--pink-neon); border:none; padding:10px 15px; border-radius:20px; color:#000; font-weight:900;">TUMA</button>
-    </div>
-
-    <!-- FORM YA KUEKA LINK YA STREAMABLE -->
-    <div id="uploadLiveForm">
-        <h3>ANZA LIVE YAKO</h3>
-        <input type="text" id="liveVideoLink" placeholder="Bandika Link ya Streamable/Cutbox">
-        <button onclick="startFakeLive()" class="post-btn">ANZA LIVE</button>
-        <button onclick="closeUploadForm()" class="post-btn" style="background:#555; margin-top:5px;">GHARIMI</button>
     </div>
 </div>
 
@@ -280,7 +280,6 @@
         for(let artistName in artists) {
             let data = artists[artistName];
 
-            // AUTO DELETE BAADA YA SAA 24
             if(data.expireTime && data.expireTime < now) {
                 db.ref("live_artists/" + artistName).remove();
                 continue;
@@ -299,7 +298,7 @@
     }
 
     function toggleMyLive() {
-        myLiveRef = db.ref("live_artists/" + currentUser); // FIX HAPA
+        myLiveRef = db.ref("live_artists/" + currentUser);
         myLiveRef.once("value", snap => {
             if(snap.exists()) {
                 document.getElementById('uploadLiveForm').style.display = 'block';
@@ -319,7 +318,7 @@
         let videoLink = document.getElementById('liveVideoLink').value.trim();
         if(!videoLink) { alert("Weka link ya video kwanza"); return; }
 
-        let expireTime = Date.now() + (24 * 60 * 60 * 1000); // Saa 24
+        let expireTime = Date.now() + (24 * 60 * 60 * 1000);
 
         if(!myLiveRef) {
             myLiveRef = db.ref("live_artists/" + currentUser);
