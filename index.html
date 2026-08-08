@@ -196,7 +196,7 @@
             document.getElementById('userProfile').onclick = null;
         }
         listenToOnlineCount();
-        listenToChannel();
+        listenToChannel(); // HAPA NDIO REALTIME
         listenToDanmaku();
     }
 
@@ -214,7 +214,7 @@
         document.getElementById('profilePage').style.display = 'flex';
         document.getElementById('profilePagePfp').src = currentPfp;
         document.getElementById('profilePageName').innerText = currentUser;
-        loadMyPosts();
+        loadMyPosts(); // HAPA NDIO REALTIME
     }
     function backToChannel() {
         document.getElementById('channelView').style.display = 'block';
@@ -230,13 +230,26 @@
             document.getElementById('userProfile').querySelector('img').src = currentPfp;
         }
     }
+
+    // REALTIME KWA PROFILE YAKO
     function loadMyPosts() {
         document.getElementById('profilePosts').innerHTML = "";
-        db.ref("channel_posts").orderByChild("sender").equalTo(currentUser).on("child_added", snap => {
-            renderMyPost(snap.key, snap.val());
+        let myPostsRef = db.ref("channel_posts").orderByChild("sender").equalTo(currentUser);
+
+        myPostsRef.on("child_added", snap => renderMyPost(snap.key, snap.val()));
+        myPostsRef.on("child_removed", snap => { // KAMA KIMEFUTWA
+            let el = document.getElementById("my-post-" + snap.key);
+            if(el) el.remove();
+        });
+        myPostsRef.on("child_changed", snap => { // KAMA KIMEHARIRIWA
+            let data = snap.val();
+            document.getElementById("caption-" + snap.key).innerText = data.caption;
+            document.getElementById("media-" + snap.key).innerHTML = getMediaHTML(data.link);
         });
     }
+
     function renderMyPost(key, data) {
+        if(document.getElementById("my-post-" + key)) return; // Zisidoblike
         let media = getMediaHTML(data.link);
         document.getElementById('profilePosts').innerHTML += `
             <div class="post" id="my-post-${key}">
@@ -255,31 +268,20 @@
         if(action == "1") {
             if(confirm("Una uhakika unataka kufuta post hii?")) {
                 db.ref("channel_posts/" + key).remove();
-                document.getElementById("my-post-" + key).remove();
             }
         }
         if(action == "2") {
             let newCap = prompt("Andika maelezo mapya:");
-            if(newCap) {
-                db.ref("channel_posts/" + key + "/caption").set(newCap);
-                document.getElementById("caption-" + key).innerText = newCap;
-            }
+            if(newCap) { db.ref("channel_posts/" + key + "/caption").set(newCap); }
         }
         if(action == "3") {
             let newLink = prompt("Bandika link mpya:");
-            if(newLink) {
-                db.ref("channel_posts/" + key + "/link").set(newLink);
-                document.getElementById("media-" + key).innerHTML = getMediaHTML(newLink);
-            }
+            if(newLink) { db.ref("channel_posts/" + key + "/link").set(newLink); }
         }
     }
 
     function handleLiveClick() {
-        if(isArtist) {
-            openCamera(); // MSANII ANAREKODI
-        } else {
-            openViewerScreen(); // MTAZAMAJI ANAANGALIA TU
-        }
+        if(isArtist) { openCamera(); } else { openViewerScreen(); }
     }
 
     function listenToOnlineCount() {
@@ -328,10 +330,11 @@
         }
     }
     function renderPost(key, data) {
+        if(document.getElementById("post-" + key)) return; // Zisidoblike
         let badge = artistsList.includes(data.sender.toUpperCase())? '<span class="v-badge"><svg viewBox="0 0 24 24"><path d="M12 2L3 5l9 19 9-19-9-3z"/></svg></span>' : '';
         let time = new Date(data.timestamp).toLocaleTimeString('sw-TZ', {hour:'2-digit', minute:'2-digit'});
         document.getElementById('chatBox').innerHTML += `
-            <div class="post">
+            <div class="post" id="post-${key}">
                 <div class="post-header">
                     <img class="post-pfp" src="${data.pfp}">
                     <div><div class="post-name">${data.sender}${badge}</div><div class="post-time">${time}</div></div>
@@ -341,11 +344,24 @@
             </div>
         `;
     }
+
+    // REALTIME KWA CHANNEL YOTE
     function listenToChannel() {
-        db.ref("channel_posts").limitToLast(30).on("child_added", snap => {
+        let postsRef = db.ref("channel_posts").limitToLast(30);
+        document.getElementById('chatBox').innerHTML = ""; // Futa kwanza
+
+        postsRef.on("child_added", snap => renderPost(snap.key, snap.val()));
+        postsRef.on("child_removed", snap => { // KAMA KIMEFUTWA
+            let el = document.getElementById("post-" + snap.key);
+            if(el) el.remove();
+        });
+        postsRef.on("child_changed", snap => { // KAMA KIMEHARIRIWA
+            let el = document.getElementById("post-" + snap.key);
+            if(el) el.remove(); // Futa ya zamani iingie mpya
             renderPost(snap.key, snap.val());
         });
     }
+
     function sendPost() {
         if(!isArtist) return;
         let caption = document.getElementById('postCaption').value.trim();
