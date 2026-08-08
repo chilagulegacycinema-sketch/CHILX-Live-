@@ -12,9 +12,10 @@
         --blue-neon:#00F0FF; --pink-neon:#FF00F5; --text:#E0E0FF; --error:#FF0040;
     }
     * { box-sizing: border-box; margin: 0; padding: 0; }
-    body { background: var(--bg); color: var(--text); font-family: 'Orbitron', sans-serif; height: 100vh; width: 100vw; display: flex; justify-content: center; overflow: hidden; overscroll-behavior: none; position: fixed; } /* FIX 1 */
+    html, body { height: 100%; overflow: hidden; } /* Muhimu */
+    body { background: var(--bg); color: var(--text); font-family: 'Orbitron', sans-serif; display: flex; justify-content: center; }
 
-.app-container { width: 100%; max-width: 500px; background: #000; border-left: 1px solid var(--border); border-right: 1px solid var(--border); display: flex; flex-direction: column; height: 100vh; } /* FIX 2 */
+.app-container { width: 100%; max-width: 500px; background: #000; border-left: 1px solid var(--border); border-right: 1px solid var(--border); display: flex; flex-direction: column; height: 100%; } /* Badili kuwa 100% */
 
 .header { background: #05050A; padding: 12px 16px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; flex-shrink: 0; }
 .logo { display: flex; align-items: center; gap: 10px; }
@@ -30,13 +31,14 @@
 .user-profile img { width: 32px; height: 32px; border-radius: 50%; object-fit: cover; border: 2px solid var(--blue-neon); }
 .user-name { font-size: 12px; font-weight: 700; color: var(--blue-neon); display: flex; align-items: center; gap: 4px; }
 
-.login-screen { text-align: center; padding: 40px 20px; display: flex; flex-direction: column; justify-content: center; align-items: center; width: 100%; height: 100vh; background: var(--bg); position: absolute; top: 0; left: 0; z-index: 1000; }
+.login-screen { text-align: center; padding: 40px 20px; display: flex; flex-direction: column; justify-content: center; align-items: center; width: 100%; height: 100%; background: var(--bg); position: absolute; top: 0; left: 0; z-index: 1000; }
 .login-screen img { width: 120px; height: 120px; border-radius: 25px; margin-bottom: 20px; border: 3px solid var(--pink-neon); object-fit: cover; }
 .login-screen h2 { color: var(--blue-neon); }
 .login-screen input { width: 90%; background: var(--card); border: 1px solid var(--blue-neon); color: #fff; padding: 14px; margin: 15px 0; border-radius: 8px; font-size: 16px; font-family: 'Orbitron'; text-align: center; }
 .login-screen button { background: linear-gradient(90deg, var(--blue-neon), var(--pink-neon)); color: #000; border: none; padding: 14px; width: 90%; border-radius: 8px; font-weight: 900; cursor: pointer; font-size: 16px; font-family: 'Orbitron'; margin-bottom: 10px; }
 
-.chat-area { flex: 1; overflow-y: auto; -webkit-overflow-scrolling: touch; padding: 15px; display: flex; flex-direction: column; gap: 15px; background: rgba(10,10,18,0.4); min-height: 0; } /* FIX 3: min-height 0 */
+#channelView { flex: 1; display: flex; flex-direction: column; overflow: hidden; } /* MWINGE MPYA */
+.chat-area { flex: 1; overflow-y: auto; -webkit-overflow-scrolling: touch; padding: 15px; display: flex; flex-direction: column; gap: 15px; background: rgba(10,10,18,0.4); } /* HII NDIO ITASCROLL */
 
 .post { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 0; overflow: hidden; flex-shrink: 0; }
 .post-header { display: flex; gap: 10px; align-items: center; padding: 10px 12px; }
@@ -72,7 +74,7 @@
     #danmakuContainer { position: absolute; top: 80px; left: 0; width: 100%; height: calc(100% - 160px); pointer-events: none; overflow: hidden; }
 .danmaku { position: absolute; white-space: nowrap; font-size: 13px; font-weight: 700; color: #fff; text-shadow: 0 0 5px #000; animation: danmakuMove 7s linear; display: flex; align-items: center; gap: 6px; background: rgba(0,240,255,0.1); padding: 4px 10px; border-radius: 15px; border: 1px solid var(--blue-neon); }
 .danmaku img { width: 22px; height: 22px; border-radius: 50%; border: 1px solid var(--pink-neon); }
-    @keyframes danmakuMove { from { transform: translateX(100%); } to { transform: translateX(-100%); } }
+    @keyframes danmakuMove { from { transform: translateX(100%); } to { transform: translateX(-100%); }
 .live-chat-input { position:absolute; bottom:20px; left:10px; right:10px; display:none; gap:10px; }
 
 .profile-page { display: none; flex-direction: column; height: 100%; }
@@ -221,7 +223,7 @@
         loadMyPosts();
     }
     function backToChannel() {
-        document.getElementById('channelView').style.display = 'block';
+        document.getElementById('channelView').style.display = 'flex'; /* Badili kuwa flex */
         document.getElementById('profilePage').style.display = 'none';
     }
     function changeProfilePic() {
@@ -248,9 +250,9 @@
     }
     function postOptions(key) {
         let action = prompt("Chagua: \n1. Futa Post \n2. Hariri Maelezo \n3. Hariri Link");
-        if(action == "1") { if(confirm("Una uhakika unataka kufuta post hii?")) { db.ref("channel_posts/" + key).remove(); } }
-        if(action == "2") { let newCap = prompt("Andika maelezo mapya:"); if(newCap) { db.ref("channel_posts/" + key + "/caption").set(newCap); } }
-        if(action == "3") { let newLink = prompt("Bandika link mpya:"); if(newLink) { db.ref("channel_posts/" + key + "/link").set(newLink); } }
+        if(action == "1") { if(confirm("Una uhakika unataka kufuta post hii?")) { db.ref("channel_posts/" + key).remove(); }
+        if(action == "2") { let newCap = prompt("Andika maelezo mapya:"); if(newCap) { db.ref("channel_posts/" + key + "/caption").set(newCap); }
+        if(action == "3") { let newLink = prompt("Bandika link mpya:"); if(newLink) { db.ref("channel_posts/" + key + "/link").set(newLink); }
     }
 
     function handleLiveClick() {
